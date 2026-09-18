@@ -30,6 +30,8 @@ const BAD_WORDS = ["hutto", "uba", "thopi", "pakyala","palayan","pnnyo"];
 
 const spamTracker = new Map();
 const blacklistedUsers = new Set(); 
+const linkWarningTracker = new Map();   // ⚠️ ලින්ක් වෝනිං ට්‍රැක් කරන්න
+const badWordWarningTracker = new Map(); // ⚠️ කුණුහරුප වෝනිං ට්‍රැක් කරන්න අලුත් Map එකක්
 
 // ========================================
 // CLIENT
@@ -69,7 +71,7 @@ client.on("ready", () => {
     console.log("🤖 BOT READY");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
-    console.log("Features Active: Anti-Link | Bad Words | Auto-Reply | Night Mode");
+    console.log("Features Active: Anti-Link & Bad Words (2-Chance Warning System) | Night Mode");
     console.log("========================================\n");
 
     // ========================================
@@ -183,7 +185,6 @@ client.on("group_join", async (notification) => {
 
             const welcomeMsg = `📜 *GROUP GUIDELINES*\n\n👋 Welcome to the IFSLS 11th INTAKE MAIN GROUP\n\nHi @${userId.split('@')[0]} (${info.name})\n\nPlease follow these new admin rules:\n\n1️⃣ Respect all group members.\n2️⃣ 🚫 No spam or message flooding.\n3️⃣ 🚫 No scams, fraud or suspicious links.\n4️⃣ 🚫 No illegal or harmful content.\n5️⃣ Only Sri Lankan numbers are allowed.\n6️⃣ 🤝 Keep conversations respectful.\n7️⃣ 🛡️ Follow admin instructions.\n\n⚠️ Breaking these rules may result in automatic removal or ban from the group.\n\nThank you for being a responsible member.Bot generated message.don't reply!`;
             
-            // 📌 අලුත් කෙනාගේ Inbox එකට විතරක් Welcome එක යවනවා
             await client.sendMessage(userId, welcomeMsg);
         }
     } catch (error) { console.log("❌ Group join error", error); }
@@ -193,7 +194,6 @@ client.on("message", async (message) => {
     try {
         if (!message.from || !message.from.endsWith("@g.us")) return;
         
-        // 📌 අලුත් Group එකක ID එක හොයාගන්න කෑල්ල
         if (!TARGET_GROUP_IDS.includes(message.from)) {
             console.log(`\n📌 [NEW GROUP ID] : ${message.from}\n`);
             return;
@@ -223,26 +223,60 @@ client.on("message", async (message) => {
             return;
         }
 
-        // 🔗 ANTI-LINK SYSTEM
+        // 🔗 ANTI-LINK SYSTEM (2-Chance Warning System)
         const linkRegex = /(https?:\/\/[^\s]+|www\.[^\s]+|wa\.me\/\d+|chat\.whatsapp\.com\/[A-Za-z0-9]+)/gi;
         if (linkRegex.test(message.body)) {
-            const removed = await directRemoveParticipant(groupId, message.author, "Sending Links");
-            if (removed) { 
+            const chat = await message.getChat();
+            const participant = chat.participants.find(p => p.id._serialized === message.author);
+            const isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
+
+            if (!isAdmin) {
                 try { await message.delete(true); } catch(e) {} 
-                blacklistedUsers.add(message.author);
-                if (ENABLE_AUTO_REMOVE) await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} has been removed for sending unauthorized links.`, { mentions: [message.author] });
+
+                let warnings = linkWarningTracker.get(message.author) || 0;
+                warnings++;
+                linkWarningTracker.set(message.author, warnings);
+
+                if (warnings === 1) {
+                    await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} මේ ගෲප් එකට ලින්ක් දැමීම සිදු කල හැකි වන්නෙ admin team එක හරහා පමණි ඔයාගෙ link එක admin කෙනෙකු හරහා යොමු කරන්නකො🥰 ! නැවත ලින්ක් දැමුවහොත් ගෲප් එකෙන් remove වෙන්න පුලුවන්. 🚫`, { mentions: [message.author] });
+                } else {
+                    const removed = await directRemoveParticipant(groupId, message.author, "Sending Links (2nd warning reached)");
+                    if (removed) {
+                        blacklistedUsers.add(message.author);
+                        if (ENABLE_AUTO_REMOVE) {
+                            await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} අවවාද නොතකා නැවත ලින්ක් දැමූ නිසා ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [message.author] });
+                        }
+                    }
+                }
             }
             return;
         }
 
-        // 🤬 BAD WORDS FILTER
+        // 🤬 BAD WORDS FILTER (2-Chance Warning System)
         const containsBadWord = BAD_WORDS.some(word => textLower.includes(word.toLowerCase()));
         if (containsBadWord) {
-            const removed = await directRemoveParticipant(groupId, message.author, "Bad Words");
-            if (removed) {
+            const chat = await message.getChat();
+            const participant = chat.participants.find(p => p.id._serialized === message.author);
+            const isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
+
+            if (!isAdmin) {
                 try { await message.delete(true); } catch(e) {} 
-                blacklistedUsers.add(message.author);
-                if (ENABLE_AUTO_REMOVE) await client.sendMessage(groupId, `🤬 @${message.author.split('@')[0]} has been removed for using inappropriate language.`, { mentions: [message.author] });
+
+                let warnings = badWordWarningTracker.get(message.author) || 0;
+                warnings++;
+                badWordWarningTracker.set(message.author, warnings);
+
+                if (warnings === 1) {
+                    await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} මෙම කණ්ඩායම තුළ අපහාසාත්මක හෝ තහනම් වචන භාවිතය තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත එවැනි වචන භාවිත කළහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🤬`, { mentions: [message.author] });
+                } else {
+                    const removed = await directRemoveParticipant(groupId, message.author, "Bad Words (2nd warning reached)");
+                    if (removed) {
+                        blacklistedUsers.add(message.author);
+                        if (ENABLE_AUTO_REMOVE) {
+                            await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} අවවාද නොතකා නැවත අපහාසාත්මක වචන භාවිත කළ නිසා ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [message.author] });
+                        }
+                    }
+                }
             }
             return;
         }
