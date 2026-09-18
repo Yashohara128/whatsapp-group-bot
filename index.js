@@ -24,6 +24,7 @@ const SPAM_LIMIT = 5;
 // ========================================
 
 const spamTracker = new Map();
+const blacklistedUsers = new Set(); // 🚫 [Feature 5] Blacklist Data
 
 // ========================================
 // CLIENT
@@ -505,6 +506,9 @@ client.on("group_join", async (notification) => {
 
         const users =
             notification.recipientIds || [];
+            
+        // මැසේජ් යවන්න Chat එක ගන්නවා
+        const chat = await client.getChatById(notification.chatId);
 
         for (const userId of users) {
 
@@ -517,68 +521,44 @@ client.on("group_join", async (notification) => {
                 await getContactInfo(userId);
 
             if (!info) {
-
-                console.log(
-                    "❓ Cannot resolve contact"
-                );
-
+                console.log("❓ Cannot resolve contact");
                 continue;
             }
 
-            console.log(
-                "Name:",
-                info.name
-            );
-
-            console.log(
-                "Actual ID:",
-                info.actualId
-            );
-
+            console.log("Name:", info.name);
+            console.log("Actual ID:", info.actualId);
             console.log(
                 "Number:",
-                info.actualNumber
-                    ? "+" + info.actualNumber
-                    : "Unknown"
+                info.actualNumber ? "+" + info.actualNumber : "Unknown"
             );
-
-            // --------------------------------
-            // Sri Lankan
-            // --------------------------------
-
-            if (
-                isSriLankan(
-                    info.actualNumber
-                )
-            ) {
-
-                console.log(
-                    "🇱🇰 ALLOWED"
-                );
-
+            
+            // 🚫 [Feature 5] Blacklist චෙක් කිරීම
+            if (blacklistedUsers.has(userId)) {
+                console.log("🚫 BLACKLISTED USER TRIED TO JOIN");
+                await chat.sendMessage(`🚫 @${userId.split('@')[0]} You are blacklisted from this group.`, { mentions: [userId] });
+                await directRemoveParticipant(userId, "Blacklisted");
                 continue;
             }
 
-            // --------------------------------
-            // Non Sri Lankan
-            // --------------------------------
+            // 🌍 [Feature 3 & 7] Non-Sri Lankan චෙක් කිරීම
+            if (!isSriLankan(info.actualNumber)) {
+                console.log("🚨 NON-SRI-LANKAN");
+                await chat.sendMessage(`🌍 @${userId.split('@')[0]} Sorry, only Sri Lankan numbers (+94) are allowed in this group. You will be removed.`, { mentions: [userId] });
+                await directRemoveParticipant(userId, "Non-Sri-Lankan number");
+                continue;
+            }
 
-            console.log(
-                "🚨 NON-SRI-LANKAN"
-            );
+            // 👋 [Feature 1 & 2] ලංකාවේ කෙනෙක් නම් Welcome මැසේජ් එක යැවීම
+            console.log("🇱🇰 ALLOWED - Sending Welcome");
+            
+            const welcomeMsg = `📜 *GROUP GUIDELINES*\n\n👋 Welcome to the IFSLS 11th INTAKE MAIN GROUP 01 \n\nHi @${userId.split('@')[0]} (${info.name})\n\nPlease follow these rules:\n\n1️⃣ Respect all group members.\n2️⃣ 🚫 No spam or message flooding.\n3️⃣ 🚫 No scams, fraud or suspicious links.\n4️⃣ 🚫 No illegal or harmful content.\n5️⃣ Only Sri Lankan numbers are allowed.\n6️⃣ 🤝 Keep conversations respectful.\n7️⃣ 🛡️ Follow admin instructions.\n\n⚠️ Breaking these rules may result in automatic removal.\n\nThank you for being a responsible member!`;
+            
+            await chat.sendMessage(welcomeMsg, { mentions: [userId] });
 
-            await directRemoveParticipant(
-                userId,
-                "Non-Sri-Lankan number"
-            );
         }
 
     } catch (error) {
-
-        console.log(
-            "❌ Group join error"
-        );
-
+        console.log("❌ Group join error");
         console.error(error);
     }
 });
@@ -590,113 +570,62 @@ client.on("group_join", async (notification) => {
 client.on("message", async (message) => {
 
     try {
-
         // Only groups
-        if (
-            !message.from ||
-            !message.from.endsWith("@g.us")
-        ) {
+        if (!message.from || !message.from.endsWith("@g.us")) {
             return;
         }
 
         // Only target group
-        if (
-            message.from !==
-            TARGET_GROUP_ID
-        ) {
+        if (message.from !== TARGET_GROUP_ID) {
             return;
         }
 
         if (!message.author) {
-
-            console.log(
-                "❓ Message author unavailable"
-            );
-
             return;
         }
 
         console.log("\n----------------------------------------");
+        console.log("📩 Message:", message.body || "[Media]");
+        console.log("LID:", message.author);
+        
+        // 🛡️ [Feature 6] ADMIN PROTECTION CHECK (Spam check වලට කලින්)
+        const chat = await message.getChat();
+        const participant = chat.participants.find(p => p.id._serialized === message.author);
+        if (participant && (participant.isAdmin || participant.isSuperAdmin)) {
+            console.log("🛡️ Admin Message - Ignored from Spam tracker");
+            return; 
+        }
 
-        console.log(
-            "📩 Message:",
-            message.body || "[Media]"
-        );
-
-        console.log(
-            "LID:",
-            message.author
-        );
-
-        const info =
-            await getContactInfo(
-                message.author
-            );
+        const info = await getContactInfo(message.author);
 
         if (!info) {
-
-            console.log(
-                "❓ Could not resolve sender"
-            );
-
+            console.log("❓ Could not resolve sender");
             return;
         }
 
-        console.log(
-            "Name:",
-            info.name
-        );
-
-        console.log(
-            "Actual WhatsApp ID:",
-            info.actualId
-        );
-
-        console.log(
-            "Actual Number:",
-            info.actualNumber
-                ? "+" + info.actualNumber
-                : "Unknown"
-        );
+        console.log("Name:", info.name);
+        console.log("Actual Number:", info.actualNumber ? "+" + info.actualNumber : "Unknown");
 
         // ====================================
-        // NON-SRI-LANKAN
+        // NON-SRI-LANKAN (මැසේජ් කරනකොට අල්ලනවා)
         // ====================================
 
-        if (
-            info.actualNumber &&
-            !isSriLankan(
-                info.actualNumber
-            )
-        ) {
-
-            console.log(
-                "🚨 NON-SRI-LANKAN USER"
-            );
-
-            await directRemoveParticipant(
-                message.author,
-                "Non-Sri-Lankan number"
-            );
-
+        if (info.actualNumber && !isSriLankan(info.actualNumber)) {
+            console.log("🚨 NON-SRI-LANKAN USER");
+            await chat.sendMessage(`🌍 @${message.author.split('@')[0]} Sorry, only Sri Lankan numbers (+94) are allowed in this group.`, { mentions: [message.author] });
+            await directRemoveParticipant(message.author, "Non-Sri-Lankan number");
             return;
         }
 
         // ====================================
         // SPAM
         // ====================================
-
-        await checkSpam(
-            message.author,
-            info.name
-        );
+        
+        // Chat එකත් යවනවා Reason Message එක දාන්න ඕන නිසා
+        await checkSpam(message, message.author, info.name);
 
     } catch (error) {
-
-        console.log(
-            "❌ Message handler error"
-        );
-
+        console.log("❌ Message handler error");
         console.error(error);
     }
 });
@@ -706,82 +635,57 @@ client.on("message", async (message) => {
 // ========================================
 
 async function checkSpam(
+    message, // අලුතින් Chat එකට මැසේජ් යවන්න මේක ඕනේ
     senderId,
     name
 ) {
 
     const now = Date.now();
 
-    if (
-        !spamTracker.has(senderId)
-    ) {
-
-        spamTracker.set(
-            senderId,
-            []
-        );
+    if (!spamTracker.has(senderId)) {
+        spamTracker.set(senderId, []);
     }
 
-    let timestamps =
-        spamTracker.get(senderId);
+    let timestamps = spamTracker.get(senderId);
 
     // Remove old timestamps
-    timestamps =
-        timestamps.filter(
-            timestamp =>
-                now - timestamp <
-                SPAM_WINDOW_MS
-        );
+    timestamps = timestamps.filter(timestamp => now - timestamp < SPAM_WINDOW_MS);
 
     // Add current message
     timestamps.push(now);
 
-    spamTracker.set(
-        senderId,
-        timestamps
-    );
+    spamTracker.set(senderId, timestamps);
 
-    console.log(
-        `📊 Spam count: ${timestamps.length}/${SPAM_LIMIT}`
-    );
+    console.log(`📊 Spam count: ${timestamps.length}/${SPAM_LIMIT}`);
 
     // ====================================
-    // 5/5
+    // 5/5 (Spam Limit පැන්නොත්)
     // ====================================
 
-    if (
-        timestamps.length >=
-        SPAM_LIMIT
-    ) {
+    if (timestamps.length >= SPAM_LIMIT) {
 
         console.log("\n========================================");
         console.log("🚨🚨 SPAM DETECTED 🚨🚨");
         console.log("========================================");
-
-        console.log(
-            "User:",
-            name
-        );
-
-        console.log(
-            "Messages:",
-            timestamps.length
-        );
-
-        console.log(
-            "Window:",
-            `${SPAM_WINDOW_MS / 1000} seconds`
-        );
+        console.log("User:", name);
+        console.log("Messages:", timestamps.length);
+        console.log("Window:", `${SPAM_WINDOW_MS / 1000} seconds`);
+        
+        // 🚫 [Feature 5] Blacklist එකට දානවා ආයේ එන්න බැරි වෙන්න
+        blacklistedUsers.add(senderId);
 
         // Reset before removal
-        spamTracker.set(
-            senderId,
-            []
-        );
+        spamTracker.set(senderId, []);
 
         // ====================================
-        // DIRECT REMOVE
+        // REASON MESSAGE & DIRECT REMOVE
         // ====================================
+        
+        // 🚨 [Feature 4] Remove කරන්න කලින් Reason එක ගෲප් එකට දානවා
+        if (ENABLE_AUTO_REMOVE) {
+            const chat = await message.getChat();
+            await chat.sendMessage(`🚨 @${senderId.split('@')[0]} has been removed for SPAMMING.`, { mentions: [senderId] });
+        }
 
         await directRemoveParticipant(
             senderId,
@@ -843,4 +747,3 @@ console.log("========================================");
 console.log("Starting...\n");
 
 client.initialize();
-
