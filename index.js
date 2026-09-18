@@ -18,10 +18,10 @@ const CHROME_PATH = "/usr/bin/chromium-browser";
 
 const ENABLE_AUTO_REMOVE = true;
 const SPAM_WINDOW_MS = 10 * 1000;
-const SPAM_LIMIT = 5;
+const SPAM_LIMIT = 3;
 
 // 🤬 Bad Words List 
-const BAD_WORDS = ["badword1", "badword2", "stupid", "idiot"]; 
+const BAD_WORDS = ["hutto", "uba", "thopi", "pakyala","palayan","pnnyo"]; 
 
 // ========================================
 // DATA
@@ -74,12 +74,12 @@ client.on("ready", () => {
     // ========================================
     // 🌙 AUTO NIGHT MODE (රෑ 10:00 ට ගෲප් වසයි)
     // ========================================
-    cron.schedule("0 22 * * *", async () => {
+    cron.schedule("0 23 * * *", async () => {
         for (const groupId of TARGET_GROUP_IDS) {
             try {
                 const chat = await client.getChatById(groupId);
                 await chat.setMessagesAdminsOnly(true); // Only Admins mode දානවා
-                await chat.sendMessage("🌙 *රාත්‍රී 10:00 බැවින් ගෲප් එක වසා ඇත.* නැවත උදෑසන 6:00 ට විවෘත වේ. සුබ රාත්‍රියක්! 😴");
+                await chat.sendMessage("🌙 *රාත්‍රී 11:00 Group Admin Mode Active වී ඇත.* නැවත උදේ 6:00 ට open වේ. Good Night All!😴 Bot generated message.don't reply");
                 console.log(`🌙 Night mode activated for ${groupId}`);
             } catch (e) { console.log("Night mode error", e); }
         }
@@ -93,7 +93,7 @@ client.on("ready", () => {
             try {
                 const chat = await client.getChatById(groupId);
                 await chat.setMessagesAdminsOnly(false); // හැමෝටම මැසේජ් දාන්න දෙනවා
-                await chat.sendMessage("☀️ *සුබ උදෑසනක්!* ගෲප් එක විවෘත කර ඇත. දැන් ඔබට පණිවිඩ යැවිය හැක. 😊");
+                await chat.sendMessage("☀️ *Good Morning All!* ගෲප් එක Open.😊Bot generated message.don't reply");
                 console.log(`☀️ Morning mode activated for ${groupId}`);
             } catch (e) { console.log("Morning mode error", e); }
         }
@@ -180,7 +180,7 @@ client.on("group_join", async (notification) => {
                 continue;
             }
 
-            const welcomeMsg = `📜 *GROUP GUIDELINES*\n\n👋 Welcome to the IFSLS 11th INTAKE MAIN GROUP 01 \n\nHi @${userId.split('@')[0]} (${info.name})\n\nPlease follow these rules:\n\n1️⃣ Respect all group members.\n2️⃣ 🚫 No spam or message flooding.\n3️⃣ 🚫 No scams, fraud or suspicious links.\n4️⃣ 🚫 No illegal or harmful content.\n5️⃣ Only Sri Lankan numbers are allowed.\n6️⃣ 🤝 Keep conversations respectful.\n7️⃣ 🛡️ Follow admin instructions.\n\n⚠️ Breaking these rules may result in automatic removal.\n\nThank you for being a responsible member!`;
+            const welcomeMsg = `📜 *GROUP GUIDELINES*\n\n👋 Welcome to the IFSLS 11th INTAKE MAIN GROUP\n\nHi @${userId.split('@')[0]} (${info.name})\n\nPlease follow these new admin rules:\n\n1️⃣ Respect all group members.\n2️⃣ 🚫 No spam or message flooding.\n3️⃣ 🚫 No scams, fraud or suspicious links.\n4️⃣ 🚫 No illegal or harmful content.\n5️⃣ Only Sri Lankan numbers are allowed.\n6️⃣ 🤝 Keep conversations respectful.\n7️⃣ 🛡️ Follow admin instructions.\n\n⚠️ Breaking these rules may result in automatic removal or ban from the group.\n\nThank you for being a responsible member.Bot generated message.don't reply!`;
             await client.sendMessage(groupId, welcomeMsg, { mentions: [userId] });
         }
     } catch (error) { console.log("❌ Group join error", error); }
@@ -230,10 +230,10 @@ client.on("message", async (message) => {
 
         // 🤖 AUTO-REPLY / FAQ 
         if (textLower.includes("fee") || textLower.includes("ගාස්තුව") || textLower.includes("class fee") || textLower.includes("fee eka kiyda")) {
-            await message.reply("💡 පන්තියේ ගාස්තුව රු. 1500 යි. වැඩි විස්තර සඳහා Admin කෙනෙක්ට මැසේජ් කරන්න.");
+            await message.reply("💡null");
         }
         else if (textLower.includes("time") || textLower.includes("වෙලාව") || textLower.includes("කවදද") || textLower.includes("class eka thiyenne")) {
-            await message.reply("⏰ පන්ති පැවැත්වෙන්නේ සෑම ඉරිදාම උදේ 8:00 ට ය.");
+            await message.reply("⏰ null");
         }
 
         // 🚨 SPAM CHECK
