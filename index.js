@@ -31,17 +31,22 @@ const spamTracker = new Map();
 
 const client = new Client({
     authStrategy: new LocalAuth(),
-
     puppeteer: {
         executablePath: CHROME_PATH,
-        headless: false,
-
+        headless: true, // මේක අනිවාර්යයෙන් true වෙන්න ඕනේ
         args: [
             "--no-sandbox",
-            "--disable-setuid-sandbox"
+            "--disable-setuid-sandbox",
+            "--disable-dev-shm-usage",
+            "--disable-accelerated-2d-canvas",
+            "--no-first-run",
+            "--no-zygote",
+            "--single-process",
+            "--disable-gpu"
         ]
     }
 });
+
 
 // ========================================
 // QR
