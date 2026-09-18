@@ -8,7 +8,7 @@ const qrcode = require("qrcode-terminal");
 const TARGET_GROUP_ID = "120363427144307038@g.us";
 
 const CHROME_PATH =
-    "C:\\Users\\Welcome\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe";
+    "/usr/bin/chromium-browser";
 
 // ========================================
 // SETTINGS
