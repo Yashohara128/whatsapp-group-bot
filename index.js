@@ -207,6 +207,16 @@ client.on("message", async (message) => {
         if (!info) return;
         const textLower = (message.body || "").toLowerCase();
 
+        // ----------------------------------------
+        // 📩 CONSOLE LOG
+        // ----------------------------------------
+        console.log("\n----------------------------------------");
+        console.log(`📩 Group ID : ${groupId}`);
+        console.log(`👤 Name     : ${info.name}`);
+        console.log(`📞 Number   : +${info.actualNumber}`);
+        console.log(`💬 Message  : ${message.body || "[Media / Sticker]"}`);
+        console.log("----------------------------------------");
+
         // 🌍 NON-SRI-LANKAN Check
         if (info.actualNumber && !isSriLankan(info.actualNumber)) {
             const removed = await directRemoveParticipant(groupId, message.author, "Non-Sri-Lankan number");
