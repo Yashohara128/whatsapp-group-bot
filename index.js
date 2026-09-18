@@ -74,7 +74,7 @@ client.on("ready", () => {
     console.log("========================================\n");
 
     // ========================================
-    // 🌙 AUTO NIGHT MODE (රෑ 10:00 ට ගෲප් වසයි)
+    // 🌙 AUTO NIGHT MODE (රෑ 11:00 ට ගෲප් වසයි)
     // ========================================
     cron.schedule("0 23 * * *", async () => {
         for (const groupId of TARGET_GROUP_IDS) {
@@ -183,7 +183,9 @@ client.on("group_join", async (notification) => {
             }
 
             const welcomeMsg = `📜 *GROUP GUIDELINES*\n\n👋 Welcome to the IFSLS 11th INTAKE MAIN GROUP\n\nHi @${userId.split('@')[0]} (${info.name})\n\nPlease follow these new admin rules:\n\n1️⃣ Respect all group members.\n2️⃣ 🚫 No spam or message flooding.\n3️⃣ 🚫 No scams, fraud or suspicious links.\n4️⃣ 🚫 No illegal or harmful content.\n5️⃣ Only Sri Lankan numbers are allowed.\n6️⃣ 🤝 Keep conversations respectful.\n7️⃣ 🛡️ Follow admin instructions.\n\n⚠️ Breaking these rules may result in automatic removal or ban from the group.\n\nThank you for being a responsible member.Bot generated message.don't reply!`;
-            await client.sendMessage(groupId, welcomeMsg, { mentions: [userId] });
+            
+            // 📌 අලුත් කෙනාගේ Inbox එකට විතරක් Welcome එක යවනවා
+            await client.sendMessage(userId, welcomeMsg);
         }
     } catch (error) { console.log("❌ Group join error", error); }
 });
