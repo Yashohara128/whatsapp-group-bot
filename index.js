@@ -9,7 +9,6 @@ const cron = require("node-cron"); // ⏰ වෙලාවට වැඩ කරන
 const TARGET_GROUP_IDS = [
     "120363427144307038@g.us",
     "120363428845309010@g.us",
-    "120363398494943813@g.us"
 ];
 
 const CHROME_PATH = "/usr/bin/chromium-browser";
