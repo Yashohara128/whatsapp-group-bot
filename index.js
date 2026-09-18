@@ -189,7 +189,13 @@ client.on("group_join", async (notification) => {
 client.on("message", async (message) => {
     try {
         if (!message.from || !message.from.endsWith("@g.us")) return;
-        if (!TARGET_GROUP_IDS.includes(message.from)) return;
+        
+        // 📌 අලුත් Group එකක ID එක හොයාගන්න කෑල්ල
+        if (!TARGET_GROUP_IDS.includes(message.from)) {
+            console.log(`\n📌 [NEW GROUP ID] : ${message.from}\n`);
+            return;
+        }
+        
         const groupId = message.from;
         if (!message.author) return;
 
