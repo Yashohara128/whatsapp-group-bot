@@ -84,7 +84,7 @@ client.on("ready", () => {
     console.log("🤖 BOT READY");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
-    console.log("Features Active: Group Join Welcome | Specific FB Group Allowed | Night Mode");
+    console.log("Features Active: Safe Group Join Welcome | Specific FB Group Allowed | Night Mode");
     console.log(`Total Blacklisted Users: ${blacklistedUsers.size}`);
     console.log("========================================\n");
 
@@ -167,11 +167,59 @@ async function directRemoveParticipant(groupId, participantId, reason) {
     } catch (error) { return false; }
 }
 
-// 👋 100% RELIABLE GROUP JOIN WELCOME EVENT
+async function sendWelcomeMessage(userId) {
+    try {
+        const info = await getContactInfo(userId);
+        if (!info) return;
+
+        if (welcomedUsers.has(userId)) return; 
+        
+        welcomedUsers.add(userId);
+        saveWelcomedUsers();
+
+        const welcomeMsg = `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓
+
+👋 Hello / ආයුබෝවන් *${info.name}*,
+
+Please follow these group guidelines to maintain a good learning environment.
+කරුණාකර සමූහයේ යහපැවැත්ම උදෙසා පහත නීති මාලාව පිළිපදින්න.
+
+*GROUP RULES / නීති මාලාව:*
+1️⃣ Be respectful to everyone.
+(සියලුම සාමාජිකයින්ට ගෞරවයෙන් සලකන්න.)
+
+2️⃣ 🚫 No Spamming or flooding messages.
+(අනවශ්‍ය පණිවිඩ යැවීමෙන් වළකින්න.)
+
+3️⃣ 🚫 No unauthorized links (Other WhatsApp groups, Telegram, Scam/Business links). Only educational links and our official Facebook group are allowed.
+(වෙනත් WhatsApp Group, Telegram හෝ ව්‍යාපාරික ලින්ක් දැමීම සපුරා තහනම්. අධ්‍යාපනික ලින්ක් සහ අපගේ නිල Facebook Group එකට පමණක් අවසර ඇත.)
+
+4️⃣ 🌙 Group will be closed for messages from 11:00 PM to 6:00 AM.
+(දිනපතා රාත්‍රී 11:00 සිට උදෑසන 6:00 දක්වා සමූහය වසා තැබේ.)
+
+5️⃣ 🎓 For further questions regarding student loans, please contact the group admins. Please watch the YouTube playlist below for more information.
+(ශිෂ්‍ය ණය පිළිබඳ වැඩිදුර ප්‍රශ්න සඳහා සමූහයේ Admin වරුන් සම්බන්ධ කරගන්න. ණය පිළිබඳ සියලුම තොරතුරු දැනගැනීමට පහත YouTube Playlist එක අනිවාර්යයෙන්ම නරඹන්න.)
+📺 *YouTube Playlist:* https://youtube.com/playlist?list=PL-ZbzAh0pKykpa-odcUrDEg94PBbTQp9M&si=F9L3Spy-pLZJq31n
+
+⚠️ *Note:* Breaking these rules will result in an automatic permanent ban by the system.
+(මෙම නීති කඩකරන අයව පද්ධතිය මගින් ස්වයංක්‍රීයව සමූහයෙන් ඉවත් කරනු ලැබේ.)
+
+Thank you! / ස්තූතියි!
+🤖 _System Generated Message. Please do not reply._`;
+
+        await client.sendMessage(userId, welcomeMsg);
+        console.log(`✅ Welcome message successfully sent to inbox of: ${info.name}`);
+    } catch (e) {
+        console.log("⚠️ Error sending welcome message:", e);
+    }
+}
+
+// 🛡️ SAFE GROUP JOIN EVENT (Fixed ChatId extraction)
 client.on("group_join", async (notification) => {
     try {
-        if (!TARGET_GROUP_IDS.includes(notification.chatId)) return;
-        const groupId = notification.chatId;
+        const groupId = typeof notification.chatId === 'object' ? notification.chatId._serialized : notification.chatId;
+        if (!TARGET_GROUP_IDS.includes(groupId)) return;
+        
         console.log(`👤 Group join event triggered for group: ${groupId}`);
 
         const chat = await client.getChatById(groupId);
@@ -207,39 +255,7 @@ client.on("group_join", async (notification) => {
                 continue;
             }
 
-            // Send Welcome Message to Inbox
-            const welcomeMsg = `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓
-
-👋 Hello / ආයුබෝවන් *${info.name}*,
-
-Please follow these group guidelines to maintain a good learning environment.
-කරුණාකර සමූහයේ යහපැවැත්ම උදෙසා පහත නීති මාලාව පිළිපදින්න.
-
-*GROUP RULES / නීති මාලාව:*
-1️⃣ Be respectful to everyone.
-(සියලුම සාමාජිකයින්ට ගෞරවයෙන් සලකන්න.)
-
-2️⃣ 🚫 No Spamming or flooding messages.
-(අනවශ්‍ය පණිවිඩ යැවීමෙන් වළකින්න.)
-
-3️⃣ 🚫 No unauthorized links (Other WhatsApp groups, Telegram, Scam/Business links). Only educational links and our official Facebook group are allowed.
-(වෙනත් WhatsApp Group, Telegram හෝ ව්‍යාපාරික ලින්ක් දැමීම සපුරා තහනම්. අධ්‍යාපනික ලින්ක් සහ අපගේ නිල Facebook Group එකට පමණක් අවසර ඇත.)
-
-4️⃣ 🌙 Group will be closed for messages from 11:00 PM to 6:00 AM.
-(දිනපතා රාත්‍රී 11:00 සිට උදෑසන 6:00 දක්වා සමූහය වසා තැබේ.)
-
-5️⃣ 🎓 For further questions regarding student loans, please contact the group admins. Please watch the YouTube playlist below for more information.
-(ශිෂ්‍ය ණය පිළිබඳ වැඩිදුර ප්‍රශ්න සඳහා සමූහයේ Admin වරුන් සම්බන්ධ කරගන්න. ණය පිළිබඳ සියලුම තොරතුරු දැනගැනීමට පහත YouTube Playlist එක අනිවාර්යයෙන්ම නරඹන්න.)
-📺 *YouTube Playlist:* https://youtube.com/playlist?list=PL-ZbzAh0pKykpa-odcUrDEg94PBbTQp9M&si=F9L3Spy-pLZJq31n
-
-⚠️ *Note:* Breaking these rules will result in an automatic permanent ban by the system.
-(මෙම නීති කඩකරන අයව පද්ධතිය මගින් ස්වයංක්‍රීයව සමූහයෙන් ඉවත් කරනු ලැබේ.)
-
-Thank you! / ස්තූතියි!
-🤖 _System Generated Message. Please do not reply._`;
-
-            await client.sendMessage(userId, welcomeMsg);
-            console.log(`✅ Welcome message successfully sent to inbox of: ${info.name}`);
+            await sendWelcomeMessage(userId);
         }
     } catch (error) {
         console.log("⚠️ Error in group_join:", error);
@@ -255,6 +271,10 @@ client.on("message", async (message) => {
         
         const groupId = message.from;
         if (!message.author) return;
+
+        if (!welcomedUsers.has(message.author)) {
+            await sendWelcomeMessage(message.author);
+        }
 
         const info = await getContactInfo(message.author);
         if (!info) return;
