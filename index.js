@@ -85,7 +85,7 @@ client.on("ready", () => {
     console.log("🤖 BOT READY");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
-    console.log("Features Active: Advanced Link Filter | Bad Words | Auto-Ban & Admin Bypass | Night Mode");
+    console.log("Features Active: Any YouTube Link Allowed | Welcome for All Joins | Night Mode");
     console.log(`Total Blacklisted Users: ${blacklistedUsers.size}`);
     console.log("========================================\n");
 
@@ -205,6 +205,7 @@ client.on("group_join", async (notification) => {
                 continue;
             }
 
+            // 👋 WELCOME MESSAGE (Sent to all members joining or re-joining)
             const welcomeMsg = `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓
 
 👋 Hello / ආයුබෝවන් *${info.name}*,
@@ -288,7 +289,7 @@ client.on("message", async (message) => {
                 const isTelegramLink = textLower.includes("t.me/") || textLower.includes("telegram.me/");
                 const isWhatsAppGroupLink = isNativeGroupInvite || textLower.includes("chat.whatsapp.com"); 
                 
-                const isAllowedYT = textLower.includes("youtube.com/@yashohara");
+                const isAllowedYT = textLower.includes("youtube.com") || textLower.includes("youtu.be");
                 const isAllowedDrive = textLower.includes("drive.google.com");
                 const isAllowedZoom = textLower.includes("zoom.us");
                 const isAllowedTeams = textLower.includes("teams.microsoft.com");
@@ -298,7 +299,7 @@ client.on("message", async (message) => {
 
                 const isAllowedEducationalLink = isAllowedYT || isAllowedDrive || isAllowedZoom || isAllowedTeams || isAllowedDocs || isAllowedForms || isAllowedClassroom;
                 
-                const scamOrBusinessKeywords = ["earn money", "crypto", "forex", "business", "job opportunity", "free cash", "marketing", "signals", "trading", "invest", "lottery", "win cash", "fast money", "income"];
+                const scamOrBusinessKeywords = ["earn money", "crypto", "forex", "business", "job opportunity", "free cash", "marketing", "signals", "trading", "invest", "lottery", "win cash", "fast money", "income","binance"];
                 const containsScamOrBusiness = scamOrBusinessKeywords.some(keyword => textLower.includes(keyword));
 
                 let shouldBlock = false;
@@ -320,7 +321,7 @@ client.on("message", async (message) => {
                     linkWarningTracker.set(message.author, warnings);
 
                     if (warnings === 1) {
-                        await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} (*${info.name}*)\nමෙම කණ්ඩායම තුළ වෙනත් WhatsApp Group ලින්ක්, ටෙලිග්‍රෑම් ලින්ක් හෝ ව්‍යාපාරික දේවල් Share කිරීම තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🚫`, { mentions: [message.author] });
+                        await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} (*${info.name}*)\nමෙම කණ්ඩායම තුළ වෙනත් WhatsApp Group ලින්ක්, ටෙලිග්‍රෑම් ලින්ක් හෝ ව්‍යාපාරික දේවල් Share කිරීම තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ කරුණාකර message එක group එක තුලින් ඉවත් කරගන්න🤠. 🚫`, { mentions: [message.author] });
                     } else {
                         const removed = await directRemoveParticipant(groupId, message.author, "Unauthorized Links/Group Invites");
                         if (removed) {
