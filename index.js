@@ -31,7 +31,7 @@ const BAD_WORDS = ["hutto", "uba", "thopi", "pakyala","palayan","pnnyo"];
 const spamTracker = new Map();
 const blacklistedUsers = new Set(); 
 const linkWarningTracker = new Map();   // ⚠️ ලින්ක් වෝනිං ට්‍රැක් කරන්න
-const badWordWarningTracker = new Map(); // ⚠️ කුණුහරුප වෝනිං ට්‍රැක් කරන්න අලුත් Map එකක්
+const badWordWarningTracker = new Map(); // ⚠️ කුණුහරුප වෝනිං ට්‍රැක් කරන්න
 
 // ========================================
 // CLIENT
@@ -71,7 +71,7 @@ client.on("ready", () => {
     console.log("🤖 BOT READY");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
-    console.log("Features Active: Anti-Link & Bad Words (2-Chance Warning System) | Night Mode");
+    console.log("Features Active: Smart Link Filter & Bad Words (2-Chance System) | Night Mode");
     console.log("========================================\n");
 
     // ========================================
@@ -223,33 +223,54 @@ client.on("message", async (message) => {
             return;
         }
 
-        // 🔗 ANTI-LINK SYSTEM (2-Chance Warning System)
-        const linkRegex = /(https?:\/\/[^\s]+|www\.[^\s]+|wa\.me\/\d+|chat\.whatsapp\.com\/[A-Za-z0-9]+)/gi;
+        // 🔗 SMART KEYWORD & LINK FILTER SYSTEM (Educational vs Scam/Business)
+        const linkRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
         if (linkRegex.test(message.body)) {
             const chat = await message.getChat();
             const participant = chat.participants.find(p => p.id._serialized === message.author);
             const isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
 
             if (!isAdmin) {
-                try { await message.delete(true); } catch(e) {} 
+                const text = message.body.toLowerCase();
 
-                let warnings = linkWarningTracker.get(message.author) || 0;
-                warnings++;
-                linkWarningTracker.set(message.author, warnings);
+                const isAllowedEducationalLink = text.includes("youtube.com") || 
+                                                 text.includes("youtu.be") || 
+                                                 text.includes("drive.google.com") || 
+                                                 text.includes("zoom.us") || 
+                                                 text.includes("teams.microsoft.com") || 
+                                                 text.includes("docs.google.com") ||
+                                                 text.includes("forms.gle") || 
+                                                 text.includes("classroom.google.com");
 
-                if (warnings === 1) {
-                    await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} මේ ගෲප් එකට ලින්ක් දැමීම සිදු කල හැකි වන්නෙ admin team එක හරහා පමණි ඔයාගෙ link එක admin කෙනෙකු හරහා යොමු කරන්නකො🥰 ! නැවත ලින්ක් දැමුවහොත් ගෲප් එකෙන් remove වෙන්න පුලුවන්. 🚫`, { mentions: [message.author] });
-                } else {
-                    const removed = await directRemoveParticipant(groupId, message.author, "Sending Links (2nd warning reached)");
-                    if (removed) {
-                        blacklistedUsers.add(message.author);
-                        if (ENABLE_AUTO_REMOVE) {
-                            await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} අවවාද නොතකා නැවත ලින්ක් දැමූ නිසා ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [message.author] });
+                const scamOrBusinessKeywords = [
+                    "earn money", "crypto", "forex", "business", "job opportunity", 
+                    "free cash", "marketing", "signals", "trading", "invest", 
+                    "lottery", "win cash", "fast money", "income", "whatsapp.com/chat"
+                ];
+
+                const containsScamOrBusiness = scamOrBusinessKeywords.some(keyword => text.includes(keyword));
+
+                if (!isAllowedEducationalLink || containsScamOrBusiness) {
+                    try { await message.delete(true); } catch(e) {} 
+
+                    let warnings = linkWarningTracker.get(message.author) || 0;
+                    warnings++;
+                    linkWarningTracker.set(message.author, warnings);
+
+                    if (warnings === 1) {
+                        await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} මෙම කණ්ඩායම තුළ ව්‍යාපාරික හෝ අනවශ්‍ය (Business/Scam) ලින්ක් Share කිරීම තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. අධ්‍යාපනික ලින්ක් (YouTube, Zoom, Drive ආදිය) පමණක් අවසර ඇත. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🚫`, { mentions: [message.author] });
+                    } else {
+                        const removed = await directRemoveParticipant(groupId, message.author, "Sending Scam/Business Links (2nd warning reached)");
+                        if (removed) {
+                            blacklistedUsers.add(message.author);
+                            if (ENABLE_AUTO_REMOVE) {
+                                await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} අවවාද නොතකා නැවත තහනම් ලින්ක් දැමූ නිසා ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [message.author] });
+                            }
                         }
                     }
+                    return;
                 }
             }
-            return;
         }
 
         // 🤬 BAD WORDS FILTER (2-Chance Warning System)
