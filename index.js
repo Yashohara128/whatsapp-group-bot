@@ -228,14 +228,10 @@ Thank you! / ස්තූතියි!
     } catch (e) {}
 }
 
-// 🚀 1. ස්ථිරම ක්‍රමය: Puppeteer හරහා WhatsApp Web එකේ Join වෙන කෙනාව කෙළින්ම අල්ලා ගැනීම
 client.on("ready", async () => {
     try {
         await client.pupPage.exposeFunction("onParticipantJoined", async (groupId, userId) => {
             if (!TARGET_GROUP_IDS.includes(groupId)) return;
-            
-            const chat = await client.getChatById(groupId);
-            const participant = chat.participants.find(p => p.id._serialized === userId);
             
             const info = await getContactInfo(userId);
             if (!info) return;
@@ -251,7 +247,6 @@ client.on("ready", async () => {
                 return;
             }
 
-            // ජොයින් වූ වහාම වෙල්කම් යැවීම
             await sendWelcomeMessage(userId);
         });
 
@@ -268,7 +263,6 @@ client.on("ready", async () => {
     } catch (err) {}
 });
 
-// 🚀 2. සාමාන්‍ය group_join ඉවෙන්ට් එක
 client.on("group_join", async (notification) => {
     try {
         if (!TARGET_GROUP_IDS.includes(notification.chatId)) return;
@@ -320,7 +314,6 @@ client.on("message", async (message) => {
         const groupId = message.from;
         if (!message.author) return;
 
-        // ආරක්ෂාවට: කෙනෙක් මැසේජ් එකක් දාද්දිත් වෙල්කම් ගිහින් නැත්නම් යවනවා
         if (!welcomedUsers.has(message.author)) {
             await sendWelcomeMessage(message.author);
         }
@@ -364,7 +357,6 @@ client.on("message", async (message) => {
                 const isAllowedForms = textLower.includes("forms.gle");
                 const isAllowedClassroom = textLower.includes("classroom.google.com");
 
-                // නිශ්චිත FB ගෲප් ලින්ක් එක (1CuM3LCFaa) පමණක් Allow කිරීම
                 const isAllowedSpecificFBGroup = textLower.includes("1cum3lcfaa"); 
                 const isGeneralFBLink = textLower.includes("facebook.com") || textLower.includes("fb.watch") || textLower.includes("fb.me");
                 
@@ -449,7 +441,7 @@ async function checkSpam(message, senderId, name, groupId) {
     const now = Date.now();
     if (!spamTracker.has(senderId)) spamTracker.set(senderId, []);
     let timestamps = spamTracker.get(senderId);
-    timestamps = timestamps.filter(timestamp => now - timestamp < SP_AM_WINDOW_MS);
+    timestamps = timestamps.filter(timestamp => now - timestamp < SPAM_WINDOW_MS);
     timestamps.push(now);
     spamTracker.set(senderId, timestamps);
 
