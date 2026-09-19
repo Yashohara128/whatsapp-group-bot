@@ -62,7 +62,7 @@ client.on("authenticated", () => {
 
 client.on("ready", () => {
     console.log("\n========================================");
-    console.log("🤖 BOT READY - COMPLETE & STABLE");
+    console.log("🤖 BOT READY - STABLE BLACKLIST & ADMIN BYPASS");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
 
