@@ -13,8 +13,8 @@ const CHROME_PATH = "/usr/bin/chromium-browser";
 
 const ENABLE_AUTO_REMOVE = true;
 const SPAM_WINDOW_MS = 10 * 1000;
-const SPAM_LIMIT = 3;
-const BAD_WORDS = ["hutto", "uba", "thopi", "pakyala","palayan","pnnyo"]; 
+const SPAM_LIMIT = 2;
+const BAD_WORDS = ["hutto", "uba", "ubala", "thopi", "pakyala","palayan","pnnyo","tho","huththo"]; 
 
 const spamTracker = new Map();
 const linkWarningTracker = new Map();   
