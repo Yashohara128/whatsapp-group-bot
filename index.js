@@ -63,7 +63,7 @@ client.on("authenticated", () => {
 
 client.on("ready", () => {
     console.log("\n========================================");
-    console.log("🤖 BOT READY - STRICT ADMIN BYPASS ACTIVE");
+    console.log("🤖 BOT READY - BULLETPROOF JOIN LOGIC");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
 
@@ -148,7 +148,6 @@ async function directRemoveParticipant(groupId, participantId) {
     } catch (error) { return false; }
 }
 
-// 🎯 GROUP JOIN & ADMIN BYPASS LOGIC
 client.on("group_join", async (notification) => {
     try {
         const groupId = typeof notification.chatId === 'object' ? notification.chatId._serialized : String(notification.chatId);
@@ -157,13 +156,19 @@ client.on("group_join", async (notification) => {
         console.log(`\n📥 [GROUP JOIN DETECTED]`);
         console.log(`📍 Group: ${groupId}`);
 
-        const chat = await client.getChatById(groupId);
         let addedByAdmin = false;
-        if (notification.author) {
-            const authorParticipant = chat.participants.find(p => p.id._serialized === notification.author);
-            if (authorParticipant && (authorParticipant.isAdmin || authorParticipant.isSuperAdmin)) {
-                addedByAdmin = true;
+        
+        // 🛡️ පූර්ණ ආරක්ෂිත Try-Catch (ක්‍රෑෂ් වීම සම්පූර්ණයෙන්ම වළක්වයි)
+        try {
+            const chat = await client.getChatById(groupId);
+            if (notification.author && chat && chat.participants) {
+                const authorParticipant = chat.participants.find(p => p.id._serialized === notification.author);
+                if (authorParticipant && (authorParticipant.isAdmin || authorParticipant.isSuperAdmin)) {
+                    addedByAdmin = true;
+                }
             }
+        } catch (syncError) {
+            // සින්ක් වෙලා නැති වුණත් කෝඩ් එක දිගටම යනවා, ක්‍රෑෂ් වෙන්නේ නෑ
         }
 
         const users = notification.recipientIds || [];
@@ -173,12 +178,11 @@ client.on("group_join", async (notification) => {
             
             console.log(`👤 New Member: ${info.name} (${info.actualNumber})`);
 
-            // 🚫 බ්ලැක්ලිස්ට් චෙක් කිරීම සහ Admin Bypass
             if (blacklistedUsers.has(userId)) {
                 if (addedByAdmin) {
                     blacklistedUsers.delete(userId);
                     saveBlacklist();
-                    console.log(`✅ [UNBAN] Admin manually added ${info.name}. Welcome allowed!`);
+                    console.log(`✅ [UNBAN] Admin manually added ${info.name}.`);
                 } else {
                     await client.sendMessage(groupId, `🚫 @${userId.split('@')[0]} (*${info.name}*), ඔබට මෙම සමූහයට නැවත සම්බන්ධ වීමට අවසර නැත (ඔබව Banned කර ඇත).`, { mentions: [userId] });
                     await directRemoveParticipant(groupId, userId);
