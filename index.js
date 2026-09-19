@@ -230,29 +230,32 @@ Thank you! / ස්තූතියි!
     }
 });
 
-client.on("message", async (message) => {
+// 🟢 වෙනස් කළේ මෙතැන: "message_create" දැම්ම නිසා ඔයාගේ ෆෝන් එකේ මැසේජ් පවා කියවනවා
+client.on("message_create", async (message) => {
     try {
         if (!message.from || !message.from.endsWith("@g.us")) return;
-        if (message.fromMe) return; 
-        
         if (!TARGET_GROUP_IDS.includes(message.from)) return;
         
         const groupId = message.from;
-        if (!message.author) return;
+        const textLower = (message.body || "").toLowerCase();
 
-        // 🛠️ ADMIN UNBAN COMMAND
-        if (message.body.startsWith(".unban")) {
-            let isAdmin = false;
-            try {
-                const chat = await message.getChat();
-                if (chat && chat.participants) {
-                    const participant = chat.participants.find(p => p.id._serialized === message.author);
-                    isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
-                }
-            } catch (err) {}
+        // 🛠️ ADMIN UNBAN COMMAND (ඔයාගේ ෆෝන් එකෙන් ගැහුවත් වැඩ)
+        if (textLower.startsWith(".unban")) {
+            let isAdmin = message.fromMe; // ඔයාම යවනවා නම් කෙළින්ම Admin
+            
+            if (!isAdmin && message.author) {
+                try {
+                    const chat = await message.getChat();
+                    if (chat && chat.participants) {
+                        const participant = chat.participants.find(p => p.id._serialized === message.author);
+                        isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
+                    }
+                } catch (err) {}
+            }
 
             if (isAdmin) {
-                let number = message.body.replace(".unban", "").replace(/[^0-9]/g, "");
+                // ඉලක්කම් ටික විතරක් වෙන් කරගන්නවා (උදා: .unban +94 77 123 4567 -> 94771234567)
+                let number = message.body.replace(/\D/g, ""); 
                 if (number) {
                     const unbanId = `${number}@c.us`;
                     if (blacklistedUsers.has(unbanId)) {
@@ -267,6 +270,10 @@ client.on("message", async (message) => {
             }
         }
 
+        // 🛑 මින් පහළට තියෙන Anti-Spam / Anti-Link නීති ඔයාගේ මැසේජ් වලට අදාළ නෑ
+        if (message.fromMe) return; 
+        if (!message.author) return;
+
         const info = await getContactInfo(message.author);
         if (!info) return;
 
@@ -277,10 +284,8 @@ client.on("message", async (message) => {
         console.log(`💬 Message  : ${message.body || "[Media / Sticker / Invite]"}`);
         console.log("----------------------------------------");
 
-        const textLower = (message.body || "").toLowerCase();
-
         if (info.actualNumber && !isSriLankan(info.actualNumber)) {
-            const removed = await directRemoveParticipant(groupId, message.author, "Non-Sri-Lankan number");
+            const removed = await directRemoveParticipant(groupId, message.author);
             if (removed) {
                 await client.sendMessage(groupId, `🌍 @${message.author.split('@')[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group.`, { mentions: [message.author] });
             }
@@ -333,7 +338,7 @@ client.on("message", async (message) => {
                     if (warnings === 1) {
                         await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} (*${info.name}*)\nමෙම කණ්ඩායම තුළ වෙනත් WhatsApp Group ලින්ක්, ටෙලිග්‍රෑම් ලින්ක් හෝ ව්‍යාපාරික දේවල් Share කිරීම තහනම්! ඔයාට group link share කරගන්න අවශ්‍යනම් group admin කෙනෙක් හරහා යොමු කරන්න🤠 මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ කරුණාකර link එක group එකෙන් ඉවත් කරගන්න.. 🚫`, { mentions: [message.author] });
                     } else {
-                        const removed = await directRemoveParticipant(groupId, message.author, "Unauthorized Links/Group Invites");
+                        const removed = await directRemoveParticipant(groupId, message.author);
                         if (removed) {
                             blacklistedUsers.add(message.author);
                             saveBlacklist(); 
@@ -367,7 +372,7 @@ client.on("message", async (message) => {
                 if (warnings === 1) {
                     await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} (*${info.name}*)\nමෙම කණ්ඩායම තුළ අපහාසාත්මක හෝ තහනම් වචන භාවිතය තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත එවැනි වචන භාවිත කළහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🤬`, { mentions: [message.author] });
                 } else {
-                    const removed = await directRemoveParticipant(groupId, message.author, "Bad Words");
+                    const removed = await directRemoveParticipant(groupId, message.author);
                     if (removed) {
                         blacklistedUsers.add(message.author);
                         saveBlacklist(); 
@@ -395,7 +400,7 @@ async function checkSpam(message, senderId, name, groupId) {
 
     if (timestamps.length >= SPAM_LIMIT) {
         spamTracker.set(senderId, []);
-        const removed = await directRemoveParticipant(groupId, senderId, "Spam");
+        const removed = await directRemoveParticipant(groupId, senderId);
         if (removed) {
             blacklistedUsers.add(senderId);
             saveBlacklist(); 
