@@ -3,10 +3,6 @@ const qrcode = require("qrcode-terminal");
 const cron = require("node-cron"); 
 const fs = require("fs"); 
 
-// ========================================
-// CONFIGURATION 
-// ========================================
-
 const TARGET_GROUP_IDS = [
     "120363427144307038@g.us",
     "120363428845309010@g.us",
@@ -15,18 +11,10 @@ const TARGET_GROUP_IDS = [
 
 const CHROME_PATH = "/usr/bin/chromium-browser";
 
-// ========================================
-// SETTINGS
-// ========================================
-
 const ENABLE_AUTO_REMOVE = true;
 const SPAM_WINDOW_MS = 10 * 1000;
 const SPAM_LIMIT = 3;
 const BAD_WORDS = ["hutto", "uba", "thopi", "pakyala","palayan","pnnyo"]; 
-
-// ========================================
-// DATA & BLACKLIST SYSTEM 
-// ========================================
 
 const spamTracker = new Map();
 const linkWarningTracker = new Map();   
@@ -61,10 +49,6 @@ function saveWelcomedUsers() {
         fs.writeFileSync(WELCOMED_FILE, JSON.stringify([...welcomedUsers]));
     } catch(e) {}
 }
-
-// ========================================
-// CLIENT
-// ========================================
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -224,7 +208,6 @@ Thank you! / ස්තූතියි!
 🤖 _System Generated Message. Please do not reply._`;
 
         await client.sendMessage(userId, welcomeMsg);
-        console.log(`✅ Welcome message sent to inbox of: ${info.name}`);
     } catch (e) {}
 }
 
