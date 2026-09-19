@@ -13,8 +13,8 @@ const CHROME_PATH = "/usr/bin/chromium-browser";
 
 const ENABLE_AUTO_REMOVE = true;
 const SPAM_WINDOW_MS = 10 * 1000;
-const SPAM_LIMIT = 2;
-const BAD_WORDS = ["hutto", "uba", "ubala", "thopi", "pakyala","palayan","pnnyo","tho","huththo"]; 
+const SPAM_LIMIT = 3;
+const BAD_WORDS = ["hutto", "uba", "thopi", "pakyala","palayan","pnnyo"]; 
 
 const spamTracker = new Map();
 const linkWarningTracker = new Map();   
@@ -153,6 +153,9 @@ client.on("group_join", async (notification) => {
         const groupId = typeof notification.chatId === 'object' ? notification.chatId._serialized : String(notification.chatId);
         if (!TARGET_GROUP_IDS.includes(groupId)) return;
 
+        console.log(`\n📥 [GROUP JOIN DETECTED]`);
+        console.log(`📍 Group: ${groupId}`);
+
         const chat = await client.getChatById(groupId);
         let addedByAdmin = false;
         if (notification.author) {
@@ -167,12 +170,14 @@ client.on("group_join", async (notification) => {
             const info = await getContactInfo(userId);
             if (!info) continue; 
             
+            console.log(`👤 New Member: ${info.name} (${info.actualNumber})`);
+
             if (blacklistedUsers.has(userId)) {
                 if (addedByAdmin) {
                     blacklistedUsers.delete(userId);
                     saveBlacklist();
                 } else {
-                    await client.sendMessage(groupId, `🚫 @${userId.split('@')[0]} (*${info.name}*), ඔබට මෙම සමූහයට නැවත සම්බන්ධ වීමට අවසර නැත කරුණාකර Admin කෙනෙකු හා සම්බන්ධ වන්න (ඔබව Banned කර ඇත).`, { mentions: [userId] });
+                    await client.sendMessage(groupId, `🚫 @${userId.split('@')[0]} (*${info.name}*), ඔබට මෙම සමූහයට නැවත සම්බන්ධ වීමට අවසර නැත (ඔබව Banned කර ඇත).`, { mentions: [userId] });
                     await directRemoveParticipant(groupId, userId, "Blacklisted");
                     continue; 
                 }
@@ -184,7 +189,6 @@ client.on("group_join", async (notification) => {
                 continue;
             }
 
-            // කිසිම Check එකක් නැහැ, ජොයින් වුණොත් කෙළින්ම මැසේජ් එක යනවා!
             const welcomeMsg = `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓
 
 👋 Hello / ආයුබෝවන් *${info.name}*,
@@ -216,7 +220,7 @@ Thank you! / ස්තූතියි!
 🤖 _System Generated Message. Please do not reply._`;
 
             await client.sendMessage(userId, welcomeMsg);
-            console.log(`✅ Welcome sent to: ${info.name}`);
+            console.log(`✅ Welcome successfully sent to: ${info.name}`);
         }
     } catch (error) {}
 });
@@ -233,6 +237,15 @@ client.on("message", async (message) => {
 
         const info = await getContactInfo(message.author);
         if (!info) return;
+
+        // 🟢 අර ලස්සන Console Log එක ආපහු දැම්මා!
+        console.log("\n----------------------------------------");
+        console.log(`📩 Group ID : ${groupId}`);
+        console.log(`👤 Name     : ${info.name}`);
+        console.log(`💬 Type     : ${message.type}`);
+        console.log(`💬 Message  : ${message.body || "[Media / Sticker / Invite]"}`);
+        console.log("----------------------------------------");
+
         const textLower = (message.body || "").toLowerCase();
 
         if (info.actualNumber && !isSriLankan(info.actualNumber)) {
@@ -294,7 +307,7 @@ client.on("message", async (message) => {
                             blacklistedUsers.add(message.author);
                             saveBlacklist(); 
                             if (ENABLE_AUTO_REMOVE) {
-                                await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} (*${info.name}*) අවවාද නොතකා නැවත ලින්ක් දැමූ නිසා ගෲප් එකෙන් ස්ථිරවම ඉවත් කරන ලදී නැවත සම්බන්ධ වීමට අවශ්‍යනම් කරුණාකර Admin කෙනෙකු හා සම්බන්ධ වන්න.`, { mentions: [message.author] });
+                                await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} (*${info.name}*) අවවාද නොතකා නැවත තහනම් ලින්ක් දැමූ නිසා ගෲප් එකෙන් ස්ථිරවම ඉවත් කරන ලදී.`, { mentions: [message.author] });
                             }
                         }
                     }
