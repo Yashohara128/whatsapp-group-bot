@@ -35,12 +35,14 @@ const badWordWarningTracker = new Map();
 const BLACKLIST_FILE = "./blacklist.json";
 let blacklistedUsers = new Set();
 
+// 📂 සර්වර් එක ඔන් වෙද්දි පරණ Blacklist එක ලෝඩ් කරනවා
 if (fs.existsSync(BLACKLIST_FILE)) {
     try {
         blacklistedUsers = new Set(JSON.parse(fs.readFileSync(BLACKLIST_FILE, "utf-8")));
     } catch(e) { console.log("⚠️ Error loading blacklist", e); }
 }
 
+// 📂 අලුතින් බෑන් වෙන අයව ෆයිල් එකේ සේව් කරන ෆන්ක්ෂන් එක
 function saveBlacklist() {
     try {
         fs.writeFileSync(BLACKLIST_FILE, JSON.stringify([...blacklistedUsers]));
@@ -85,10 +87,11 @@ client.on("ready", () => {
     console.log("🤖 BOT READY");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
-    console.log("Features Active: Link Filter | Bad Words | Auto-Ban & Admin Bypass | Night Mode");
+    console.log("Features Active: Advanced Link Filter | Bad Words | Auto-Ban & Admin Bypass | Night Mode");
     console.log(`Total Blacklisted Users: ${blacklistedUsers.size}`);
     console.log("========================================\n");
 
+    // 🌙 AUTO NIGHT MODE (රෑ 11:00 ට)
     cron.schedule("0 23 * * *", async () => {
         for (const groupId of TARGET_GROUP_IDS) {
             try {
@@ -99,6 +102,7 @@ client.on("ready", () => {
         }
     }, { scheduled: true, timezone: "Asia/Colombo" });
 
+    // ☀️ AUTO MORNING MODE (උදේ 6:00 ට)
     cron.schedule("0 6 * * *", async () => {
         for (const groupId of TARGET_GROUP_IDS) {
             try {
@@ -205,7 +209,37 @@ client.on("group_join", async (notification) => {
                 continue;
             }
 
-            const welcomeMsg = `📜 *GROUP GUIDELINES*\n\n👋 Welcome to the IFSLS 11th INTAKE MAIN GROUP\n\nHi @${userId.split('@')[0]} (*${info.name}*)\n\nPlease follow these new admin rules:\n\n1️⃣ Respect all group members.\n2️⃣ 🚫 No spam or message flooding.\n3️⃣ 🚫 No scams, fraud or suspicious links.\n4️⃣ 🚫 No illegal or harmful content.\n5️⃣ Only Sri Lankan numbers are allowed.\n6️⃣ 🤝 Keep conversations respectful.\n7️⃣ 🛡️ Follow admin instructions.\n\n⚠️ Breaking these rules may result in automatic removal or ban from the group.\n\nThank you for being a responsible member.Bot generated message.don't reply!`;
+            // 👋 BILINGUAL WELCOME MESSAGE (Inbox Version with Loan Info)
+            const welcomeMsg = `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓
+
+👋 Hello / ආයුබෝවන් *${info.name}*,
+
+Please follow these group guidelines to maintain a good learning environment.
+කරුණාකර සමූහයේ යහපැවැත්ම උදෙසා පහත නීති මාලාව පිළිපදින්න.
+
+*GROUP RULES / නීති මාලාව:*
+1️⃣ Be respectful to everyone.
+(සියලුම සාමාජිකයින්ට ගෞරවයෙන් සලකන්න.)
+
+2️⃣ 🚫 No Spamming or flooding messages.
+(අනවශ්‍ය පණිවිඩ යැවීමෙන් වළකින්න.)
+
+3️⃣ 🚫 No unauthorized links (Other WhatsApp groups, Telegram, Scam/Business links). Only educational links are allowed.
+(වෙනත් WhatsApp Group, Telegram හෝ ව්‍යාපාරික ලින්ක් දැමීම සපුරා තහනම්. අධ්‍යාපනික ලින්ක් සඳහා පමණක් අවසර ඇත.)
+
+4️⃣ 🌙 Group will be closed for messages from 11:00 PM to 6:00 AM.
+(දිනපතා රාත්‍රී 11:00 සිට උදෑසන 6:00 දක්වා සමූහය වසා තැබේ.)
+
+5️⃣ 🎓 For further questions regarding student loans, please contact the group admins. Please watch the YouTube playlist below for more information.
+(ශිෂ්‍ය ණය පිළිබඳ වැඩිදුර ප්‍රශ්න සඳහා සමූහයේ Admin වරුන් සම්බන්ධ කරගන්න. ණය පිළිබඳ සියලුම තොරතුරු දැනගැනීමට පහත YouTube Playlist එක අනිවාර්යයෙන්ම නරඹන්න.)
+📺 *YouTube Playlist:* https://youtube.com/playlist?list=PL-ZbzAh0pKykpa-odcUrDEg94PBbTQp9M&si=F9L3Spy-pLZJq31n
+
+⚠️ *Note:* Breaking these rules will result in an automatic permanent ban by the system.
+(මෙම නීති කඩකරන අයව පද්ධතිය මගින් ස්වයංක්‍රීයව සමූහයෙන් ඉවත් කරනු ලැබේ.)
+
+Thank you! / ස්තූතියි!
+🤖 _System Generated Message. Please do not reply._`;
+
             await client.sendMessage(userId, welcomeMsg);
         }
     } catch (error) {}
@@ -228,8 +262,8 @@ client.on("message", async (message) => {
         console.log("\n----------------------------------------");
         console.log(`📩 Group ID : ${groupId}`);
         console.log(`👤 Name     : ${info.name}`);
-        console.log(`📞 Number   : +${info.actualNumber}`);
-        console.log(`💬 Message  : ${message.body || "[Media / Sticker]"}`);
+        console.log(`💬 Type     : ${message.type}`);
+        console.log(`💬 Message  : ${message.body || "[Media / Sticker / Invite]"}`);
         console.log("----------------------------------------");
 
         if (info.actualNumber && !isSriLankan(info.actualNumber)) {
@@ -240,7 +274,9 @@ client.on("message", async (message) => {
             return;
         }
 
-        const hasLinkIndicator = textLower.includes("http://") || textLower.includes("https://") || textLower.includes("www.") || textLower.includes(".com") || textLower.includes(".net") || textLower.includes(".org") || textLower.includes(".me") || textLower.includes(".co") || textLower.includes("t.me");
+        // 🔗 1. Native WhatsApp Group Invites සහ සාමාන්‍ය ලින්ක් අල්ලන අලුත් ක්‍රමය
+        const isNativeGroupInvite = message.type === 'group_invite';
+        const hasLinkIndicator = isNativeGroupInvite || textLower.includes("http://") || textLower.includes("https://") || textLower.includes("www.") || textLower.includes(".com") || textLower.includes(".net") || textLower.includes(".org") || textLower.includes(".me") || textLower.includes(".co") || textLower.includes("t.me") || textLower.includes("chat.whatsapp.com");
 
         if (hasLinkIndicator) {
             let isAdmin = false;
@@ -254,16 +290,29 @@ client.on("message", async (message) => {
                 isAdmin = false;
             }
 
+            // සාමාන්‍ය සාමාජිකයෙක් (Admin නොවන) නම් පමණක් බ්ලොක් කිරීම් ක්‍රියාත්මක වේ
             if (!isAdmin) {
                 const isTelegramLink = textLower.includes("t.me/") || textLower.includes("telegram.me/");
-                const isAllowedEducationalLink = textLower.includes("youtube.com") || textLower.includes("youtu.be") || textLower.includes("drive.google.com") || textLower.includes("zoom.us") || textLower.includes("teams.microsoft.com") || textLower.includes("docs.google.com") || textLower.includes("forms.gle") || textLower.includes("classroom.google.com");
-                const scamOrBusinessKeywords = ["earn money", "crypto", "forex", "business", "job opportunity", "free cash", "marketing", "signals", "trading", "invest", "lottery", "win cash", "fast money", "income", "whatsapp.com/chat"];
+                const isWhatsAppGroupLink = isNativeGroupInvite || textLower.includes("chat.whatsapp.com"); 
+                
+                // ඔයාගේ YouTube චැනල් එක පමණක් Allow කිරීම 
+                // ⚠️ (ඔයාගේ චැනල් එකේ නම "@yashohara" නෙවෙයි නම් මේක වෙනස් කරන්න)
+                const isAllowedEducationalLink = textLower.includes("youtube.com) || 
+                                                 textLower.includes("drive.google.com") || 
+                                                 textLower.includes("zoom.us") || 
+                                                 textLower.includes("teams.microsoft.com") || 
+                                                 textLower.includes("docs.google.com") || 
+                                                 textLower.includes("forms.gle") || 
+                                                 textLower.includes("classroom.google.com");
+                
+                const scamOrBusinessKeywords = ["earn money", "crypto", "forex", "business", "job opportunity", "free cash", "marketing", "signals", "trading", "invest", "lottery", "win cash", "fast money", "income","binance"];
                 const containsScamOrBusiness = scamOrBusinessKeywords.some(keyword => textLower.includes(keyword));
 
                 let shouldBlock = false;
                 if (isTelegramLink) shouldBlock = true; 
                 else if (containsScamOrBusiness) shouldBlock = true; 
-                else if (!isAllowedEducationalLink && !textLower.includes("chat.whatsapp.com")) shouldBlock = true; 
+                else if (isWhatsAppGroupLink) shouldBlock = true; // ළමයින්ට වෙනත් WhatsApp ගෲප් වල ලින්ක්/කාඩ් දැමීම තහනම්!
+                else if (!isAllowedEducationalLink) shouldBlock = true; 
 
                 if (shouldBlock) {
                     try { 
@@ -278,9 +327,9 @@ client.on("message", async (message) => {
                     linkWarningTracker.set(message.author, warnings);
 
                     if (warnings === 1) {
-                        await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} (*${info.name}*)\nමෙම කණ්ඩායම තුළ අවසර නොලත් ලින්ක් හෝ ව්‍යාපාරික/ටෙලිග්‍රෑම් ලින්ක් Share කිරීම තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. අධ්‍යාපනික ලින්ක් සහ අධ්‍යාපනික වට්ස්ඇප් ගෲප් ලින්ක් පමණක් අවසර ඇත. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🚫`, { mentions: [message.author] });
+                        await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} (*${info.name}*)\nමෙම කණ්ඩායම තුළ වෙනත් WhatsApp Group ලින්ක්, ටෙලිග්‍රෑම් ලින්ක් හෝ ව්‍යාපාරික දේවල් Share කිරීම තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🚫`, { mentions: [message.author] });
                     } else {
-                        const removed = await directRemoveParticipant(groupId, message.author, "Unauthorized Links");
+                        const removed = await directRemoveParticipant(groupId, message.author, "Unauthorized Links/Group Invites");
                         if (removed) {
                             blacklistedUsers.add(message.author);
                             saveBlacklist(); 
@@ -294,6 +343,7 @@ client.on("message", async (message) => {
             }
         }
 
+        // 🤬 BAD WORDS FILTER 
         const containsBadWord = BAD_WORDS.some(word => textLower.includes(word.toLowerCase()));
         if (containsBadWord) {
             let isAdmin = false;
