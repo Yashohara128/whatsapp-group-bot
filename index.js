@@ -84,7 +84,7 @@ client.on("ready", () => {
     console.log("🤖 BOT READY");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
-    console.log("Features Active: Instant Join Welcome | Specific FB Group Allowed | Night Mode");
+    console.log("Features Active: Group Join Welcome | Specific FB Group Allowed | Night Mode");
     console.log(`Total Blacklisted Users: ${blacklistedUsers.size}`);
     console.log("========================================\n");
 
@@ -167,17 +167,48 @@ async function directRemoveParticipant(groupId, participantId, reason) {
     } catch (error) { return false; }
 }
 
-async function sendWelcomeMessage(userId) {
+// 👋 100% RELIABLE GROUP JOIN WELCOME EVENT
+client.on("group_join", async (notification) => {
     try {
-        const info = await getContactInfo(userId);
-        if (!info) return;
+        if (!TARGET_GROUP_IDS.includes(notification.chatId)) return;
+        const groupId = notification.chatId;
+        console.log(`👤 Group join event triggered for group: ${groupId}`);
 
-        if (welcomedUsers.has(userId)) return; 
-        
-        welcomedUsers.add(userId);
-        saveWelcomedUsers();
+        const chat = await client.getChatById(groupId);
+        let addedByAdmin = false;
+        if (notification.author) {
+            const authorParticipant = chat.participants.find(p => p.id._serialized === notification.author);
+            if (authorParticipant && (authorParticipant.isAdmin || authorParticipant.isSuperAdmin)) {
+                addedByAdmin = true;
+            }
+        }
 
-        const welcomeMsg = `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓
+        const users = notification.recipientIds || [];
+        for (const userId of users) {
+            const info = await getContactInfo(userId);
+            if (!info) continue;
+            
+            console.log(`✨ New user detected: ${info.name} (${info.actualNumber})`);
+
+            if (blacklistedUsers.has(userId)) {
+                if (addedByAdmin) {
+                    blacklistedUsers.delete(userId);
+                    saveBlacklist();
+                } else {
+                    await client.sendMessage(groupId, `🚫 @${userId.split('@')[0]} (*${info.name}*), ඔබට මෙම සමූහයට නැවත සම්බන්ධ වීමට අවසර නැත (ඔබව Banned කර ඇත).`, { mentions: [userId] });
+                    await directRemoveParticipant(groupId, userId, "Blacklisted");
+                    continue; 
+                }
+            }
+
+            if (!isSriLankan(info.actualNumber)) {
+                await client.sendMessage(groupId, `🌍 @${userId.split('@')[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group. You will be removed.`, { mentions: [userId] });
+                await directRemoveParticipant(groupId, userId, "Non-Sri-Lankan number");
+                continue;
+            }
+
+            // Send Welcome Message to Inbox
+            const welcomeMsg = `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓
 
 👋 Hello / ආයුබෝවන් *${info.name}*,
 
@@ -207,84 +238,12 @@ Please follow these group guidelines to maintain a good learning environment.
 Thank you! / ස්තූතියි!
 🤖 _System Generated Message. Please do not reply._`;
 
-        await client.sendMessage(userId, welcomeMsg);
-    } catch (e) {}
-}
-
-client.on("ready", async () => {
-    try {
-        await client.pupPage.exposeFunction("onParticipantJoined", async (groupId, userId) => {
-            if (!TARGET_GROUP_IDS.includes(groupId)) return;
-            
-            const info = await getContactInfo(userId);
-            if (!info) return;
-
-            if (blacklistedUsers.has(userId)) {
-                await directRemoveParticipant(groupId, userId, "Blacklisted");
-                return;
-            }
-
-            if (!isSriLankan(info.actualNumber)) {
-                await client.sendMessage(groupId, `🌍 @${userId.split('@')[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group.`, { mentions: [userId] });
-                await directRemoveParticipant(groupId, userId, "Non-Sri-Lankan number");
-                return;
-            }
-
-            await sendWelcomeMessage(userId);
-        });
-
-        await client.pupPage.evaluate(() => {
-            window.WWebJS.onParticipantsChanged = async (event) => {
-                if (event && event.action === 'add') {
-                    const groupId = event.chatId._serialized;
-                    for (const wid of event.who) {
-                        window.onParticipantJoined(groupId, wid._serialized);
-                    }
-                }
-            };
-        });
-    } catch (err) {}
-});
-
-client.on("group_join", async (notification) => {
-    try {
-        if (!TARGET_GROUP_IDS.includes(notification.chatId)) return;
-        const groupId = notification.chatId;
-
-        const chat = await client.getChatById(groupId);
-        let addedByAdmin = false;
-        if (notification.author) {
-            const authorParticipant = chat.participants.find(p => p.id._serialized === notification.author);
-            if (authorParticipant && (authorParticipant.isAdmin || authorParticipant.isSuperAdmin)) {
-                addedByAdmin = true;
-            }
+            await client.sendMessage(userId, welcomeMsg);
+            console.log(`✅ Welcome message successfully sent to inbox of: ${info.name}`);
         }
-
-        const users = notification.recipientIds || [];
-        for (const userId of users) {
-            const info = await getContactInfo(userId);
-            if (!info) continue;
-            
-            if (blacklistedUsers.has(userId)) {
-                if (addedByAdmin) {
-                    blacklistedUsers.delete(userId);
-                    saveBlacklist();
-                } else {
-                    await client.sendMessage(groupId, `🚫 @${userId.split('@')[0]} (*${info.name}*), ඔබට මෙම සමූහයට නැවත සම්බන්ධ වීමට අවසර නැත (ඔබව Banned කර ඇත).`, { mentions: [userId] });
-                    await directRemoveParticipant(groupId, userId, "Blacklisted");
-                    continue; 
-                }
-            }
-
-            if (!isSriLankan(info.actualNumber)) {
-                await client.sendMessage(groupId, `🌍 @${userId.split('@')[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group. You will be removed.`, { mentions: [userId] });
-                await directRemoveParticipant(groupId, userId, "Non-Sri-Lankan number");
-                continue;
-            }
-
-            await sendWelcomeMessage(userId);
-        }
-    } catch (error) {}
+    } catch (error) {
+        console.log("⚠️ Error in group_join:", error);
+    }
 });
 
 client.on("message", async (message) => {
@@ -296,10 +255,6 @@ client.on("message", async (message) => {
         
         const groupId = message.from;
         if (!message.author) return;
-
-        if (!welcomedUsers.has(message.author)) {
-            await sendWelcomeMessage(message.author);
-        }
 
         const info = await getContactInfo(message.author);
         if (!info) return;
