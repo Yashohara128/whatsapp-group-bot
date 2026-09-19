@@ -33,7 +33,10 @@ const linkWarningTracker = new Map();
 const badWordWarningTracker = new Map(); 
 
 const BLACKLIST_FILE = "./blacklist.json";
+const WELCOMED_FILE = "./welcomed_users.json"; 
+
 let blacklistedUsers = new Set();
+let welcomedUsers = new Set();
 
 if (fs.existsSync(BLACKLIST_FILE)) {
     try {
@@ -41,10 +44,22 @@ if (fs.existsSync(BLACKLIST_FILE)) {
     } catch(e) { console.log("⚠️ Error loading blacklist", e); }
 }
 
+if (fs.existsSync(WELCOMED_FILE)) {
+    try {
+        welcomedUsers = new Set(JSON.parse(fs.readFileSync(WELCOMED_FILE, "utf-8")));
+    } catch(e) { console.log("⚠️ Error loading welcomed users", e); }
+}
+
 function saveBlacklist() {
     try {
         fs.writeFileSync(BLACKLIST_FILE, JSON.stringify([...blacklistedUsers]));
     } catch(e) { console.log("⚠️ Error saving blacklist", e); }
+}
+
+function saveWelcomedUsers() {
+    try {
+        fs.writeFileSync(WELCOMED_FILE, JSON.stringify([...welcomedUsers]));
+    } catch(e) {}
 }
 
 // ========================================
@@ -85,7 +100,7 @@ client.on("ready", () => {
     console.log("🤖 BOT READY");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
-    console.log("Features Active: Any YouTube Link Allowed | Welcome for All Joins | Night Mode");
+    console.log("Features Active: Specific FB Group Allowed | Instant Welcome | Night Mode");
     console.log(`Total Blacklisted Users: ${blacklistedUsers.size}`);
     console.log("========================================\n");
 
@@ -168,6 +183,50 @@ async function directRemoveParticipant(groupId, participantId, reason) {
     } catch (error) { return false; }
 }
 
+async function sendWelcomeMessage(userId) {
+    try {
+        const info = await getContactInfo(userId);
+        if (!info) return;
+
+        if (welcomedUsers.has(userId)) return; 
+        
+        welcomedUsers.add(userId);
+        saveWelcomedUsers();
+
+        const welcomeMsg = `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓
+
+👋 Hello / ආයුබෝවන් *${info.name}*,
+
+Please follow these group guidelines to maintain a good learning environment.
+කරුණාකර සමූහයේ යහපැවැත්ම උදෙසා පහත නීති මාලාව පිළිපදින්න.
+
+*GROUP RULES / නීති මාලාව:*
+1️⃣ Be respectful to everyone.
+(සියලුම සාමාජිකයින්ට ගෞරවයෙන් සලකන්න.)
+
+2️⃣ 🚫 No Spamming or flooding messages.
+(අනවශ්‍ය පණිවිඩ යැවීමෙන් වළකින්න.)
+
+3️⃣ 🚫 No unauthorized links (Other WhatsApp groups, Telegram, Scam/Business links). Only educational links and our official Facebook group are allowed.
+(වෙනත් WhatsApp Group, Telegram හෝ ව්‍යාපාරික ලින්ක් දැමීම සපුරා තහනම්. අධ්‍යාපනික ලින්ක් සහ අපගේ නිල Facebook Group එකට පමණක් අවසර ඇත.)
+
+4️⃣ 🌙 Group will be closed for messages from 11:00 PM to 6:00 AM.
+(දිනපතා රාත්‍රී 11:00 සිට උදෑසන 6:00 දක්වා සමූහය වසා තැබේ.)
+
+5️⃣ 🎓 For further questions regarding student loans, please contact the group admins. Please watch the YouTube playlist below for more information.
+(ශිෂ්‍ය ණය පිළිබඳ වැඩිදුර ප්‍රශ්න සඳහා සමූහයේ Admin වරුන් සම්බන්ධ කරගන්න. ණය පිළිබඳ සියලුම තොරතුරු දැනගැනීමට පහත YouTube Playlist එක අනිවාර්යයෙන්ම නරඹන්න.)
+📺 *YouTube Playlist:* https://youtube.com/playlist?list=PL-ZbzAh0pKykpa-odcUrDEg94PBbTQp9M&si=F9L3Spy-pLZJq31n
+
+⚠️ *Note:* Breaking these rules will result in an automatic permanent ban by the system.
+(මෙම නීති කඩකරන අයව පද්ධතිය මගින් ස්වයංක්‍රීයව සමූහයෙන් ඉවත් කරනු ලැබේ.)
+
+Thank you! / ස්තූතියි!
+🤖 _System Generated Message. Please do not reply._`;
+
+        await client.sendMessage(userId, welcomeMsg);
+    } catch (e) {}
+}
+
 client.on("group_join", async (notification) => {
     try {
         if (!TARGET_GROUP_IDS.includes(notification.chatId)) return;
@@ -191,7 +250,6 @@ client.on("group_join", async (notification) => {
                 if (addedByAdmin) {
                     blacklistedUsers.delete(userId);
                     saveBlacklist();
-                    console.log(`✅ [UNBAN] Admin manually added ${info.name}.`);
                 } else {
                     await client.sendMessage(groupId, `🚫 @${userId.split('@')[0]} (*${info.name}*), ඔබට මෙම සමූහයට නැවත සම්බන්ධ වීමට අවසර නැත (ඔබව Banned කර ඇත).`, { mentions: [userId] });
                     await directRemoveParticipant(groupId, userId, "Blacklisted");
@@ -205,38 +263,7 @@ client.on("group_join", async (notification) => {
                 continue;
             }
 
-            // 👋 WELCOME MESSAGE (Sent to all members joining or re-joining)
-            const welcomeMsg = `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓
-
-👋 Hello / ආයුබෝවන් *${info.name}*,
-
-Please follow these group guidelines to maintain a good learning environment.
-කරුණාකර සමූහයේ යහපැවැත්ම උදෙසා පහත නීති මාලාව පිළිපදින්න.
-
-*GROUP RULES / නීති මාලාව:*
-1️⃣ Be respectful to everyone.
-(සියලුම සාමාජිකයින්ට ගෞරවයෙන් සලකන්න.)
-
-2️⃣ 🚫 No Spamming or flooding messages.
-(අනවශ්‍ය පණිවිඩ යැවීමෙන් වළකින්න.)
-
-3️⃣ 🚫 No unauthorized links (Other WhatsApp groups, Telegram, Scam/Business links). Only educational links are allowed.
-(වෙනත් WhatsApp Group, Telegram හෝ ව්‍යාපාරික ලින්ක් දැමීම සපුරා තහනම්. අධ්‍යාපනික ලින්ක් සඳහා පමණක් අවසර ඇත.)
-
-4️⃣ 🌙 Group will be closed for messages from 11:00 PM to 6:00 AM.
-(දිනපතා රාත්‍රී 11:00 සිට උදෑසන 6:00 දක්වා සමූහය වසා තැබේ.)
-
-5️⃣ 🎓 For further questions regarding student loans, please contact the group admins. Please watch the YouTube playlist below for more information.
-(ශිෂ්‍ය ණය පිළිබඳ වැඩිදුර ප්‍රශ්න සඳහා සමූහයේ Admin වරුන් සම්බන්ධ කරගන්න. ණය පිළිබඳ සියලුම තොරතුරු දැනගැනීමට පහත YouTube Playlist එක අනිවාර්යයෙන්ම නරඹන්න.)
-📺 *YouTube Playlist:* https://youtube.com/playlist?list=PL-ZbzAh0pKykpa-odcUrDEg94PBbTQp9M&si=F9L3Spy-pLZJq31n
-
-⚠️ *Note:* Breaking these rules will result in an automatic permanent ban by the system.
-(මෙම නීති කඩකරන අයව පද්ධතිය මගින් ස්වයංක්‍රීයව සමූහයෙන් ඉවත් කරනු ලැබේ.)
-
-Thank you! / ස්තූතියි!
-🤖 _System Generated Message. Please do not reply._`;
-
-            await client.sendMessage(userId, welcomeMsg);
+            await sendWelcomeMessage(userId);
         }
     } catch (error) {}
 });
@@ -251,16 +278,13 @@ client.on("message", async (message) => {
         const groupId = message.from;
         if (!message.author) return;
 
+        if (!welcomedUsers.has(message.author)) {
+            await sendWelcomeMessage(message.author);
+        }
+
         const info = await getContactInfo(message.author);
         if (!info) return;
         const textLower = (message.body || "").toLowerCase();
-
-        console.log("\n----------------------------------------");
-        console.log(`📩 Group ID : ${groupId}`);
-        console.log(`👤 Name     : ${info.name}`);
-        console.log(`💬 Type     : ${message.type}`);
-        console.log(`💬 Message  : ${message.body || "[Media / Sticker / Invite]"}`);
-        console.log("----------------------------------------");
 
         if (info.actualNumber && !isSriLankan(info.actualNumber)) {
             const removed = await directRemoveParticipant(groupId, message.author, "Non-Sri-Lankan number");
@@ -297,31 +321,34 @@ client.on("message", async (message) => {
                 const isAllowedForms = textLower.includes("forms.gle");
                 const isAllowedClassroom = textLower.includes("classroom.google.com");
 
-                const isAllowedEducationalLink = isAllowedYT || isAllowedDrive || isAllowedZoom || isAllowedTeams || isAllowedDocs || isAllowedForms || isAllowedClassroom;
+                // 📘 Facebook Link Filter: ඔයා දුන් නිශ්චිත ගෲප් ලින්ක් එකට (1CuM3LCFaa) පමණක් අවසර දීම
+                const isAllowedSpecificFBGroup = textLower.includes("1cum3lcfaa"); 
+                const isGeneralFBLink = textLower.includes("facebook.com") || textLower.includes("fb.watch") || textLower.includes("fb.me");
                 
-                const scamOrBusinessKeywords = ["earn money", "crypto", "forex", "business", "job opportunity", "free cash", "marketing", "signals", "trading", "invest", "lottery", "win cash", "fast money", "income","binance"];
+                const isAllowedFB = !isGeneralFBLink || isAllowedSpecificFBGroup;
+                const isAllowedEducationalLink = (isAllowedYT || isAllowedDrive || isAllowedZoom || isAllowedTeams || isAllowedDocs || isAllowedForms || isAllowedClassroom) && isAllowedFB;
+                
+                const scamOrBusinessKeywords = ["earn money", "crypto", "forex", "business", "job opportunity", "free cash", "marketing", "signals", "trading", "invest", "lottery", "win cash", "fast money", "income"];
                 const containsScamOrBusiness = scamOrBusinessKeywords.some(keyword => textLower.includes(keyword));
 
                 let shouldBlock = false;
                 if (isTelegramLink) shouldBlock = true; 
                 else if (containsScamOrBusiness) shouldBlock = true; 
                 else if (isWhatsAppGroupLink) shouldBlock = true; 
-                else if (!isAllowedEducationalLink) shouldBlock = true; 
+                else if (isGeneralFBLink && !isAllowedSpecificFBGroup) shouldBlock = true; // වෙනත් FB ලින්ක් බ්ලොක් කරයි
+                else if (!isAllowedEducationalLink && !isAllowedSpecificFBGroup) shouldBlock = true; 
 
                 if (shouldBlock) {
                     try { 
                         await message.delete(true); 
-                        console.log("✅ Message successfully deleted.");
-                    } catch(e) { 
-                        console.log("⚠️ Could not delete message."); 
-                    } 
+                    } catch(e) {} 
 
                     let warnings = linkWarningTracker.get(message.author) || 0;
                     warnings++;
                     linkWarningTracker.set(message.author, warnings);
 
                     if (warnings === 1) {
-                        await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} (*${info.name}*)\nමෙම කණ්ඩායම තුළ වෙනත් WhatsApp Group ලින්ක්, ටෙලිග්‍රෑම් ලින්ක් හෝ ව්‍යාපාරික දේවල් Share කිරීම තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ කරුණාකර message එක group එක තුලින් ඉවත් කරගන්න🤠. 🚫`, { mentions: [message.author] });
+                        await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} (*${info.name}*)\nමෙම කණ්ඩායම තුළ අවසර නොලත් ලින්ක් Share කිරීම තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. කරුණාකර group එකෙ message එක delete කරගන්න🤠🚫`, { mentions: [message.author] });
                     } else {
                         const removed = await directRemoveParticipant(groupId, message.author, "Unauthorized Links/Group Invites");
                         if (removed) {
