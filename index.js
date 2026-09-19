@@ -62,7 +62,7 @@ client.on("authenticated", () => {
 
 client.on("ready", () => {
     console.log("\n========================================");
-    console.log("🤖 BOT READY - STABLE UNBAN COMMAND MODE");
+    console.log("🤖 BOT READY - MESSAGECREATE FIXED");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
 
@@ -212,48 +212,66 @@ Thank you! / ස්තූතියි!
     }
 });
 
-client.on("message", async (message) => {
+// 🛠️ පාවිච්චි කළේ message වෙනුවට message_create ඉවෙන්ට් එකයි (මෙයින් සියලුම මැසේජ් අල්ලා ගනී)
+client.on("message_create", async (message) => {
     try {
-        if (!message.from || !message.from.endsWith("@g.us")) return;
-        if (message.fromMe) return; 
-        if (!TARGET_GROUP_IDS.includes(message.from)) return;
+        const groupId = message.fromMe ? message.to : message.from;
+        if (!groupId || !groupId.endsWith("@g.us")) return;
+        if (!TARGET_GROUP_IDS.includes(groupId)) return;
         
-        const groupId = message.from;
-        if (!message.author) return;
-
         const textLower = (message.body || "").toLowerCase();
 
-        // 🛠️ ADMIN UNBAN COMMAND (.unban 9477xxxxxxx)
+        // 🛠️ ADMIN UNBAN COMMAND
         if (textLower.startsWith(".unban")) {
-            let isAdmin = false;
-            try {
-                const chat = await message.getChat();
-                if (chat && chat.participants) {
-                    const participant = chat.participants.find(p => p.id._serialized === message.author);
-                    isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
-                }
-            } catch (err) {}
+            let isAdmin = message.fromMe;
+            let senderId = message.fromMe ? client.info.wid._serialized : (message.author || message.from);
+
+            if (!isAdmin) {
+                try {
+                    const chat = await message.getChat();
+                    if (chat && chat.participants) {
+                        const participant = chat.participants.find(p => p.id._serialized === senderId);
+                        if (participant && (participant.isAdmin || participant.isSuperAdmin)) {
+                            isAdmin = true;
+                        }
+                    }
+                } catch (err) {}
+            }
 
             if (isAdmin) {
                 let number = textLower.replace(/\D/g, "");
                 if (number.startsWith("0")) {
                     number = "94" + number.substring(1);
                 }
+                
                 if (number) {
-                    const unbanId = `${number}@c.us`;
-                    if (blacklistedUsers.has(unbanId)) {
-                        blacklistedUsers.delete(unbanId);
+                    let foundAndRemoved = false;
+                    for (let bannedUser of blacklistedUsers) {
+                        if (bannedUser.includes(number)) {
+                            blacklistedUsers.delete(bannedUser);
+                            foundAndRemoved = true;
+                        }
+                    }
+
+                    if (foundAndRemoved) {
                         saveBlacklist();
                         await client.sendMessage(groupId, `✅ +${number} සාර්ථකව Blacklist එකෙන් ඉවත් කරන ලදී. දැන් ඔවුන්ට Group Link එක හරහා ජොයින් විය හැක.`);
                     } else {
-                        await client.sendMessage(groupId, `⚠️ +${number} Blacklist එකේ නොමැත.`);
+                        await client.sendMessage(groupId, `⚠️ +${number} අංකය Blacklist එකේ හමු නොවීය.`);
                     }
+                } else {
+                    await client.sendMessage(groupId, `⚠️ කරුණාකර නිවැරදි අංකයක් දෙන්න. (උදා: .unban 0771234567)`);
                 }
+                return;
+            } else {
+                await client.sendMessage(groupId, `❌ මෙම කමාන්ඩ් එක භාවිතා කළ හැක්කේ Admin කෙනෙකුට පමණි.`);
                 return;
             }
         }
 
-        const info = await getContactInfo(message.author);
+        if (message.fromMe) return; 
+        const senderId = message.author || message.from;
+        const info = await getContactInfo(senderId);
         if (!info) return;
 
         console.log("\n----------------------------------------");
@@ -264,9 +282,9 @@ client.on("message", async (message) => {
         console.log("----------------------------------------");
 
         if (info.actualNumber && !isSriLankan(info.actualNumber)) {
-            const removed = await directRemoveParticipant(groupId, message.author);
+            const removed = await directRemoveParticipant(groupId, senderId);
             if (removed) {
-                await client.sendMessage(groupId, `🌍 @${message.author.split('@')[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group.`, { mentions: [message.author] });
+                await client.sendMessage(groupId, `🌍 @${senderId.split('@')[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group.`, { mentions: [senderId] });
             }
             return;
         }
@@ -279,7 +297,7 @@ client.on("message", async (message) => {
             try {
                 const chat = await message.getChat();
                 if (chat && chat.participants) {
-                    const participant = chat.participants.find(p => p.id._serialized === message.author);
+                    const participant = chat.participants.find(p => p.id._serialized === senderId);
                     isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
                 }
             } catch (err) { }
@@ -310,19 +328,19 @@ client.on("message", async (message) => {
                 if (shouldBlock) {
                     try { await message.delete(true); } catch(e) { } 
 
-                    let warnings = linkWarningTracker.get(message.author) || 0;
+                    let warnings = linkWarningTracker.get(senderId) || 0;
                     warnings++;
-                    linkWarningTracker.set(message.author, warnings);
+                    linkWarningTracker.set(senderId, warnings);
 
                     if (warnings === 1) {
-                        await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} (*${info.name}*)\nමෙම කණ්ඩායම තුළ වෙනත් WhatsApp Group ලින්ක්, ටෙලිග්‍රෑම් ලින්ක් හෝ ව්‍යාපාරික දේවල් Share කිරීම තහනම්! ඔයාට group link share කරගන්න අවශ්‍යනම් group admin කෙනෙක් හරහා යොමු කරන්න🤠 මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ කරුණාකර link එක group එකෙන් ඉවත් කරගන්න.. 🚫`, { mentions: [message.author] });
+                        await client.sendMessage(groupId, `⚠️ @${senderId.split('@')[0]} (*${info.name}*)\nමෙම කණ්ඩායම තුළ වෙනත් WhatsApp Group ලින්ක්, ටෙලිග්‍රෑම් ලින්ක් හෝ ව්‍යාපාරික දේවල් Share කිරීම තහනම්! ඔයාට group link share කරගන්න අවශ්‍යනම් group admin කෙනෙක් හරහා යොමු කරන්න🤠 මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ කරුණාකර link එක group එකෙන් ඉවත් කරගන්න.. 🚫`, { mentions: [senderId] });
                     } else {
-                        const removed = await directRemoveParticipant(groupId, message.author);
+                        const removed = await directRemoveParticipant(groupId, senderId);
                         if (removed) {
-                            blacklistedUsers.add(message.author);
+                            blacklistedUsers.add(senderId);
                             saveBlacklist(); 
                             if (ENABLE_AUTO_REMOVE) {
-                                await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} (*${info.name}*) අවවාද නොතකා නැවත තහනම් ලින්ක් දැමූ නිසා ගෲප් එකෙන් ස්ථිරවම ඉවත් කරන ලදී.`, { mentions: [message.author] });
+                                await client.sendMessage(groupId, `🚫 @${senderId.split('@')[0]} (*${info.name}*) අවවාද නොතකා නැවත තහනම් ලින්ක් දැමූ නිසා ගෲප් එකෙන් ස්ථිරවම ඉවත් කරන ලදී.`, { mentions: [senderId] });
                             }
                         }
                     }
@@ -337,26 +355,26 @@ client.on("message", async (message) => {
             try {
                 const chat = await message.getChat();
                 if (chat && chat.participants) {
-                    const participant = chat.participants.find(p => p.id._serialized === message.author);
+                    const participant = chat.participants.find(p => p.id._serialized === senderId);
                     isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
                 }
             } catch (err) { }
 
             if (!isAdmin) {
                 try { await message.delete(true); } catch(e) {} 
-                let warnings = badWordWarningTracker.get(message.author) || 0;
+                let warnings = badWordWarningTracker.get(senderId) || 0;
                 warnings++;
-                badWordWarningTracker.set(message.author, warnings);
+                badWordWarningTracker.set(senderId, warnings);
 
                 if (warnings === 1) {
-                    await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} (*${info.name}*)\nමෙම කණ්ඩායම තුළ අපහාසාත්මක හෝ තහනම් වචන භාවිතය තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත එවැනි වචන භාවිත කළහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🤬`, { mentions: [message.author] });
+                    await client.sendMessage(groupId, `⚠️ @${senderId.split('@')[0]} (*${info.name}*)\nමෙම කණ්ඩායම තුළ අපහාසාත්මක හෝ තහනම් වචන භාවිතය තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත එවැනි වචන භාවිත කළහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🤬`, { mentions: [senderId] });
                 } else {
-                    const removed = await directRemoveParticipant(groupId, message.author);
+                    const removed = await directRemoveParticipant(groupId, senderId);
                     if (removed) {
-                        blacklistedUsers.add(message.author);
+                        blacklistedUsers.add(senderId);
                         saveBlacklist(); 
                         if (ENABLE_AUTO_REMOVE) {
-                            await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} (*${info.name}*) අවවාද නොතකා නැවත අපහාසාත්මක වචන භාවිත කළ නිසා ගෲප් එකෙන් ස්ථිරවම ඉවත් කරන ලදී.`, { mentions: [message.author] });
+                            await client.sendMessage(groupId, `🚫 @${senderId.split('@')[0]} (*${info.name}*) අවවාද නොතකා නැවත අපහාසාත්මක වචන භාවිත කළ නිසා ගෲප් එකෙන් ස්ථිරවම ඉවත් කරන ලදී.`, { mentions: [senderId] });
                         }
                     }
                 }
@@ -364,7 +382,7 @@ client.on("message", async (message) => {
             return;
         }
 
-        await checkSpam(message, message.author, info.name, groupId);
+        await checkSpam(message, senderId, info.name, groupId);
 
     } catch (error) {}
 });
