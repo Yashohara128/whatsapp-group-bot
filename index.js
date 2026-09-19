@@ -72,7 +72,7 @@ client.on("ready", () => {
     console.log("🤖 BOT READY");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
-    console.log("Features Active: Smart WA & Edu Link Filter | Telegram Block | Bad Words (2-Chance) | Night Mode");
+    console.log("Features Active: Powerful Smart Link Filter | Bad Words | Night Mode");
     console.log("========================================\n");
 
     // ========================================
@@ -224,28 +224,35 @@ client.on("message", async (message) => {
             return;
         }
 
-        // 🔗 SMART EDUCATIONAL & KEYWORD FILTER SYSTEM (WA Group + Telegram + Edu Links)
-        const linkRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
-        if (linkRegex.test(message.body)) {
+        // 🔗 POWERFUL SMART LINK FILTER SYSTEM (ලින්ක් හෝ වෙබ්සයිට් නමක් අඩංගු ඕනෑම මැසේජ් එකක් පරීක්ෂා කරයි)
+        const hasLinkIndicator = textLower.includes("http://") || 
+                                 textLower.includes("https://") || 
+                                 textLower.includes("www.") || 
+                                 textLower.includes(".com") || 
+                                 textLower.includes(".net") || 
+                                 textLower.includes(".org") || 
+                                 textLower.includes(".me") || 
+                                 textLower.includes(".co") ||
+                                 textLower.includes("t.me");
+
+        if (hasLinkIndicator) {
             const chat = await message.getChat();
             const participant = chat.participants.find(p => p.id._serialized === message.author);
             const isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
 
             if (!isAdmin) {
-                const text = message.body.toLowerCase();
-
                 // 1️⃣ Telegram ලින්ක් සම්පූර්ණයෙන්ම බ්ලොක් වේ
-                const isTelegramLink = text.includes("t.me/") || text.includes("telegram.me/");
+                const isTelegramLink = textLower.includes("t.me/") || textLower.includes("telegram.me/");
 
                 // 2️⃣ අධ්‍යාපනික ප්ලැට්ෆෝම් ලින්ක් (YouTube, Zoom, Drive ආදිය) 100% ක් අවසර ඇත
-                const isAllowedEducationalLink = text.includes("youtube.com") || 
-                                                 text.includes("youtu.be") || 
-                                                 text.includes("drive.google.com") || 
-                                                 text.includes("zoom.us") || 
-                                                 text.includes("teams.microsoft.com") || 
-                                                 text.includes("docs.google.com") || 
-                                                 text.includes("forms.gle") || 
-                                                 text.includes("classroom.google.com");
+                const isAllowedEducationalLink = textLower.includes("youtube.com") || 
+                                                 textLower.includes("youtu.be") || 
+                                                 textLower.includes("drive.google.com") || 
+                                                 textLower.includes("zoom.us") || 
+                                                 textLower.includes("teams.microsoft.com") || 
+                                                 textLower.includes("docs.google.com") || 
+                                                 textLower.includes("forms.gle") || 
+                                                 textLower.includes("classroom.google.com");
 
                 // 3️⃣ Business / Scam Keywords (ව්‍යාපාරික වචන ලැයිස්තුව)
                 const scamOrBusinessKeywords = [
@@ -254,7 +261,7 @@ client.on("message", async (message) => {
                     "lottery", "win cash", "fast money", "income", "whatsapp.com/chat"
                 ];
 
-                const containsScamOrBusiness = scamOrBusinessKeywords.some(keyword => text.includes(keyword));
+                const containsScamOrBusiness = scamOrBusinessKeywords.some(keyword => textLower.includes(keyword));
 
                 // තීරණය කිරීම (Should Block?):
                 let shouldBlock = false;
@@ -263,7 +270,7 @@ client.on("message", async (message) => {
                     shouldBlock = true; // ටෙලිග්‍රෑම් ලින්ක් නම් අනිවාර්යයෙන්ම බ්ලොක් කරයි
                 } else if (containsScamOrBusiness) {
                     shouldBlock = true; // බිස්නස් හෝ ස්කෑම් වචන අඩංගු නම් බ්ලොක් කරයි
-                } else if (!isAllowedEducationalLink && !text.includes("chat.whatsapp.com")) {
+                } else if (!isAllowedEducationalLink && !textLower.includes("chat.whatsapp.com")) {
                     shouldBlock = true; // අධ්‍යාපනික නොවන සහ සාමාන්‍ය වට්ස්ඇප් ගෲප් එකක් නොවන අනෙකුත් වෙබ් ලින්ක් බ්ලොක් කරයි
                 }
 
