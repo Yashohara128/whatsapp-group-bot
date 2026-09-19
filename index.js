@@ -72,7 +72,7 @@ client.on("ready", () => {
     console.log("🤖 BOT READY");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
-    console.log("Features Active: Powerful Smart Link Filter | Bad Words | Night Mode");
+    console.log("Features Active: Reliable Smart Link Filter | Bad Words (2-Chance) | Night Mode");
     console.log("========================================\n");
 
     // ========================================
@@ -224,7 +224,7 @@ client.on("message", async (message) => {
             return;
         }
 
-        // 🔗 POWERFUL SMART LINK FILTER SYSTEM (ලින්ක් හෝ වෙබ්සයිට් නමක් අඩංගු ඕනෑම මැසේජ් එකක් පරීක්ෂා කරයි)
+        // 🔗 RELIABLE SMART LINK FILTER SYSTEM
         const hasLinkIndicator = textLower.includes("http://") || 
                                  textLower.includes("https://") || 
                                  textLower.includes("www.") || 
@@ -267,11 +267,11 @@ client.on("message", async (message) => {
                 let shouldBlock = false;
 
                 if (isTelegramLink) {
-                    shouldBlock = true; // ටෙලිග්‍රෑම් ලින්ක් නම් අනිවාර්යයෙන්ම බ්ලොක් කරයි
+                    shouldBlock = true; 
                 } else if (containsScamOrBusiness) {
-                    shouldBlock = true; // බිස්නස් හෝ ස්කෑම් වචන අඩංගු නම් බ්ලොක් කරයි
+                    shouldBlock = true; 
                 } else if (!isAllowedEducationalLink && !textLower.includes("chat.whatsapp.com")) {
-                    shouldBlock = true; // අධ්‍යාපනික නොවන සහ සාමාන්‍ය වට්ස්ඇප් ගෲප් එකක් නොවන අනෙකුත් වෙබ් ලින්ක් බ්ලොක් කරයි
+                    shouldBlock = true; 
                 }
 
                 if (shouldBlock) {
