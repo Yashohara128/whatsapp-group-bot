@@ -63,7 +63,7 @@ client.on("authenticated", () => {
 
 client.on("ready", () => {
     console.log("\n========================================");
-    console.log("🤖 BOT READY");
+    console.log("🤖 BOT READY - STRICT ADMIN BYPASS ACTIVE");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
 
@@ -148,6 +148,7 @@ async function directRemoveParticipant(groupId, participantId) {
     } catch (error) { return false; }
 }
 
+// 🎯 GROUP JOIN & ADMIN BYPASS LOGIC
 client.on("group_join", async (notification) => {
     try {
         const groupId = typeof notification.chatId === 'object' ? notification.chatId._serialized : String(notification.chatId);
@@ -156,16 +157,14 @@ client.on("group_join", async (notification) => {
         console.log(`\n📥 [GROUP JOIN DETECTED]`);
         console.log(`📍 Group: ${groupId}`);
 
+        const chat = await client.getChatById(groupId);
         let addedByAdmin = false;
-        try {
-            const chat = await client.getChatById(groupId);
-            if (notification.author) {
-                const authorParticipant = chat.participants.find(p => p.id._serialized === notification.author);
-                if (authorParticipant && (authorParticipant.isAdmin || authorParticipant.isSuperAdmin)) {
-                    addedByAdmin = true;
-                }
+        if (notification.author) {
+            const authorParticipant = chat.participants.find(p => p.id._serialized === notification.author);
+            if (authorParticipant && (authorParticipant.isAdmin || authorParticipant.isSuperAdmin)) {
+                addedByAdmin = true;
             }
-        } catch (syncError) {}
+        }
 
         const users = notification.recipientIds || [];
         for (const userId of users) {
@@ -174,11 +173,12 @@ client.on("group_join", async (notification) => {
             
             console.log(`👤 New Member: ${info.name} (${info.actualNumber})`);
 
+            // 🚫 බ්ලැක්ලිස්ට් චෙක් කිරීම සහ Admin Bypass
             if (blacklistedUsers.has(userId)) {
                 if (addedByAdmin) {
                     blacklistedUsers.delete(userId);
                     saveBlacklist();
-                    console.log(`✅ [UNBAN] Admin manually added ${info.name}.`);
+                    console.log(`✅ [UNBAN] Admin manually added ${info.name}. Welcome allowed!`);
                 } else {
                     await client.sendMessage(groupId, `🚫 @${userId.split('@')[0]} (*${info.name}*), ඔබට මෙම සමූහයට නැවත සම්බන්ධ වීමට අවසර නැත (ඔබව Banned කර ඇත).`, { mentions: [userId] });
                     await directRemoveParticipant(groupId, userId);
@@ -230,48 +230,14 @@ Thank you! / ස්තූතියි!
     }
 });
 
-// 🟢 වෙනස් කළේ මෙතැන: "message_create" දැම්ම නිසා ඔයාගේ ෆෝන් එකේ මැසේජ් පවා කියවනවා
-client.on("message_create", async (message) => {
+client.on("message", async (message) => {
     try {
         if (!message.from || !message.from.endsWith("@g.us")) return;
+        if (message.fromMe) return; 
+        
         if (!TARGET_GROUP_IDS.includes(message.from)) return;
         
         const groupId = message.from;
-        const textLower = (message.body || "").toLowerCase();
-
-        // 🛠️ ADMIN UNBAN COMMAND (ඔයාගේ ෆෝන් එකෙන් ගැහුවත් වැඩ)
-        if (textLower.startsWith(".unban")) {
-            let isAdmin = message.fromMe; // ඔයාම යවනවා නම් කෙළින්ම Admin
-            
-            if (!isAdmin && message.author) {
-                try {
-                    const chat = await message.getChat();
-                    if (chat && chat.participants) {
-                        const participant = chat.participants.find(p => p.id._serialized === message.author);
-                        isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
-                    }
-                } catch (err) {}
-            }
-
-            if (isAdmin) {
-                // ඉලක්කම් ටික විතරක් වෙන් කරගන්නවා (උදා: .unban +94 77 123 4567 -> 94771234567)
-                let number = message.body.replace(/\D/g, ""); 
-                if (number) {
-                    const unbanId = `${number}@c.us`;
-                    if (blacklistedUsers.has(unbanId)) {
-                        blacklistedUsers.delete(unbanId);
-                        saveBlacklist();
-                        await message.reply(`✅ +${number} සාර්ථකව Blacklist එකෙන් ඉවත් කරන ලදී. දැන් ඔවුන්ට Link එක හරහා ගෲප් එකට ජොයින් විය හැක.`);
-                    } else {
-                        await message.reply(`⚠️ +${number} Blacklist එකේ නොමැත.`);
-                    }
-                }
-                return; 
-            }
-        }
-
-        // 🛑 මින් පහළට තියෙන Anti-Spam / Anti-Link නීති ඔයාගේ මැසේජ් වලට අදාළ නෑ
-        if (message.fromMe) return; 
         if (!message.author) return;
 
         const info = await getContactInfo(message.author);
@@ -283,6 +249,8 @@ client.on("message_create", async (message) => {
         console.log(`💬 Type     : ${message.type}`);
         console.log(`💬 Message  : ${message.body || "[Media / Sticker / Invite]"}`);
         console.log("----------------------------------------");
+
+        const textLower = (message.body || "").toLowerCase();
 
         if (info.actualNumber && !isSriLankan(info.actualNumber)) {
             const removed = await directRemoveParticipant(groupId, message.author);
