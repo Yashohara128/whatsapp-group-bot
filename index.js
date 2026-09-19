@@ -62,7 +62,7 @@ client.on("authenticated", () => {
 
 client.on("ready", () => {
     console.log("\n========================================");
-    console.log("🤖 BOT READY - MESSAGECREATE FIXED");
+    console.log("🤖 BOT READY - ADVANCED UNBAN MATCHING");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
 
@@ -160,9 +160,18 @@ client.on("group_join", async (notification) => {
             const info = await getContactInfo(userId);
             if (!info) continue; 
             
-            console.log(`👤 New Member: ${info.name} (${info.actualNumber})`);
+            console.log(`👤 New Member: ${info.name} (${info.actualNumber}) | ID: ${userId}`);
 
-            if (blacklistedUsers.has(userId)) {
+            // බ්ලැක්ලිස්ට් එකේ සේවී තිබෙන ඕනෑම අයිඩී එකක් හෝ නම්බර් එකක් පරීක්ෂා කිරීම
+            let isBanned = false;
+            for (let bannedUser of blacklistedUsers) {
+                if (bannedUser === userId || bannedUser.includes(info.actualNumber)) {
+                    isBanned = true;
+                    break;
+                }
+            }
+
+            if (isBanned) {
                 await client.sendMessage(groupId, `🚫 @${userId.split('@')[0]} (*${info.name}*), ඔබට මෙම සමූහයට නැවත සම්බන්ධ වීමට අවසර නැත (ඔබව Banned කර ඇත).`, { mentions: [userId] });
                 await directRemoveParticipant(groupId, userId);
                 continue; 
@@ -212,7 +221,6 @@ Thank you! / ස්තූතියි!
     }
 });
 
-// 🛠️ පාවිච්චි කළේ message වෙනුවට message_create ඉවෙන්ට් එකයි (මෙයින් සියලුම මැසේජ් අල්ලා ගනී)
 client.on("message_create", async (message) => {
     try {
         const groupId = message.fromMe ? message.to : message.from;
@@ -221,7 +229,7 @@ client.on("message_create", async (message) => {
         
         const textLower = (message.body || "").toLowerCase();
 
-        // 🛠️ ADMIN UNBAN COMMAND
+        // 🛠️ ADVANCED ADMIN UNBAN COMMAND
         if (textLower.startsWith(".unban")) {
             let isAdmin = message.fromMe;
             let senderId = message.fromMe ? client.info.wid._serialized : (message.author || message.from);
@@ -245,19 +253,20 @@ client.on("message_create", async (message) => {
                 }
                 
                 if (number) {
-                    let foundAndRemoved = false;
+                    let removedCount = 0;
                     for (let bannedUser of blacklistedUsers) {
+                        // නම්බර් එක හෝ අයිඩී එක කුමන ආකාරයකින් තිබුණත් මැච් කර ඉවත් කරයි
                         if (bannedUser.includes(number)) {
                             blacklistedUsers.delete(bannedUser);
-                            foundAndRemoved = true;
+                            removedCount++;
                         }
                     }
 
-                    if (foundAndRemoved) {
+                    if (removedCount > 0) {
                         saveBlacklist();
-                        await client.sendMessage(groupId, `✅ +${number} සාර්ථකව Blacklist එකෙන් ඉවත් කරන ලදී. දැන් ඔවුන්ට Group Link එක හරහා ජොයින් විය හැක.`);
+                        await client.sendMessage(groupId, `✅ +${number} (සම්බන්ධතා වාර්තා ${removedCount}ක්) සාර්ථකව Blacklist එකෙන් ඉවත් කරන ලදී. දැන් ඔවුන්ට නැවත ජොයින් විය හැක.`);
                     } else {
-                        await client.sendMessage(groupId, `⚠️ +${number} අංකය Blacklist එකේ හමු නොවීය.`);
+                        await client.sendMessage(groupId, `⚠️ +${number} අංකය Blacklist එකේ කිසිදු ආකාරයකින් හමු නොවීය.`);
                     }
                 } else {
                     await client.sendMessage(groupId, `⚠️ කරුණාකර නිවැරදි අංකයක් දෙන්න. (උදා: .unban 0771234567)`);
@@ -284,6 +293,9 @@ client.on("message_create", async (message) => {
         if (info.actualNumber && !isSriLankan(info.actualNumber)) {
             const removed = await directRemoveParticipant(groupId, senderId);
             if (removed) {
+                blacklistedUsers.add(senderId);
+                if (info.actualId) blacklistedUsers.add(info.actualId);
+                saveBlacklist();
                 await client.sendMessage(groupId, `🌍 @${senderId.split('@')[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group.`, { mentions: [senderId] });
             }
             return;
@@ -338,6 +350,7 @@ client.on("message_create", async (message) => {
                         const removed = await directRemoveParticipant(groupId, senderId);
                         if (removed) {
                             blacklistedUsers.add(senderId);
+                            if (info.actualId) blacklistedUsers.add(info.actualId);
                             saveBlacklist(); 
                             if (ENABLE_AUTO_REMOVE) {
                                 await client.sendMessage(groupId, `🚫 @${senderId.split('@')[0]} (*${info.name}*) අවවාද නොතකා නැවත තහනම් ලින්ක් දැමූ නිසා ගෲප් එකෙන් ස්ථිරවම ඉවත් කරන ලදී.`, { mentions: [senderId] });
@@ -372,6 +385,7 @@ client.on("message_create", async (message) => {
                     const removed = await directRemoveParticipant(groupId, senderId);
                     if (removed) {
                         blacklistedUsers.add(senderId);
+                        if (info.actualId) blacklistedUsers.add(info.actualId);
                         saveBlacklist(); 
                         if (ENABLE_AUTO_REMOVE) {
                             await client.sendMessage(groupId, `🚫 @${senderId.split('@')[0]} (*${info.name}*) අවවාද නොතකා නැවත අපහාසාත්මක වචන භාවිත කළ නිසා ගෲප් එකෙන් ස්ථිරවම ඉවත් කරන ලදී.`, { mentions: [senderId] });
@@ -400,6 +414,7 @@ async function checkSpam(message, senderId, name, groupId) {
         const removed = await directRemoveParticipant(groupId, senderId);
         if (removed) {
             blacklistedUsers.add(senderId);
+            if (info && info.actualId) blacklistedUsers.add(info.actualId);
             saveBlacklist(); 
             if (ENABLE_AUTO_REMOVE) {
                 await client.sendMessage(groupId, `🚨 @${senderId.split('@')[0]} (*${name}*) has been permanently removed for SPAMMING.`, { mentions: [senderId] });
