@@ -35,14 +35,12 @@ const badWordWarningTracker = new Map();
 const BLACKLIST_FILE = "./blacklist.json";
 let blacklistedUsers = new Set();
 
-// 📂 සර්වර් එක ඔන් වෙද්දි පරණ Blacklist එක ලෝඩ් කරනවා
 if (fs.existsSync(BLACKLIST_FILE)) {
     try {
         blacklistedUsers = new Set(JSON.parse(fs.readFileSync(BLACKLIST_FILE, "utf-8")));
     } catch(e) { console.log("⚠️ Error loading blacklist", e); }
 }
 
-// 📂 අලුතින් බෑන් වෙන අයව ෆයිල් එකේ සේව් කරන ෆන්ක්ෂන් එක
 function saveBlacklist() {
     try {
         fs.writeFileSync(BLACKLIST_FILE, JSON.stringify([...blacklistedUsers]));
@@ -91,7 +89,6 @@ client.on("ready", () => {
     console.log(`Total Blacklisted Users: ${blacklistedUsers.size}`);
     console.log("========================================\n");
 
-    // 🌙 AUTO NIGHT MODE (රෑ 11:00 ට)
     cron.schedule("0 23 * * *", async () => {
         for (const groupId of TARGET_GROUP_IDS) {
             try {
@@ -102,7 +99,6 @@ client.on("ready", () => {
         }
     }, { scheduled: true, timezone: "Asia/Colombo" });
 
-    // ☀️ AUTO MORNING MODE (උදේ 6:00 ට)
     cron.schedule("0 6 * * *", async () => {
         for (const groupId of TARGET_GROUP_IDS) {
             try {
@@ -209,7 +205,6 @@ client.on("group_join", async (notification) => {
                 continue;
             }
 
-            // 👋 BILINGUAL WELCOME MESSAGE (Inbox Version with Loan Info)
             const welcomeMsg = `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓
 
 👋 Hello / ආයුබෝවන් *${info.name}*,
@@ -248,7 +243,7 @@ Thank you! / ස්තූතියි!
 client.on("message", async (message) => {
     try {
         if (!message.from || !message.from.endsWith("@g.us")) return;
-        if (message.fromMe) return; // බොට් තමන්ගේම මැසේජ් චෙක් කිරීම නවත්වයි
+        if (message.fromMe) return; 
         
         if (!TARGET_GROUP_IDS.includes(message.from)) return;
         
@@ -274,7 +269,6 @@ client.on("message", async (message) => {
             return;
         }
 
-        // 🔗 1. Native WhatsApp Group Invites සහ සාමාන්‍ය ලින්ක් අල්ලන අලුත් ක්‍රමය
         const isNativeGroupInvite = message.type === 'group_invite';
         const hasLinkIndicator = isNativeGroupInvite || textLower.includes("http://") || textLower.includes("https://") || textLower.includes("www.") || textLower.includes(".com") || textLower.includes(".net") || textLower.includes(".org") || textLower.includes(".me") || textLower.includes(".co") || textLower.includes("t.me") || textLower.includes("chat.whatsapp.com");
 
@@ -290,28 +284,27 @@ client.on("message", async (message) => {
                 isAdmin = false;
             }
 
-            // සාමාන්‍ය සාමාජිකයෙක් (Admin නොවන) නම් පමණක් බ්ලොක් කිරීම් ක්‍රියාත්මක වේ
             if (!isAdmin) {
                 const isTelegramLink = textLower.includes("t.me/") || textLower.includes("telegram.me/");
                 const isWhatsAppGroupLink = isNativeGroupInvite || textLower.includes("chat.whatsapp.com"); 
                 
-                // ඔයාගේ YouTube චැනල් එක පමණක් Allow කිරීම 
-                // ⚠️ (ඔයාගේ චැනල් එකේ නම "@yashohara" නෙවෙයි නම් මේක වෙනස් කරන්න)
-                const isAllowedEducationalLink = textLower.includes("youtube.com) || 
-                                                 textLower.includes("drive.google.com") || 
-                                                 textLower.includes("zoom.us") || 
-                                                 textLower.includes("teams.microsoft.com") || 
-                                                 textLower.includes("docs.google.com") || 
-                                                 textLower.includes("forms.gle") || 
-                                                 textLower.includes("classroom.google.com");
+                const isAllowedYT = textLower.includes("youtube.com/@yashohara");
+                const isAllowedDrive = textLower.includes("drive.google.com");
+                const isAllowedZoom = textLower.includes("zoom.us");
+                const isAllowedTeams = textLower.includes("teams.microsoft.com");
+                const isAllowedDocs = textLower.includes("docs.google.com");
+                const isAllowedForms = textLower.includes("forms.gle");
+                const isAllowedClassroom = textLower.includes("classroom.google.com");
+
+                const isAllowedEducationalLink = isAllowedYT || isAllowedDrive || isAllowedZoom || isAllowedTeams || isAllowedDocs || isAllowedForms || isAllowedClassroom;
                 
-                const scamOrBusinessKeywords = ["earn money", "crypto", "forex", "business", "job opportunity", "free cash", "marketing", "signals", "trading", "invest", "lottery", "win cash", "fast money", "income","binance"];
+                const scamOrBusinessKeywords = ["earn money", "crypto", "forex", "business", "job opportunity", "free cash", "marketing", "signals", "trading", "invest", "lottery", "win cash", "fast money", "income"];
                 const containsScamOrBusiness = scamOrBusinessKeywords.some(keyword => textLower.includes(keyword));
 
                 let shouldBlock = false;
                 if (isTelegramLink) shouldBlock = true; 
                 else if (containsScamOrBusiness) shouldBlock = true; 
-                else if (isWhatsAppGroupLink) shouldBlock = true; // ළමයින්ට වෙනත් WhatsApp ගෲප් වල ලින්ක්/කාඩ් දැමීම තහනම්!
+                else if (isWhatsAppGroupLink) shouldBlock = true; 
                 else if (!isAllowedEducationalLink) shouldBlock = true; 
 
                 if (shouldBlock) {
@@ -343,7 +336,6 @@ client.on("message", async (message) => {
             }
         }
 
-        // 🤬 BAD WORDS FILTER 
         const containsBadWord = BAD_WORDS.some(word => textLower.includes(word.toLowerCase()));
         if (containsBadWord) {
             let isAdmin = false;
