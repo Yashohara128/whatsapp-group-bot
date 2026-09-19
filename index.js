@@ -10,7 +10,6 @@ const TARGET_GROUP_IDS = [
 ];
 
 const CHROME_PATH = "/usr/bin/chromium-browser";
-
 const ENABLE_AUTO_REMOVE = true;
 const SPAM_WINDOW_MS = 10 * 1000;
 const SPAM_LIMIT = 3;
@@ -63,12 +62,12 @@ client.on("authenticated", () => {
 
 client.on("ready", () => {
     console.log("\n========================================");
-    console.log("🤖 BOT READY - BULLETPROOF JOIN LOGIC");
+    console.log("🤖 BOT READY - COMPLETE & STABLE");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
 
     setTimeout(async () => {
-        console.log("⏳ Initializing existing group members (Delayed to allow Sync)...");
+        console.log("⏳ Initializing existing group members...");
         for (const groupId of TARGET_GROUP_IDS) {
             try {
                 await client.getChatById(groupId);
@@ -157,8 +156,6 @@ client.on("group_join", async (notification) => {
         console.log(`📍 Group: ${groupId}`);
 
         let addedByAdmin = false;
-        
-        // 🛡️ පූර්ණ ආරක්ෂිත Try-Catch (ක්‍රෑෂ් වීම සම්පූර්ණයෙන්ම වළක්වයි)
         try {
             const chat = await client.getChatById(groupId);
             if (notification.author && chat && chat.participants) {
@@ -167,22 +164,20 @@ client.on("group_join", async (notification) => {
                     addedByAdmin = true;
                 }
             }
-        } catch (syncError) {
-            // සින්ක් වෙලා නැති වුණත් කෝඩ් එක දිගටම යනවා, ක්‍රෑෂ් වෙන්නේ නෑ
-        }
+        } catch (e) {}
 
         const users = notification.recipientIds || [];
         for (const userId of users) {
             const info = await getContactInfo(userId);
             if (!info) continue; 
             
-            console.log(`👤 New Member: ${info.name} (${info.actualNumber})`);
+            console.log(`👤 New Member: ${info.name} (${info.actualNumber}) | Added by Admin: ${addedByAdmin}`);
 
             if (blacklistedUsers.has(userId)) {
                 if (addedByAdmin) {
                     blacklistedUsers.delete(userId);
                     saveBlacklist();
-                    console.log(`✅ [UNBAN] Admin manually added ${info.name}.`);
+                    console.log(`✅ [UNBAN SUCCESS] Admin added banned user: ${info.name}`);
                 } else {
                     await client.sendMessage(groupId, `🚫 @${userId.split('@')[0]} (*${info.name}*), ඔබට මෙම සමූහයට නැවත සම්බන්ධ වීමට අවසර නැත (ඔබව Banned කර ඇත).`, { mentions: [userId] });
                     await directRemoveParticipant(groupId, userId);
@@ -238,7 +233,6 @@ client.on("message", async (message) => {
     try {
         if (!message.from || !message.from.endsWith("@g.us")) return;
         if (message.fromMe) return; 
-        
         if (!TARGET_GROUP_IDS.includes(message.from)) return;
         
         const groupId = message.from;
