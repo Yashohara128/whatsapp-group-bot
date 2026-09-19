@@ -15,23 +15,41 @@ const SPAM_WINDOW_MS = 10 * 1000;
 const SPAM_LIMIT = 3;
 const BAD_WORDS = ["hutto", "uba", "thopi", "pakyala","palayan","pnnyo"]; 
 
+// ⏳ බෑන් වන කෙනෙකුට නැවත ජොයින් වීමට ගත විය යුතු කාලය (පැය 24ක් ලෙස සකසා ඇත - මිලලිසෙකන්ඩ් වලින්)
+const BAN_DURATION_MS = 24 * 60 * 60 * 1000; 
+
 const spamTracker = new Map();
 const linkWarningTracker = new Map();   
 const badWordWarningTracker = new Map(); 
 
 const BLACKLIST_FILE = "./blacklist.json";
-let blacklistedUsers = new Set();
+let blacklistedUsers = {}; // දැන් මේක Object එකක් (userId -> banExpiryTime)
 
 if (fs.existsSync(BLACKLIST_FILE)) {
     try {
-        blacklistedUsers = new Set(JSON.parse(fs.readFileSync(BLACKLIST_FILE, "utf-8")));
-    } catch(e) { }
+        blacklistedUsers = JSON.parse(fs.readFileSync(BLACKLIST_FILE, "utf-8"));
+    } catch(e) { blacklistedUsers = {}; }
 }
 
 function saveBlacklist() {
     try {
-        fs.writeFileSync(BLACKLIST_FILE, JSON.stringify([...blacklistedUsers]));
+        fs.writeFileSync(BLACKLIST_FILE, JSON.stringify(blacklistedUsers, null, 2));
     } catch(e) { }
+}
+
+// 🧹 කල් ඉකුත් වූ (Expired) බෑන් ස්වයංක්‍රීයව ඉවත් කිරීමේ ශ්‍රිතය
+function cleanExpiredBans() {
+    const now = Date.now();
+    let updated = false;
+    for (let userId in blacklistedUsers) {
+        if (blacklistedUsers[userId] && now > blacklistedUsers[userId]) {
+            delete blacklistedUsers[userId];
+            updated = true;
+        }
+    }
+    if (updated) {
+        saveBlacklist();
+    }
 }
 
 const client = new Client({
@@ -62,7 +80,7 @@ client.on("authenticated", () => {
 
 client.on("ready", () => {
     console.log("\n========================================");
-    console.log("🤖 BOT READY - ADVANCED UNBAN MATCHING");
+    console.log("🤖 BOT READY - AUTO-EXPIRE BAN SYSTEM");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
 
@@ -149,6 +167,8 @@ async function directRemoveParticipant(groupId, participantId) {
 
 client.on("group_join", async (notification) => {
     try {
+        cleanExpiredBans(); // ජොයින් වෙද්දීල් පැරණි බෑන්ස් ක්ලියර් කරයි
+
         const groupId = typeof notification.chatId === 'object' ? notification.chatId._serialized : String(notification.chatId);
         if (!TARGET_GROUP_IDS.includes(groupId)) return;
 
@@ -160,19 +180,21 @@ client.on("group_join", async (notification) => {
             const info = await getContactInfo(userId);
             if (!info) continue; 
             
-            console.log(`👤 New Member: ${info.name} (${info.actualNumber}) | ID: ${userId}`);
+            console.log(`👤 New Member: ${info.name} (${info.actualNumber})`);
 
-            // බ්ලැක්ලිස්ට් එකේ සේවී තිබෙන ඕනෑම අයිඩී එකක් හෝ නම්බර් එකක් පරීක්ෂා කිරීම
             let isBanned = false;
-            for (let bannedUser of blacklistedUsers) {
-                if (bannedUser === userId || bannedUser.includes(info.actualNumber)) {
+            const now = Date.now();
+            
+            // නම්බර් එක හෝ අයිඩී එක බ්ලැක්ලිස්ට් එකේ ඇද්ද සහ කාලය ඉවර වී ඇද්ද බැලීම
+            for (let bannedId in blacklistedUsers) {
+                if ((bannedId === userId || bannedId.includes(info.actualNumber)) && now < blacklistedUsers[bannedId]) {
                     isBanned = true;
                     break;
                 }
             }
 
             if (isBanned) {
-                await client.sendMessage(groupId, `🚫 @${userId.split('@')[0]} (*${info.name}*), ඔබට මෙම සමූහයට නැවත සම්බන්ධ වීමට අවසර නැත (ඔබව Banned කර ඇත).`, { mentions: [userId] });
+                await client.sendMessage(groupId, `🚫 @${userId.split('@')[0]} (*${info.name}*), ඔබට තවමත් මෙම සමූහයට සම්බන්ධ වීමට කාලය පැමිණ නැත (ඔබගේ Ban කාලය තවම අවසන් වී නැත).`, { mentions: [userId] });
                 await directRemoveParticipant(groupId, userId);
                 continue; 
             }
@@ -228,57 +250,8 @@ client.on("message_create", async (message) => {
         if (!TARGET_GROUP_IDS.includes(groupId)) return;
         
         const textLower = (message.body || "").toLowerCase();
-
-        // 🛠️ ADVANCED ADMIN UNBAN COMMAND
-        if (textLower.startsWith(".unban")) {
-            let isAdmin = message.fromMe;
-            let senderId = message.fromMe ? client.info.wid._serialized : (message.author || message.from);
-
-            if (!isAdmin) {
-                try {
-                    const chat = await message.getChat();
-                    if (chat && chat.participants) {
-                        const participant = chat.participants.find(p => p.id._serialized === senderId);
-                        if (participant && (participant.isAdmin || participant.isSuperAdmin)) {
-                            isAdmin = true;
-                        }
-                    }
-                } catch (err) {}
-            }
-
-            if (isAdmin) {
-                let number = textLower.replace(/\D/g, "");
-                if (number.startsWith("0")) {
-                    number = "94" + number.substring(1);
-                }
-                
-                if (number) {
-                    let removedCount = 0;
-                    for (let bannedUser of blacklistedUsers) {
-                        // නම්බර් එක හෝ අයිඩී එක කුමන ආකාරයකින් තිබුණත් මැච් කර ඉවත් කරයි
-                        if (bannedUser.includes(number)) {
-                            blacklistedUsers.delete(bannedUser);
-                            removedCount++;
-                        }
-                    }
-
-                    if (removedCount > 0) {
-                        saveBlacklist();
-                        await client.sendMessage(groupId, `✅ +${number} (සම්බන්ධතා වාර්තා ${removedCount}ක්) සාර්ථකව Blacklist එකෙන් ඉවත් කරන ලදී. දැන් ඔවුන්ට නැවත ජොයින් විය හැක.`);
-                    } else {
-                        await client.sendMessage(groupId, `⚠️ +${number} අංකය Blacklist එකේ කිසිදු ආකාරයකින් හමු නොවීය.`);
-                    }
-                } else {
-                    await client.sendMessage(groupId, `⚠️ කරුණාකර නිවැරදි අංකයක් දෙන්න. (උදා: .unban 0771234567)`);
-                }
-                return;
-            } else {
-                await client.sendMessage(groupId, `❌ මෙම කමාන්ඩ් එක භාවිතා කළ හැක්කේ Admin කෙනෙකුට පමණි.`);
-                return;
-            }
-        }
-
         if (message.fromMe) return; 
+
         const senderId = message.author || message.from;
         const info = await getContactInfo(senderId);
         if (!info) return;
@@ -293,8 +266,8 @@ client.on("message_create", async (message) => {
         if (info.actualNumber && !isSriLankan(info.actualNumber)) {
             const removed = await directRemoveParticipant(groupId, senderId);
             if (removed) {
-                blacklistedUsers.add(senderId);
-                if (info.actualId) blacklistedUsers.add(info.actualId);
+                blacklistedUsers[senderId] = Date.now() + BAN_DURATION_MS;
+                if (info.actualId) blacklistedUsers[info.actualId] = Date.now() + BAN_DURATION_MS;
                 saveBlacklist();
                 await client.sendMessage(groupId, `🌍 @${senderId.split('@')[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group.`, { mentions: [senderId] });
             }
@@ -349,11 +322,11 @@ client.on("message_create", async (message) => {
                     } else {
                         const removed = await directRemoveParticipant(groupId, senderId);
                         if (removed) {
-                            blacklistedUsers.add(senderId);
-                            if (info.actualId) blacklistedUsers.add(info.actualId);
+                            blacklistedUsers[senderId] = Date.now() + BAN_DURATION_MS;
+                            if (info.actualId) blacklistedUsers[info.actualId] = Date.now() + BAN_DURATION_MS;
                             saveBlacklist(); 
                             if (ENABLE_AUTO_REMOVE) {
-                                await client.sendMessage(groupId, `🚫 @${senderId.split('@')[0]} (*${info.name}*) අවවාද නොතකා නැවත තහනම් ලින්ක් දැමූ නිසා ගෲප් එකෙන් ස්ථිරවම ඉවත් කරන ලදී.`, { mentions: [senderId] });
+                                await client.sendMessage(groupId, `🚫 @${senderId.split('@')[0]} (*${info.name}*) අවවාද නොතකා නැවත තහනම් ලින්ක් දැමූ නිසා පැය 24කට ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [senderId] });
                             }
                         }
                     }
@@ -384,11 +357,11 @@ client.on("message_create", async (message) => {
                 } else {
                     const removed = await directRemoveParticipant(groupId, senderId);
                     if (removed) {
-                        blacklistedUsers.add(senderId);
-                        if (info.actualId) blacklistedUsers.add(info.actualId);
+                        blacklistedUsers[senderId] = Date.now() + BAN_DURATION_MS;
+                        if (info.actualId) blacklistedUsers[info.actualId] = Date.now() + BAN_DURATION_MS;
                         saveBlacklist(); 
                         if (ENABLE_AUTO_REMOVE) {
-                            await client.sendMessage(groupId, `🚫 @${senderId.split('@')[0]} (*${info.name}*) අවවාද නොතකා නැවත අපහාසාත්මක වචන භාවිත කළ නිසා ගෲප් එකෙන් ස්ථිරවම ඉවත් කරන ලදී.`, { mentions: [senderId] });
+                            await client.sendMessage(groupId, `🚫 @${senderId.split('@')[0]} (*${info.name}*) අවවාද නොතකා නැවත අපහාසාත්මක වචන භාවිත කළ නිසා පැය 24කට ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [senderId] });
                         }
                     }
                 }
@@ -413,11 +386,12 @@ async function checkSpam(message, senderId, name, groupId) {
         spamTracker.set(senderId, []);
         const removed = await directRemoveParticipant(groupId, senderId);
         if (removed) {
-            blacklistedUsers.add(senderId);
-            if (info && info.actualId) blacklistedUsers.add(info.actualId);
+            blacklistedUsers[senderId] = Date.now() + BAN_DURATION_MS;
+            const info = await getContactInfo(senderId);
+            if (info && info.actualId) blacklistedUsers[info.actualId] = Date.now() + BAN_DURATION_MS;
             saveBlacklist(); 
             if (ENABLE_AUTO_REMOVE) {
-                await client.sendMessage(groupId, `🚨 @${senderId.split('@')[0]} (*${name}*) has been permanently removed for SPAMMING.`, { mentions: [senderId] });
+                await client.sendMessage(groupId, `🚨 @${senderId.split('@')[0]} (*${name}*) has been temporarily removed for SPAMMING (24h ban).`, { mentions: [senderId] });
             }
         }
     }
