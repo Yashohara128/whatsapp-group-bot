@@ -120,7 +120,7 @@ function isSriLankan(number) {
     return number.startsWith("94");
 }
 
-async function directRemoveParticipant(groupId, participantId, reason) {
+async function directRemoveParticipant(groupId, participantId) {
     try {
         if (!ENABLE_AUTO_REMOVE) return false;
         const result = await client.pupPage.evaluate(async (groupId, participantId) => {
@@ -156,15 +156,6 @@ client.on("group_join", async (notification) => {
         console.log(`\n📥 [GROUP JOIN DETECTED]`);
         console.log(`📍 Group: ${groupId}`);
 
-        const chat = await client.getChatById(groupId);
-        let addedByAdmin = false;
-        if (notification.author) {
-            const authorParticipant = chat.participants.find(p => p.id._serialized === notification.author);
-            if (authorParticipant && (authorParticipant.isAdmin || authorParticipant.isSuperAdmin)) {
-                addedByAdmin = true;
-            }
-        }
-
         const users = notification.recipientIds || [];
         for (const userId of users) {
             const info = await getContactInfo(userId);
@@ -173,22 +164,18 @@ client.on("group_join", async (notification) => {
             console.log(`👤 New Member: ${info.name} (${info.actualNumber})`);
 
             if (blacklistedUsers.has(userId)) {
-                if (addedByAdmin) {
-                    blacklistedUsers.delete(userId);
-                    saveBlacklist();
-                } else {
-                    await client.sendMessage(groupId, `🚫 @${userId.split('@')[0]} (*${info.name}*), ඔබට මෙම සමූහයට නැවත සම්බන්ධ වීමට අවසර නැත (ඔබව Banned කර ඇත).`, { mentions: [userId] });
-                    await directRemoveParticipant(groupId, userId, "Blacklisted");
-                    continue; 
-                }
+                await client.sendMessage(groupId, `🚫 @${userId.split('@')[0]} (*${info.name}*), ඔබට මෙම සමූහයට නැවත සම්බන්ධ වීමට අවසර නැත (ඔබව Banned කර ඇත).`, { mentions: [userId] });
+                await directRemoveParticipant(groupId, userId);
+                continue; 
             }
 
             if (!isSriLankan(info.actualNumber)) {
                 await client.sendMessage(groupId, `🌍 @${userId.split('@')[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group. You will be removed.`, { mentions: [userId] });
-                await directRemoveParticipant(groupId, userId, "Non-Sri-Lankan number");
+                await directRemoveParticipant(groupId, userId);
                 continue;
             }
 
+            // කිසිම කොන්දේසියක් නෑ, ජොයින් වුණ ගමන් කෙළින්ම වෙල්කම් මැසේජ් එක යනවා!
             const welcomeMsg = `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓
 
 👋 Hello / ආයුබෝවන් *${info.name}*,
@@ -222,7 +209,9 @@ Thank you! / ස්තූතියි!
             await client.sendMessage(userId, welcomeMsg);
             console.log(`✅ Welcome successfully sent to: ${info.name}`);
         }
-    } catch (error) {}
+    } catch (error) {
+        console.log("⚠️ Error in group_join event:", error);
+    }
 });
 
 client.on("message", async (message) => {
@@ -238,7 +227,6 @@ client.on("message", async (message) => {
         const info = await getContactInfo(message.author);
         if (!info) return;
 
-        // 🟢 අර ලස්සන Console Log එක ආපහු දැම්මා!
         console.log("\n----------------------------------------");
         console.log(`📩 Group ID : ${groupId}`);
         console.log(`👤 Name     : ${info.name}`);
@@ -249,7 +237,7 @@ client.on("message", async (message) => {
         const textLower = (message.body || "").toLowerCase();
 
         if (info.actualNumber && !isSriLankan(info.actualNumber)) {
-            const removed = await directRemoveParticipant(groupId, message.author, "Non-Sri-Lankan number");
+            const removed = await directRemoveParticipant(groupId, message.author);
             if (removed) {
                 await client.sendMessage(groupId, `🌍 @${message.author.split('@')[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group.`, { mentions: [message.author] });
             }
@@ -302,7 +290,7 @@ client.on("message", async (message) => {
                     if (warnings === 1) {
                         await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} (*${info.name}*)\nමෙම කණ්ඩායම තුළ වෙනත් WhatsApp Group ලින්ක්, ටෙලිග්‍රෑම් ලින්ක් හෝ ව්‍යාපාරික දේවල් Share කිරීම තහනම්! ඔයාට group link share කරගන්න අවශ්‍යනම් group admin කෙනෙක් හරහා යොමු කරන්න🤠 මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ කරුණාකර link එක group එකෙන් ඉවත් කරගන්න.. 🚫`, { mentions: [message.author] });
                     } else {
-                        const removed = await directRemoveParticipant(groupId, message.author, "Unauthorized Links/Group Invites");
+                        const removed = await directRemoveParticipant(groupId, message.author);
                         if (removed) {
                             blacklistedUsers.add(message.author);
                             saveBlacklist(); 
@@ -336,7 +324,7 @@ client.on("message", async (message) => {
                 if (warnings === 1) {
                     await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} (*${info.name}*)\nමෙම කණ්ඩායම තුළ අපහාසාත්මක හෝ තහනම් වචන භාවිතය තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත එවැනි වචන භාවිත කළහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🤬`, { mentions: [message.author] });
                 } else {
-                    const removed = await directRemoveParticipant(groupId, message.author, "Bad Words");
+                    const removed = await directRemoveParticipant(groupId, message.author);
                     if (removed) {
                         blacklistedUsers.add(message.author);
                         saveBlacklist(); 
@@ -364,7 +352,7 @@ async function checkSpam(message, senderId, name, groupId) {
 
     if (timestamps.length >= SPAM_LIMIT) {
         spamTracker.set(senderId, []);
-        const removed = await directRemoveParticipant(groupId, senderId, "Spam");
+        const removed = await directRemoveParticipant(groupId, senderId);
         if (removed) {
             blacklistedUsers.add(senderId);
             saveBlacklist(); 
