@@ -33,12 +33,11 @@ const BAD_WORDS = [
     "pnnyo"
 ];
 
-// How often the bot checks group members
-// for newly joined/added students.
-const MEMBER_CHECK_INTERVAL_MS = 5000;
+// Check new members every 5 seconds
+const MEMBER_CHECK_INTERVAL = 5000;
 
 // ========================================
-// DATA & BLACKLIST SYSTEM
+// DATA
 // ========================================
 
 const spamTracker = new Map();
@@ -46,8 +45,14 @@ const linkWarningTracker = new Map();
 const badWordWarningTracker = new Map();
 
 const BLACKLIST_FILE = "./blacklist.json";
+const WELCOMED_FILE = "./welcomed_users.json";
 
 let blacklistedUsers = new Set();
+let welcomedUsers = new Set();
+
+// ========================================
+// LOAD BLACKLIST
+// ========================================
 
 if (fs.existsSync(BLACKLIST_FILE)) {
     try {
@@ -55,18 +60,51 @@ if (fs.existsSync(BLACKLIST_FILE)) {
             JSON.parse(fs.readFileSync(BLACKLIST_FILE, "utf-8"))
         );
     } catch (e) {
-        console.log("⚠️ Error loading blacklist", e);
+        console.log("⚠️ Error loading blacklist:", e);
     }
 }
+
+// ========================================
+// LOAD WELCOMED USERS
+// ========================================
+
+if (fs.existsSync(WELCOMED_FILE)) {
+    try {
+        welcomedUsers = new Set(
+            JSON.parse(fs.readFileSync(WELCOMED_FILE, "utf-8"))
+        );
+    } catch (e) {
+        console.log("⚠️ Error loading welcomed users:", e);
+    }
+}
+
+// ========================================
+// SAVE BLACKLIST
+// ========================================
 
 function saveBlacklist() {
     try {
         fs.writeFileSync(
             BLACKLIST_FILE,
-            JSON.stringify([...blacklistedUsers])
+            JSON.stringify([...blacklistedUsers], null, 2)
         );
     } catch (e) {
-        console.log("⚠️ Error saving blacklist", e);
+        console.log("⚠️ Error saving blacklist:", e);
+    }
+}
+
+// ========================================
+// SAVE WELCOMED USERS
+// ========================================
+
+function saveWelcomedUsers() {
+    try {
+        fs.writeFileSync(
+            WELCOMED_FILE,
+            JSON.stringify([...welcomedUsers], null, 2)
+        );
+    } catch (e) {
+        console.log("⚠️ Error saving welcomed users:", e);
     }
 }
 
@@ -99,6 +137,7 @@ const client = new Client({
 // ========================================
 
 client.on("qr", (qr) => {
+
     console.log("\n========================================");
     console.log("📱 SCAN QR CODE");
     console.log("========================================\n");
@@ -113,846 +152,10 @@ client.on("qr", (qr) => {
 // ========================================
 
 client.on("authenticated", () => {
+
     console.log("✅ WhatsApp authenticated");
+
 });
-
-// ========================================
-// CONTACT / LID RESOLVER
-// ========================================
-
-async function getContactInfo(id) {
-    try {
-        if (!id) {
-            return null;
-        }
-
-        const contact = await client.getContactById(id);
-
-        if (!contact) {
-            return null;
-        }
-
-        const originalId =
-            contact.id && contact.id._serialized
-                ? contact.id._serialized
-                : id;
-
-        const name =
-            contact.pushname ||
-            contact.name ||
-            contact.shortName ||
-            "Unknown User";
-
-        let phoneId = null;
-        let phoneNumber = "";
-
-        // ==================================================
-        // IMPORTANT:
-        // WhatsApp can give group participants as @lid.
-        // Resolve @lid -> real @c.us phone ID.
-        // ==================================================
-
-        try {
-            const resolved = await client.pupPage.evaluate(
-                async (participantId) => {
-                    try {
-                        if (
-                            !window.WWebJS ||
-                            typeof window.WWebJS
-                                .enforceLidAndPnRetrieval !== "function"
-                        ) {
-                            return null;
-                        }
-
-                        const result =
-                            await window.WWebJS.enforceLidAndPnRetrieval(
-                                participantId
-                            );
-
-                        return {
-                            lid:
-                                result && result.lid
-                                    ? result.lid._serialized
-                                    : null,
-
-                            phone:
-                                result && result.phone
-                                    ? result.phone._serialized
-                                    : null
-                        };
-                    } catch (e) {
-                        return null;
-                    }
-                },
-                id
-            );
-
-            if (resolved && resolved.phone) {
-                phoneId = resolved.phone;
-                phoneNumber = resolved.phone.split("@")[0];
-            }
-        } catch (e) {
-            console.log(
-                "⚠️ LID resolution failed:",
-                e.message || e
-            );
-        }
-
-        // Normal @c.us ID
-        if (!phoneId && originalId.endsWith("@c.us")) {
-            phoneId = originalId;
-            phoneNumber = originalId.split("@")[0];
-        }
-
-        // Fallback using contact.number
-        if (!phoneId && contact.number) {
-            phoneNumber = String(contact.number).replace(/\D/g, "");
-
-            if (phoneNumber) {
-                phoneId = `${phoneNumber}@c.us`;
-            }
-        }
-
-        return {
-            contact,
-            name,
-
-            actualId: phoneId || originalId,
-
-            actualNumber: phoneNumber,
-
-            dmId: phoneId || originalId,
-
-            originalId
-        };
-
-    } catch (error) {
-        console.log(
-            "⚠️ getContactInfo error:",
-            error.message || error
-        );
-
-        return null;
-    }
-}
-
-// ========================================
-// SRI LANKAN NUMBER CHECK
-// ========================================
-
-function isSriLankan(number) {
-    if (!number) {
-        return false;
-    }
-
-    return number.startsWith("94");
-}
-
-// ========================================
-// REMOVE PARTICIPANT
-// ========================================
-
-async function directRemoveParticipant(
-    groupId,
-    participantId,
-    reason
-) {
-    try {
-        if (!ENABLE_AUTO_REMOVE) {
-            return false;
-        }
-
-        const result = await client.pupPage.evaluate(
-            async (groupId, participantId) => {
-                try {
-                    const WWebJS = window.WWebJS;
-
-                    if (!WWebJS) {
-                        return {
-                            success: false,
-                            error: "WWebJS unavailable"
-                        };
-                    }
-
-                    // Refresh group metadata
-                    try {
-                        window
-                            .require("WAWebWidFactory")
-                            .createWid(groupId);
-
-                        await window
-                            .require("WAWebGroupQueryJob")
-                            .queryAndUpdateGroupMetadataById({
-                                id: groupId
-                            });
-
-                    } catch (metadataError) {}
-
-                    const chat = await WWebJS.getChat(
-                        groupId,
-                        {
-                            getAsModel: false
-                        }
-                    );
-
-                    if (!chat) {
-                        return {
-                            success: false,
-                            error: "Group chat unavailable"
-                        };
-                    }
-
-                    // Resolve LID / Phone ID
-                    let resolved = null;
-
-                    try {
-                        resolved =
-                            await WWebJS.enforceLidAndPnRetrieval(
-                                participantId
-                            );
-                    } catch (resolveError) {}
-
-                    const lid =
-                        resolved && resolved.lid
-                            ? resolved.lid
-                            : null;
-
-                    const phone =
-                        resolved && resolved.phone
-                            ? resolved.phone
-                            : null;
-
-                    let participant = null;
-
-                    if (
-                        lid &&
-                        chat.groupMetadata &&
-                        chat.groupMetadata.participants
-                    ) {
-                        participant =
-                            chat.groupMetadata.participants.get(
-                                lid._serialized
-                            );
-                    }
-
-                    if (
-                        !participant &&
-                        phone &&
-                        chat.groupMetadata &&
-                        chat.groupMetadata.participants
-                    ) {
-                        participant =
-                            chat.groupMetadata.participants.get(
-                                phone._serialized
-                            );
-                    }
-
-                    if (
-                        !participant &&
-                        chat.groupMetadata &&
-                        chat.groupMetadata.participants
-                    ) {
-                        participant =
-                            chat.groupMetadata.participants.get(
-                                participantId
-                            );
-                    }
-
-                    if (!participant) {
-                        return {
-                            success: false,
-                            error: "Participant not found"
-                        };
-                    }
-
-                    // Never remove admins
-                    if (
-                        participant.isAdmin === true ||
-                        participant.isSuperAdmin === true
-                    ) {
-                        return {
-                            success: false,
-                            error: "ADMIN_PROTECTED"
-                        };
-                    }
-
-                    await window
-                        .require(
-                            "WAWebModifyParticipantsGroupAction"
-                        )
-                        .removeParticipants(
-                            chat,
-                            [participant]
-                        );
-
-                    return {
-                        success: true
-                    };
-
-                } catch (error) {
-                    return {
-                        success: false,
-                        error: String(error)
-                    };
-                }
-            },
-            groupId,
-            participantId
-        );
-
-        if (result && result.success) {
-            console.log(
-                `✅ Removed participant. Reason: ${reason}`
-            );
-
-            return true;
-        }
-
-        console.log(
-            `⚠️ Remove failed. Reason: ${reason}`,
-            result
-        );
-
-        return false;
-
-    } catch (error) {
-        console.log(
-            "❌ directRemoveParticipant error:",
-            error.message || error
-        );
-
-        return false;
-    }
-}
-
-// ========================================
-// WELCOME MESSAGE
-// ========================================
-
-function createWelcomeMessage(name) {
-    return `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓
-
-👋 Hello / ආයුබෝවන් *${name}*,
-
-Please follow these group guidelines to maintain a good learning environment.
-කරුණාකර සමූහයේ යහපැවැත්ම උදෙසා පහත නීති මාලාව පිළිපදින්න.
-
-*GROUP RULES / නීති මාලාව:*
-
-1️⃣ Be respectful to everyone.
-(සියලුම සාමාජිකයින්ට ගෞරවයෙන් සලකන්න.)
-
-2️⃣ 🚫 No Spamming or flooding messages.
-(අනවශ්‍ය පණිවිඩ යැවීමෙන් වළකින්න.)
-
-3️⃣ 🚫 No unauthorized links (Other WhatsApp groups, Telegram, Scam/Business links). Only educational links are allowed.
-(වෙනත් WhatsApp Group, Telegram හෝ ව්‍යාපාරික ලින්ක් දැමීම සපුරා තහනම්. අධ්‍යාපනික ලින්ක් සඳහා පමණක් අවසර ඇත.)
-
-4️⃣ 🌙 Group will be closed for messages from 11:00 PM to 6:00 AM.
-(දිනපතා රාත්‍රී 11:00 සිට උදෑසන 6:00 දක්වා සමූහය වසා තැබේ.)
-
-5️⃣ 🎓 For further questions regarding student loans, please contact the group admins. Please watch the YouTube playlist below for more information.
-(ශිෂ්‍ය ණය පිළිබඳ වැඩිදුර ප්‍රශ්න සඳහා සමූහයේ Admin වරුන් සම්බන්ධ කරගන්න. ණය පිළිබඳ සියලුම තොරතුරු දැනගැනීමට පහත YouTube Playlist එක අනිවාර්යයෙන්ම නරඹන්න.)
-
-📺 *YouTube Playlist:*
-https://youtube.com/playlist?list=PL-ZbzAh0pKykpa-odcUrDEg94PBbTQp9M&si=F9L3Spy-pLZJq31n
-
-⚠️ *Note:* Breaking these rules will result in an automatic permanent ban by the system.
-(මෙම නීති කඩකරන අයව පද්ධතිය මගින් ස්වයංක්‍රීයව සමූහයෙන් ඉවත් කරනු ලැබේ.)
-
-Thank you! / ස්තූතියි!
-
-🤖 _System Generated Message. Please do not reply._`;
-}
-
-// ========================================
-// SEND WELCOME DM
-// ========================================
-
-async function sendWelcomeDM(userId) {
-    try {
-        console.log(
-            `📨 Preparing welcome DM for: ${userId}`
-        );
-
-        let info = await getContactInfo(userId);
-
-        if (!info) {
-            console.log(
-                `❌ Could not get contact information for ${userId}`
-            );
-
-            return false;
-        }
-
-        console.log(
-            `👤 Detected user: ${info.name}`
-        );
-
-        console.log(
-            `📱 Original ID: ${info.originalId}`
-        );
-
-        console.log(
-            `📱 Resolved ID: ${info.dmId}`
-        );
-
-        console.log(
-            `📞 Number: ${info.actualNumber}`
-        );
-
-        // Only Sri Lankan numbers
-        if (!isSriLankan(info.actualNumber)) {
-            console.log(
-                `🌍 Non-Sri-Lankan user detected: ${info.name}`
-            );
-
-            return false;
-        }
-
-        const welcomeMsg =
-            createWelcomeMessage(info.name);
-
-        const recipient =
-            info.dmId || info.actualId;
-
-        if (!recipient) {
-            console.log(
-                `❌ No DM recipient available for ${info.name}`
-            );
-
-            return false;
-        }
-
-        // ==================================================
-        // FIRST ATTEMPT
-        // ==================================================
-
-        try {
-            await client.sendMessage(
-                recipient,
-                welcomeMsg
-            );
-
-            console.log(
-                `✅ WELCOME DM SENT to ${info.name}`
-            );
-
-            return true;
-
-        } catch (firstError) {
-
-            console.log(
-                `⚠️ First DM attempt failed for ${info.name}:`,
-                firstError.message || firstError
-            );
-        }
-
-        // ==================================================
-        // SECOND ATTEMPT
-        // Refresh LID -> Phone mapping
-        // ==================================================
-
-        await new Promise(resolve =>
-            setTimeout(resolve, 1500)
-        );
-
-        try {
-            info = await getContactInfo(userId);
-
-            if (!info) {
-                return false;
-            }
-
-            const retryRecipient =
-                info.dmId || info.actualId;
-
-            if (!retryRecipient) {
-                return false;
-            }
-
-            await client.sendMessage(
-                retryRecipient,
-                welcomeMsg
-            );
-
-            console.log(
-                `✅ WELCOME DM RETRY SUCCESS for ${info.name}`
-            );
-
-            return true;
-
-        } catch (retryError) {
-
-            console.log(
-                `❌ WELCOME DM RETRY FAILED:`,
-                retryError.message || retryError
-            );
-
-            return false;
-        }
-
-    } catch (error) {
-
-        console.log(
-            "❌ sendWelcomeDM error:",
-            error.message || error
-        );
-
-        return false;
-    }
-}
-
-// ========================================
-// NEW MEMBER TRACKER
-// ========================================
-
-// groupId -> Set(participant IDs)
-const knownGroupMembers = new Map();
-
-// Prevent duplicate welcome messages
-const welcomedUsers = new Set();
-
-// Prevent simultaneous processing
-const processingWelcomeUsers = new Set();
-
-// ========================================
-// INITIALIZE GROUP MEMBER CACHE
-// ========================================
-
-async function initializeMemberCache() {
-    console.log("\n========================================");
-    console.log("👥 INITIALIZING GROUP MEMBER WATCHER");
-    console.log("========================================");
-
-    for (const groupId of TARGET_GROUP_IDS) {
-        try {
-            const chat =
-                await client.getChatById(groupId);
-
-            if (
-                !chat ||
-                !chat.participants
-            ) {
-                console.log(
-                    `⚠️ Cannot read members of ${groupId}`
-                );
-
-                continue;
-            }
-
-            const members = new Set();
-
-            for (const participant of chat.participants) {
-                if (
-                    participant &&
-                    participant.id &&
-                    participant.id._serialized
-                ) {
-                    members.add(
-                        participant.id._serialized
-                    );
-                }
-            }
-
-            knownGroupMembers.set(
-                groupId,
-                members
-            );
-
-            console.log(
-                `✅ Cached ${members.size} members for ${groupId}`
-            );
-
-        } catch (error) {
-
-            console.log(
-                `❌ Cache error for ${groupId}:`,
-                error.message || error
-            );
-        }
-    }
-
-    console.log("========================================\n");
-}
-
-// ========================================
-// CHECK FOR NEW MEMBERS
-// ========================================
-
-async function checkForNewMembers() {
-    for (const groupId of TARGET_GROUP_IDS) {
-
-        try {
-            const chat =
-                await client.getChatById(groupId);
-
-            if (
-                !chat ||
-                !chat.participants
-            ) {
-                continue;
-            }
-
-            let knownMembers =
-                knownGroupMembers.get(groupId);
-
-            if (!knownMembers) {
-                knownMembers = new Set();
-
-                for (
-                    const participant
-                    of chat.participants
-                ) {
-                    if (
-                        participant &&
-                        participant.id &&
-                        participant.id._serialized
-                    ) {
-                        knownMembers.add(
-                            participant.id._serialized
-                        );
-                    }
-                }
-
-                knownGroupMembers.set(
-                    groupId,
-                    knownMembers
-                );
-
-                continue;
-            }
-
-            const currentMembers = new Set();
-
-            for (
-                const participant
-                of chat.participants
-            ) {
-                if (
-                    participant &&
-                    participant.id &&
-                    participant.id._serialized
-                ) {
-                    currentMembers.add(
-                        participant.id._serialized
-                    );
-                }
-            }
-
-            // Find new members
-            const newMembers = [];
-
-            for (
-                const memberId
-                of currentMembers
-            ) {
-                if (!knownMembers.has(memberId)) {
-                    newMembers.push(memberId);
-                }
-            }
-
-            // Update cache immediately
-            knownGroupMembers.set(
-                groupId,
-                currentMembers
-            );
-
-            // No new members
-            if (newMembers.length === 0) {
-                continue;
-            }
-
-            console.log("\n========================================");
-            console.log(
-                `🆕 NEW MEMBER(S) DETECTED: ${newMembers.length}`
-            );
-            console.log(
-                `👥 Group: ${groupId}`
-            );
-            console.log("========================================");
-
-            for (const userId of newMembers) {
-
-                if (
-                    welcomedUsers.has(userId)
-                ) {
-                    continue;
-                }
-
-                if (
-                    processingWelcomeUsers.has(userId)
-                ) {
-                    continue;
-                }
-
-                processingWelcomeUsers.add(
-                    userId
-                );
-
-                try {
-
-                    console.log(
-                        `🔍 Processing new member: ${userId}`
-                    );
-
-                    const info =
-                        await getContactInfo(userId);
-
-                    if (!info) {
-                        console.log(
-                            `⚠️ Contact information unavailable for ${userId}`
-                        );
-
-                        continue;
-                    }
-
-                    console.log(
-                        `👤 New member name: ${info.name}`
-                    );
-
-                    console.log(
-                        `📞 Resolved number: ${info.actualNumber}`
-                    );
-
-                    // ==================================================
-                    // BLACKLIST CHECK
-                    // ==================================================
-
-                    if (
-                        blacklistedUsers.has(userId) ||
-                        blacklistedUsers.has(info.dmId)
-                    ) {
-
-                        console.log(
-                            `🚫 Blacklisted user detected: ${info.name}`
-                        );
-
-                        await client.sendMessage(
-                            groupId,
-                            `🚫 @${info.actualNumber || userId.split("@")[0]} (*${info.name}*), ඔබට මෙම සමූහයට නැවත සම්බන්ධ වීමට අවසර නැත (ඔබව Banned කර ඇත).`,
-                            {
-                                mentions: [
-                                    info.dmId || userId
-                                ]
-                            }
-                        );
-
-                        await directRemoveParticipant(
-                            groupId,
-                            userId,
-                            "Blacklisted"
-                        );
-
-                        continue;
-                    }
-
-                    // ==================================================
-                    // COUNTRY CHECK
-                    // ==================================================
-
-                    if (
-                        !isSriLankan(
-                            info.actualNumber
-                        )
-                    ) {
-
-                        console.log(
-                            `🌍 NON-SRI-LANKAN USER: ${info.name}`
-                        );
-
-                        await client.sendMessage(
-                            groupId,
-                            `🌍 @${info.actualNumber || userId.split("@")[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group. You will be removed.`,
-                            {
-                                mentions: [
-                                    info.dmId || userId
-                                ]
-                            }
-                        );
-
-                        await directRemoveParticipant(
-                            groupId,
-                            userId,
-                            "Non-Sri-Lankan number"
-                        );
-
-                        continue;
-                    }
-
-                    // ==================================================
-                    // SEND WELCOME DM
-                    // ==================================================
-
-                    const sent =
-                        await sendWelcomeDM(
-                            userId
-                        );
-
-                    if (sent) {
-
-                        welcomedUsers.add(
-                            userId
-                        );
-
-                        console.log(
-                            `🎉 Welcome process completed for ${info.name}`
-                        );
-
-                    } else {
-
-                        console.log(
-                            `⚠️ Welcome DM could not be sent to ${info.name}`
-                        );
-                    }
-
-                } catch (error) {
-
-                    console.log(
-                        `❌ New member processing error:`,
-                        error.message || error
-                    );
-
-                } finally {
-
-                    processingWelcomeUsers.delete(
-                        userId
-                    );
-                }
-
-                // Small delay between users
-                await new Promise(resolve =>
-                    setTimeout(resolve, 500)
-                );
-            }
-
-            console.log("========================================\n");
-
-        } catch (error) {
-
-            console.log(
-                `⚠️ Member watcher error for ${groupId}:`,
-                error.message || error
-            );
-        }
-    }
-}
-
-// ========================================
-// START MEMBER WATCHER
-// ========================================
-
-function startMemberWatcher() {
-
-    console.log(
-        `👀 Member watcher started. Checking every ${MEMBER_CHECK_INTERVAL_MS / 1000}s`
-    );
-
-    setInterval(
-        checkForNewMembers,
-        MEMBER_CHECK_INTERVAL_MS
-    );
-}
 
 // ========================================
 // READY
@@ -964,12 +167,10 @@ client.on("ready", async () => {
     console.log("🤖 BOT READY");
     console.log("========================================");
 
-    console.log(
-        `Working on ${TARGET_GROUP_IDS.length} Groups!`
-    );
+    console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
 
     console.log(
-        "Features Active: Any YouTube Link Allowed | Bad Words | Auto-Ban & Admin Bypass | Night Mode"
+        "Features Active: Welcome DM | Member Watcher | Sri Lankan Check | Bad Words | Spam | Links | Auto-Ban | Night Mode"
     );
 
     console.log(
@@ -977,59 +178,49 @@ client.on("ready", async () => {
     );
 
     console.log(
-        "📨 Welcome DM: NEW MEMBER WATCHER ENABLED"
-    );
-
-    console.log(
-        "📨 Welcome DM: LID → @c.us RESOLUTION ENABLED"
-    );
-
-    console.log(
-        "👀 New member check interval: 5 seconds"
+        `Total Welcomed Users: ${welcomedUsers.size}`
     );
 
     console.log("========================================\n");
 
-    // ==================================================
-    // IMPORTANT:
-    // Cache existing members first.
-    // Therefore existing users won't receive welcome.
-    // ==================================================
+    // Initialize existing members
+    await initializeExistingMembers();
 
-    await initializeMemberCache();
-
-    // Start new member watcher
+    // Start member watcher
     startMemberWatcher();
 
-    // ==================================================
-    // NIGHT MODE - 11 PM
-    // ==================================================
+    // ========================================
+    // NIGHT MODE
+    // ========================================
 
     cron.schedule(
         "0 23 * * *",
         async () => {
 
-            for (
-                const groupId
-                of TARGET_GROUP_IDS
-            ) {
+            console.log("🌙 Night mode starting...");
+
+            for (const groupId of TARGET_GROUP_IDS) {
 
                 try {
 
                     const chat =
-                        await client.getChatById(
-                            groupId
-                        );
+                        await client.getChatById(groupId);
 
-                    await chat.setMessagesAdminsOnly(
-                        true
-                    );
+                    await chat.setMessagesAdminsOnly(true);
 
                     await chat.sendMessage(
-                        "🌙 *රාත්‍රී 11:00 Group Admin Mode Active වී ඇත.* නැවත උදේ 6:00 ට open වේ. Good Night All!😴 Bot generated message.don't reply"
+                        "🌙 *රාත්‍රී 11:00 Group Admin Mode Active වී ඇත.*\n\nනැවත උදේ 6:00 ට open වේ.\n\nGood Night All! 😴\n\n_Bot generated message. Don't reply._"
                     );
 
-                } catch (e) {}
+                } catch (e) {
+
+                    console.log(
+                        `❌ Night mode error ${groupId}:`,
+                        e.message
+                    );
+
+                }
+
             }
 
         },
@@ -1039,35 +230,38 @@ client.on("ready", async () => {
         }
     );
 
-    // ==================================================
-    // MORNING MODE - 6 AM
-    // ==================================================
+    // ========================================
+    // MORNING MODE
+    // ========================================
 
     cron.schedule(
         "0 6 * * *",
         async () => {
 
-            for (
-                const groupId
-                of TARGET_GROUP_IDS
-            ) {
+            console.log("☀️ Morning mode starting...");
+
+            for (const groupId of TARGET_GROUP_IDS) {
 
                 try {
 
                     const chat =
-                        await client.getChatById(
-                            groupId
-                        );
+                        await client.getChatById(groupId);
 
-                    await chat.setMessagesAdminsOnly(
-                        false
-                    );
+                    await chat.setMessagesAdminsOnly(false);
 
                     await chat.sendMessage(
-                        "☀️ *Good Morning All!* ගෲප් එක Open.😊Bot generated message.don't reply"
+                        "☀️ *Good Morning All!*\n\nගෲප් එක Open. 😊\n\n_Bot generated message. Don't reply._"
                     );
 
-                } catch (e) {}
+                } catch (e) {
+
+                    console.log(
+                        `❌ Morning mode error ${groupId}:`,
+                        e.message
+                    );
+
+                }
+
             }
 
         },
@@ -1076,23 +270,863 @@ client.on("ready", async () => {
             timezone: "Asia/Colombo"
         }
     );
+
 });
+
+// ========================================
+// GET CONTACT INFO
+// ========================================
+
+async function getContactInfo(id) {
+
+    try {
+
+        if (!id) {
+            return null;
+        }
+
+        const contact =
+            await client.getContactById(id);
+
+        if (!contact) {
+            return null;
+        }
+
+        const contactId =
+            contact.id &&
+            contact.id._serialized
+                ? contact.id._serialized
+                : id;
+
+        let actualId = contactId;
+        let phoneId = null;
+        let lidId = null;
+
+        // ========================================
+        // RESOLVE LID -> PHONE
+        // ========================================
+
+        try {
+
+            const resolved =
+                await client.pupPage.evaluate(
+                    async (participantId) => {
+
+                        try {
+
+                            if (
+                                !window.WWebJS ||
+                                !window.WWebJS
+                                    .enforceLidAndPnRetrieval
+                            ) {
+                                return null;
+                            }
+
+                            const result =
+                                await window.WWebJS
+                                    .enforceLidAndPnRetrieval(
+                                        participantId
+                                    );
+
+                            return {
+                                lid: result?.lid?._serialized || null,
+                                phone: result?.phone?._serialized || null
+                            };
+
+                        } catch (e) {
+
+                            return {
+                                error: String(e)
+                            };
+
+                        }
+
+                    },
+                    contactId
+                );
+
+            if (resolved) {
+
+                lidId = resolved.lid || null;
+                phoneId = resolved.phone || null;
+
+            }
+
+        } catch (e) {
+
+            console.log(
+                "⚠️ LID resolution failed:",
+                e.message
+            );
+
+        }
+
+        // ========================================
+        // PHONE ID
+        // ========================================
+
+        if (!phoneId && contactId.endsWith("@c.us")) {
+            phoneId = contactId;
+        }
+
+        if (!phoneId && contactId.endsWith("@s.whatsapp.net")) {
+            phoneId = contactId;
+        }
+
+        // ========================================
+        // NUMBER
+        // ========================================
+
+        let actualNumber = "";
+
+        if (phoneId) {
+
+            actualNumber =
+                phoneId.split("@")[0];
+
+        } else if (contactId.endsWith("@c.us")) {
+
+            actualNumber =
+                contactId.split("@")[0];
+
+        }
+
+        // ========================================
+        // NAME
+        // ========================================
+
+        const name =
+            contact.pushname ||
+            contact.name ||
+            contact.shortName ||
+            "Unknown User";
+
+        return {
+
+            contact,
+            name,
+
+            originalId: id,
+
+            actualId: contactId,
+
+            phoneId,
+
+            lidId,
+
+            actualNumber
+
+        };
+
+    } catch (error) {
+
+        console.log(
+            "❌ getContactInfo error:",
+            error.message
+        );
+
+        return null;
+    }
+
+}
+
+// ========================================
+// SRI LANKAN NUMBER
+// ========================================
+
+function isSriLankan(number) {
+
+    if (!number) {
+        return false;
+    }
+
+    return number.startsWith("94");
+
+}
+
+// ========================================
+// REMOVE PARTICIPANT
+// ========================================
+
+async function directRemoveParticipant(
+    groupId,
+    participantId,
+    reason
+) {
+
+    try {
+
+        if (!ENABLE_AUTO_REMOVE) {
+            return false;
+        }
+
+        console.log(
+            `🗑️ Removing ${participantId} | Reason: ${reason}`
+        );
+
+        const result =
+            await client.pupPage.evaluate(
+                async (
+                    groupId,
+                    participantId
+                ) => {
+
+                    try {
+
+                        const WWebJS =
+                            window.WWebJS;
+
+                        if (!WWebJS) {
+
+                            return {
+                                success: false,
+                                error:
+                                    "WWebJS unavailable"
+                            };
+
+                        }
+
+                        // ========================================
+                        // UPDATE GROUP METADATA
+                        // ========================================
+
+                        try {
+
+                            window
+                                .require(
+                                    "WAWebWidFactory"
+                                )
+                                .createWid(
+                                    groupId
+                                );
+
+                            await window
+                                .require(
+                                    "WAWebGroupQueryJob"
+                                )
+                                .queryAndUpdateGroupMetadataById(
+                                    {
+                                        id: groupId
+                                    }
+                                );
+
+                        } catch (e) {}
+
+                        // ========================================
+                        // GET GROUP
+                        // ========================================
+
+                        const chat =
+                            await WWebJS.getChat(
+                                groupId,
+                                {
+                                    getAsModel: false
+                                }
+                            );
+
+                        if (!chat) {
+
+                            return {
+                                success: false,
+                                error:
+                                    "Group unavailable"
+                            };
+
+                        }
+
+                        // ========================================
+                        // RESOLVE LID / PHONE
+                        // ========================================
+
+                        const resolved =
+                            await WWebJS
+                                .enforceLidAndPnRetrieval(
+                                    participantId
+                                );
+
+                        const lid =
+                            resolved?.lid || null;
+
+                        const phone =
+                            resolved?.phone || null;
+
+                        let participant = null;
+
+                        // LID
+                        if (
+                            lid &&
+                            chat.groupMetadata &&
+                            chat.groupMetadata.participants
+                        ) {
+
+                            participant =
+                                chat.groupMetadata
+                                    .participants
+                                    .get(
+                                        lid._serialized
+                                    );
+
+                        }
+
+                        // PHONE
+                        if (
+                            !participant &&
+                            phone &&
+                            chat.groupMetadata &&
+                            chat.groupMetadata.participants
+                        ) {
+
+                            participant =
+                                chat.groupMetadata
+                                    .participants
+                                    .get(
+                                        phone._serialized
+                                    );
+
+                        }
+
+                        // ORIGINAL
+                        if (
+                            !participant &&
+                            chat.groupMetadata &&
+                            chat.groupMetadata.participants
+                        ) {
+
+                            participant =
+                                chat.groupMetadata
+                                    .participants
+                                    .get(
+                                        participantId
+                                    );
+
+                        }
+
+                        if (!participant) {
+
+                            return {
+                                success: false,
+                                error:
+                                    "Participant not found"
+                            };
+
+                        }
+
+                        // ========================================
+                        // ADMIN PROTECTION
+                        // ========================================
+
+                        if (
+                            participant.isAdmin === true ||
+                            participant.isSuperAdmin === true
+                        ) {
+
+                            return {
+                                success: false,
+                                error:
+                                    "ADMIN_PROTECTED"
+                            };
+
+                        }
+
+                        // ========================================
+                        // REMOVE
+                        // ========================================
+
+                        await window
+                            .require(
+                                "WAWebModifyParticipantsGroupAction"
+                            )
+                            .removeParticipants(
+                                chat,
+                                [participant]
+                            );
+
+                        return {
+                            success: true
+                        };
+
+                    } catch (error) {
+
+                        return {
+                            success: false,
+                            error: String(error)
+                        };
+
+                    }
+
+                },
+                groupId,
+                participantId
+            );
+
+        if (
+            result &&
+            result.success
+        ) {
+
+            console.log(
+                `✅ USER REMOVED | ${participantId} | ${reason}`
+            );
+
+            return true;
+
+        }
+
+        console.log(
+            `❌ REMOVE FAILED | ${participantId} | ${result?.error}`
+        );
+
+        return false;
+
+    } catch (error) {
+
+        console.log(
+            "❌ directRemoveParticipant error:",
+            error.message
+        );
+
+        return false;
+
+    }
+
+}
+
+// ========================================
+// WELCOME MESSAGE
+// ========================================
+
+function createWelcomeMessage(name) {
+
+    return `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓
+
+👋 Hello / ආයුබෝවන් *${name}*,
+
+Please follow these group guidelines to maintain a good learning environment.
+
+කරුණාකර සමූහයේ යහපැවැත්ම උදෙසා පහත නීති මාලාව පිළිපදින්න.
+
+*GROUP RULES / නීති මාලාව:*
+
+1️⃣ Be respectful to everyone.
+(සියලුම සාමාජිකයින්ට ගෞරවයෙන් සලකන්න.)
+
+2️⃣ 🚫 No Spamming or flooding messages.
+(අනවශ්‍ය පණිවිඩ යැවීමෙන් වළකින්න.)
+
+3️⃣ 🚫 No unauthorized links.
+(වෙනත් WhatsApp Group, Telegram හෝ ව්‍යාපාරික ලින්ක් දැමීම තහනම්.)
+
+Only educational links are allowed.
+
+4️⃣ 🌙 Group will be closed for messages from 11:00 PM to 6:00 AM.
+(දිනපතා රාත්‍රී 11:00 සිට උදෑසන 6:00 දක්වා සමූහය වසා තැබේ.)
+
+5️⃣ 🎓 For further questions regarding student loans, please contact the group admins.
+
+ශිෂ්‍ය ණය පිළිබඳ වැඩිදුර ප්‍රශ්න සඳහා Admin වරුන් සම්බන්ධ කරගන්න.
+
+📺 *YouTube Playlist:*
+https://youtube.com/playlist?list=PL-ZbzAh0pKykpa-odcUrDEg94PBbTQp9M&si=F9L3Spy-pLZJq31n
+
+⚠️ *Note:*
+Breaking these rules will result in an automatic permanent ban by the system.
+
+(මෙම නීති කඩකරන අයව පද්ධතිය මගින් ස්වයංක්‍රීයව සමූහයෙන් ඉවත් කරනු ලැබේ.)
+
+Thank you! / ස්තූතියි!
+
+🤖 _System Generated Message. Please do not reply._`;
+
+}
+
+// ========================================
+// SEND WELCOME DM
+// ========================================
+
+async function sendWelcomeDM(
+    groupId,
+    userId,
+    source = "watcher"
+) {
+
+    try {
+
+        console.log("\n----------------------------------------");
+
+        console.log(
+            `👤 NEW MEMBER DETECTED`
+        );
+
+        console.log(
+            `Group    : ${groupId}`
+        );
+
+        console.log(
+            `User ID  : ${userId}`
+        );
+
+        console.log(
+            `Source   : ${source}`
+        );
+
+        // ========================================
+        // CONTACT INFO
+        // ========================================
+
+        const info =
+            await getContactInfo(userId);
+
+        if (!info) {
+
+            console.log(
+                "❌ Could not get contact information."
+            );
+
+            return false;
+
+        }
+
+        console.log(
+            `Name     : ${info.name}`
+        );
+
+        console.log(
+            `Phone ID : ${info.phoneId}`
+        );
+
+        console.log(
+            `LID      : ${info.lidId}`
+        );
+
+        console.log(
+            `Number   : ${info.actualNumber}`
+        );
+
+        // ========================================
+        // ALREADY WELCOMED?
+        // ========================================
+
+        const uniqueKey =
+            `${groupId}|${info.phoneId || info.lidId || userId}`;
+
+        if (welcomedUsers.has(uniqueKey)) {
+
+            console.log(
+                "ℹ️ Welcome already sent."
+            );
+
+            return true;
+
+        }
+
+        // ========================================
+        // BLACKLIST CHECK
+        // ========================================
+
+        const blacklistId =
+            info.phoneId ||
+            info.lidId ||
+            userId;
+
+        if (
+            blacklistedUsers.has(userId) ||
+            blacklistedUsers.has(blacklistId)
+        ) {
+
+            console.log(
+                `🚫 User is blacklisted: ${info.name}`
+            );
+
+            await client.sendMessage(
+                groupId,
+
+                `🚫 @${userId.split("@")[0]} (*${info.name}*), ඔබට මෙම සමූහයට නැවත සම්බන්ධ වීමට අවසර නැත. ඔබව system එක මගින් Banned කර ඇත.`,
+
+                {
+                    mentions: [userId]
+                }
+            );
+
+            await directRemoveParticipant(
+                groupId,
+                userId,
+                "Blacklisted"
+            );
+
+            return false;
+
+        }
+
+        // ========================================
+        // COUNTRY CHECK
+        // ========================================
+
+        if (!isSriLankan(info.actualNumber)) {
+
+            console.log(
+                `🌍 NON-SRI LANKAN NUMBER: ${info.actualNumber}`
+            );
+
+            await client.sendMessage(
+                groupId,
+
+                `🌍 @${userId.split("@")[0]} (*${info.name}*)\n\nSorry, only Sri Lankan numbers (+94) are allowed in this group.\n\nඔබව සමූහයෙන් ඉවත් කරනු ලැබේ.`,
+
+                {
+                    mentions: [userId]
+                }
+            );
+
+            await directRemoveParticipant(
+                groupId,
+                userId,
+                "Non-Sri-Lankan number"
+            );
+
+            return false;
+
+        }
+
+        // ========================================
+        // MESSAGE ID
+        // ========================================
+
+        const dmId =
+            info.phoneId ||
+            info.actualId ||
+            userId;
+
+        console.log(
+            `📨 Sending welcome DM to: ${dmId}`
+        );
+
+        // ========================================
+        // SEND DM
+        // ========================================
+
+        const welcomeMsg =
+            createWelcomeMessage(info.name);
+
+        await client.sendMessage(
+            dmId,
+            welcomeMsg
+        );
+
+        // ========================================
+        // SAVE
+        // ========================================
+
+        welcomedUsers.add(uniqueKey);
+
+        saveWelcomedUsers();
+
+        console.log(
+            `✅ WELCOME DM SENT TO ${info.name}`
+        );
+
+        console.log("----------------------------------------\n");
+
+        return true;
+
+    } catch (error) {
+
+        console.log(
+            "\n❌ WELCOME DM ERROR"
+        );
+
+        console.log(
+            "User:",
+            userId
+        );
+
+        console.log(
+            "Error:",
+            error
+        );
+
+        console.log("----------------------------------------\n");
+
+        return false;
+
+    }
+
+}
+
+// ========================================
+// INITIALIZE EXISTING MEMBERS
+// ========================================
+
+async function initializeExistingMembers() {
+
+    console.log(
+        "\n🔄 Initializing existing group members..."
+    );
+
+    for (const groupId of TARGET_GROUP_IDS) {
+
+        try {
+
+            const chat =
+                await client.getChatById(groupId);
+
+            if (
+                !chat ||
+                !chat.participants
+            ) {
+                continue;
+            }
+
+            let count = 0;
+
+            for (
+                const participant
+                of chat.participants
+            ) {
+
+                const id =
+                    participant.id._serialized;
+
+                // Existing users are NOT welcomed
+                // They are only registered as known
+                const key =
+                    `${groupId}|${id}`;
+
+                if (!welcomedUsers.has(key)) {
+
+                    welcomedUsers.add(key);
+
+                }
+
+                count++;
+
+            }
+
+            console.log(
+                `✅ ${chat.name}: ${count} existing members loaded`
+            );
+
+        } catch (error) {
+
+            console.log(
+                `❌ Initial member load failed ${groupId}:`,
+                error.message
+            );
+
+        }
+
+    }
+
+    saveWelcomedUsers();
+
+    console.log(
+        "✅ Existing member initialization completed.\n"
+    );
+
+}
+
+// ========================================
+// MEMBER WATCHER
+// ========================================
+
+function startMemberWatcher() {
+
+    console.log(
+        "👀 Member watcher started."
+    );
+
+    setInterval(
+        async () => {
+
+            for (const groupId of TARGET_GROUP_IDS) {
+
+                try {
+
+                    const chat =
+                        await client.getChatById(groupId);
+
+                    if (
+                        !chat ||
+                        !chat.participants
+                    ) {
+                        continue;
+                    }
+
+                    for (
+                        const participant
+                        of chat.participants
+                    ) {
+
+                        const userId =
+                            participant.id._serialized;
+
+                        const key =
+                            `${groupId}|${userId}`;
+
+                        // ========================================
+                        // NEW USER
+                        // ========================================
+
+                        if (
+                            !welcomedUsers.has(key)
+                        ) {
+
+                            console.log(
+                                `🆕 New member found by watcher: ${userId}`
+                            );
+
+                            await sendWelcomeDM(
+                                groupId,
+                                userId,
+                                "MEMBER_WATCHER"
+                            );
+
+                        }
+
+                    }
+
+                } catch (error) {
+
+                    console.log(
+                        `⚠️ Member watcher error ${groupId}:`,
+                        error.message
+                    );
+
+                }
+
+            }
+
+        },
+        MEMBER_CHECK_INTERVAL
+    );
+
+}
 
 // ========================================
 // GROUP JOIN EVENT
 // ========================================
-//
-// Keep the original event as an additional
-// fast path.
-//
-// The member watcher above is the important
-// fallback for cases where group_join does not
-// fire correctly.
-//
 
 client.on(
     "group_join",
     async (notification) => {
+
+        console.log(
+            "\n========== GROUP JOIN EVENT =========="
+        );
+
+        console.log(
+            "Chat ID:",
+            notification.chatId
+        );
+
+        console.log(
+            "Author:",
+            notification.author
+        );
+
+        console.log(
+            "Recipient IDs:",
+            notification.recipientIds
+        );
 
         try {
 
@@ -1101,64 +1135,65 @@ client.on(
                     notification.chatId
                 )
             ) {
+
+                console.log(
+                    "⚠️ Group is not in TARGET_GROUP_IDS."
+                );
+
                 return;
+
             }
 
             const groupId =
                 notification.chatId;
 
-            console.log(
-                `📥 group_join event received for ${groupId}`
-            );
-
             const users =
                 notification.recipientIds || [];
 
-            if (users.length === 0) {
+            // ========================================
+            // NORMAL GROUP JOIN USERS
+            // ========================================
+
+            if (users.length > 0) {
+
+                for (
+                    const userId
+                    of users
+                ) {
+
+                    await sendWelcomeDM(
+                        groupId,
+                        userId,
+                        "GROUP_JOIN_EVENT"
+                    );
+
+                }
+
+            } else {
 
                 console.log(
-                    "⚠️ group_join event had no recipientIds. Member watcher will handle it."
+                    "⚠️ group_join fired but recipientIds is empty."
                 );
 
-                return;
-            }
-
-            for (
-                const userId
-                of users
-            ) {
-
-                if (
-                    welcomedUsers.has(userId)
-                ) {
-                    continue;
-                }
-
-                // Give member watcher a chance first
-                await new Promise(resolve =>
-                    setTimeout(resolve, 1000)
+                console.log(
+                    "👀 Member watcher will detect the user."
                 );
 
-                const sent =
-                    await sendWelcomeDM(
-                        userId
-                    );
-
-                if (sent) {
-
-                    welcomedUsers.add(
-                        userId
-                    );
-                }
             }
 
         } catch (error) {
 
             console.log(
-                "❌ group_join error:",
-                error.message || error
+                "❌ GROUP JOIN ERROR:",
+                error
             );
+
         }
+
+        console.log(
+            "======================================\n"
+        );
+
     }
 );
 
@@ -1172,7 +1207,6 @@ client.on(
 
         try {
 
-            // Only group messages
             if (
                 !message.from ||
                 !message.from.endsWith("@g.us")
@@ -1180,12 +1214,10 @@ client.on(
                 return;
             }
 
-            // Ignore own messages
             if (message.fromMe) {
                 return;
             }
 
-            // Only target groups
             if (
                 !TARGET_GROUP_IDS.includes(
                     message.from
@@ -1211,7 +1243,9 @@ client.on(
             }
 
             const textLower =
-                (message.body || "").toLowerCase();
+                (
+                    message.body || ""
+                ).toLowerCase();
 
             console.log(
                 "\n----------------------------------------"
@@ -1226,20 +1260,27 @@ client.on(
             );
 
             console.log(
+                `📱 Number   : ${info.actualNumber}`
+            );
+
+            console.log(
                 `💬 Type     : ${message.type}`
             );
 
             console.log(
-                `💬 Message  : ${message.body || "[Media / Sticker / Invite]"}`
+                `💬 Message  : ${
+                    message.body ||
+                    "[Media / Sticker / Invite]"
+                }`
             );
 
             console.log(
                 "----------------------------------------"
             );
 
-            // ==================================================
-            // NON-SRI-LANKAN MESSAGE CHECK
-            // ==================================================
+            // ========================================
+            // COUNTRY CHECK
+            // ========================================
 
             if (
                 info.actualNumber &&
@@ -1259,22 +1300,25 @@ client.on(
 
                     await client.sendMessage(
                         groupId,
-                        `🌍 @${info.actualNumber || message.author.split("@")[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group.`,
+
+                        `🌍 @${message.author.split("@")[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group.`,
+
                         {
                             mentions: [
-                                info.dmId ||
                                 message.author
                             ]
                         }
                     );
+
                 }
 
                 return;
+
             }
 
-            // ==================================================
-            // LINK CHECK
-            // ==================================================
+            // ========================================
+            // LINK DETECTION
+            // ========================================
 
             const isNativeGroupInvite =
                 message.type === "group_invite";
@@ -1319,11 +1363,13 @@ client.on(
                                 participant.isAdmin ||
                                 participant.isSuperAdmin
                             );
+
                     }
 
                 } catch (err) {
 
                     isAdmin = false;
+
                 }
 
                 if (!isAdmin) {
@@ -1413,25 +1459,27 @@ client.on(
                     let shouldBlock = false;
 
                     if (isTelegramLink) {
-                        shouldBlock = true;
-                    }
 
-                    else if (
+                        shouldBlock = true;
+
+                    } else if (
                         containsScamOrBusiness
                     ) {
-                        shouldBlock = true;
-                    }
 
-                    else if (
+                        shouldBlock = true;
+
+                    } else if (
                         isWhatsAppGroupLink
                     ) {
-                        shouldBlock = true;
-                    }
 
-                    else if (
+                        shouldBlock = true;
+
+                    } else if (
                         !isAllowedEducationalLink
                     ) {
+
                         shouldBlock = true;
+
                     }
 
                     if (shouldBlock) {
@@ -1451,6 +1499,7 @@ client.on(
                             console.log(
                                 "⚠️ Could not delete message."
                             );
+
                         }
 
                         let warnings =
@@ -1468,14 +1517,17 @@ client.on(
                         if (warnings === 1) {
 
                             await client.sendMessage(
+
                                 groupId,
-                                `⚠️ @${message.author.split("@")[0]} (*${info.name}*)
-මෙම කණ්ඩායම තුළ වෙනත් WhatsApp Group ලින්ක්, ටෙලිග්‍රෑම් ලින්ක් හෝ ව්‍යාපාරික දේවල් Share කිරීම තහනම්! ඔයාට group link share කරගන්න අවශ්‍යනම් group admin කෙනෙක් හරහා යොමු කරන්න🤠 මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ කරුණාකර link එක group එකෙන් ඉවත් කරගන්න.. 🚫`,
+
+                                `⚠️ @${message.author.split("@")[0]} (*${info.name}*)\n\nමෙම කණ්ඩායම තුළ වෙනත් WhatsApp Group ලින්ක්, Telegram ලින්ක් හෝ ව්‍යාපාරික දේවල් Share කිරීම තහනම්!\n\nමෙය ඔබගේ *පළමු අවවාදයයි*. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🚫`,
+
                                 {
                                     mentions: [
                                         message.author
                                     ]
                                 }
+
                             );
 
                         } else {
@@ -1484,7 +1536,7 @@ client.on(
                                 await directRemoveParticipant(
                                     groupId,
                                     message.author,
-                                    "Unauthorized Links/Group Invites"
+                                    "Unauthorized Links / Group Invites"
                                 );
 
                             if (removed) {
@@ -1493,33 +1545,47 @@ client.on(
                                     message.author
                                 );
 
-                                saveBlacklist();
-
                                 if (
-                                    ENABLE_AUTO_REMOVE
+                                    info.phoneId
                                 ) {
 
-                                    await client.sendMessage(
-                                        groupId,
-                                        `🚫 @${message.author.split("@")[0]} (*${info.name}*) අවවාද නොතකා නැවත තහනම් ලින්ක් දැමූ නිසා ගෲප් එකෙන් ස්ථිරවම ඉවත් කරන ලදී.`,
-                                        {
-                                            mentions: [
-                                                message.author
-                                            ]
-                                        }
+                                    blacklistedUsers.add(
+                                        info.phoneId
                                     );
+
                                 }
+
+                                saveBlacklist();
+
+                                await client.sendMessage(
+
+                                    groupId,
+
+                                    `🚫 @${message.author.split("@")[0]} (*${info.name}*) අවවාද නොතකා නැවත තහනම් ලින්ක් දැමූ නිසා ගෲප් එකෙන් ස්ථිරවම ඉවත් කරන ලදී.`,
+
+                                    {
+                                        mentions: [
+                                            message.author
+                                        ]
+                                    }
+
+                                );
+
                             }
+
                         }
 
                         return;
+
                     }
+
                 }
+
             }
 
-            // ==================================================
-            // BAD WORD CHECK
-            // ==================================================
+            // ========================================
+            // BAD WORDS
+            // ========================================
 
             const containsBadWord =
                 BAD_WORDS.some(
@@ -1556,17 +1622,23 @@ client.on(
                                 participant.isAdmin ||
                                 participant.isSuperAdmin
                             );
+
                     }
 
                 } catch (err) {
 
                     isAdmin = false;
+
                 }
 
                 if (!isAdmin) {
 
                     try {
-                        await message.delete(true);
+
+                        await message.delete(
+                            true
+                        );
+
                     } catch (e) {}
 
                     let warnings =
@@ -1584,14 +1656,17 @@ client.on(
                     if (warnings === 1) {
 
                         await client.sendMessage(
+
                             groupId,
-                            `⚠️ @${message.author.split("@")[0]} (*${info.name}*)
-මෙම කණ්ඩායම තුළ අපහාසාත්මක හෝ තහනම් වචන භාවිතය තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත එවැනි වචන භාවිත කළහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🤬`,
+
+                            `⚠️ @${message.author.split("@")[0]} (*${info.name}*)\n\nමෙම කණ්ඩායම තුළ අපහාසාත්මක හෝ තහනම් වචන භාවිතය තහනම්!\n\nමෙය ඔබගේ *පළමු අවවාදයයි*. නැවත එවැනි වචන භාවිත කළහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🤬`,
+
                             {
                                 mentions: [
                                     message.author
                                 ]
                             }
+
                         );
 
                     } else {
@@ -1609,32 +1684,45 @@ client.on(
                                 message.author
                             );
 
-                            saveBlacklist();
-
                             if (
-                                ENABLE_AUTO_REMOVE
+                                info.phoneId
                             ) {
 
-                                await client.sendMessage(
-                                    groupId,
-                                    `🚫 @${message.author.split("@")[0]} (*${info.name}*) අවවාද නොතකා නැවත අපහාසාත්මක වචන භාවිත කළ නිසා ගෲප් එකෙන් ස්ථිරවම ඉවත් කරන ලදී.`,
-                                    {
-                                        mentions: [
-                                            message.author
-                                        ]
-                                    }
+                                blacklistedUsers.add(
+                                    info.phoneId
                                 );
+
                             }
+
+                            saveBlacklist();
+
+                            await client.sendMessage(
+
+                                groupId,
+
+                                `🚫 @${message.author.split("@")[0]} (*${info.name}*) අවවාද නොතකා නැවත අපහාසාත්මක වචන භාවිත කළ නිසා ගෲප් එකෙන් ස්ථිරවම ඉවත් කරන ලදී.`,
+
+                                {
+                                    mentions: [
+                                        message.author
+                                    ]
+                                }
+
+                            );
+
                         }
+
                     }
+
                 }
 
                 return;
+
             }
 
-            // ==================================================
-            // SPAM CHECK
-            // ==================================================
+            // ========================================
+            // SPAM
+            // ========================================
 
             await checkSpam(
                 message,
@@ -1646,10 +1734,12 @@ client.on(
         } catch (error) {
 
             console.log(
-                "❌ Message handler error:",
-                error.message || error
+                "❌ MESSAGE HANDLER ERROR:",
+                error
             );
+
         }
+
     }
 );
 
@@ -1667,12 +1757,16 @@ async function checkSpam(
     const now = Date.now();
 
     if (
-        !spamTracker.has(senderId)
+        !spamTracker.has(
+            senderId
+        )
     ) {
+
         spamTracker.set(
             senderId,
             []
         );
+
     }
 
     let timestamps =
@@ -1692,6 +1786,10 @@ async function checkSpam(
     spamTracker.set(
         senderId,
         timestamps
+    );
+
+    console.log(
+        `📊 Spam count ${name}: ${timestamps.length}/${SPAM_LIMIT}`
     );
 
     if (
@@ -1719,38 +1817,66 @@ async function checkSpam(
 
             saveBlacklist();
 
-            if (
-                ENABLE_AUTO_REMOVE
-            ) {
+            await client.sendMessage(
 
-                await client.sendMessage(
-                    groupId,
-                    `🚨 @${senderId.split("@")[0]} (*${name}*) has been permanently removed for SPAMMING.`,
-                    {
-                        mentions: [
-                            senderId
-                        ]
-                    }
-                );
-            }
+                groupId,
+
+                `🚨 @${senderId.split("@")[0]} (*${name}*) has been permanently removed for SPAMMING.`,
+
+                {
+                    mentions: [
+                        senderId
+                    ]
+                }
+
+            );
+
         }
+
     }
+
 }
+
+// ========================================
+// DISCONNECTED
+// ========================================
+
+client.on(
+    "disconnected",
+    (reason) => {
+
+        console.log(
+            "❌ WhatsApp disconnected:",
+            reason
+        );
+
+    }
+);
+
+// ========================================
+// AUTH FAILURE
+// ========================================
+
+client.on(
+    "auth_failure",
+    (message) => {
+
+        console.log(
+            "❌ Authentication failure:",
+            message
+        );
+
+    }
+);
 
 // ========================================
 // START BOT
 // ========================================
 
-console.log(
-    "\n========================================"
-);
-
-console.log(
-    "🤖 WHATSAPP MODERATION BOT"
-);
-
-console.log(
-    "========================================"
-);
+console.log("\n========================================");
+console.log("🤖 WHATSAPP MODERATION BOT");
+console.log("========================================");
+console.log("🚀 Starting...");
+console.log("========================================\n");
 
 client.initialize();
