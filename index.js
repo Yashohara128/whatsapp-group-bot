@@ -1,6 +1,6 @@
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
-const cron = require("node-cron"); // ⏰ වෙලාවට වැඩ කරන අලුත් කෑල්ල
+const cron = require("node-cron"); 
 
 // ========================================
 // CONFIGURATION (ඔයාගේ Groups ටික)
@@ -31,8 +31,8 @@ const BAD_WORDS = ["hutto", "uba", "thopi", "pakyala","palayan","pnnyo"];
 
 const spamTracker = new Map();
 const blacklistedUsers = new Set(); 
-const linkWarningTracker = new Map();   // ⚠️ ලින්ක් වෝනිං ට්‍රැක් කරන්න
-const badWordWarningTracker = new Map(); // ⚠️ කුණුහරුප වෝනිං ට්‍රැක් කරන්න
+const linkWarningTracker = new Map();   
+const badWordWarningTracker = new Map(); 
 
 // ========================================
 // CLIENT
@@ -72,33 +72,27 @@ client.on("ready", () => {
     console.log("🤖 BOT READY");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
-    console.log("Features Active: Reliable Smart Link Filter | Bad Words (2-Chance) | Night Mode");
+    console.log("Features Active: Reliable Smart Link Filter | Bad Words | Night Mode");
     console.log("========================================\n");
 
-    // ========================================
-    // 🌙 AUTO NIGHT MODE (රෑ 11:00 ට ගෲප් වසයි)
-    // ========================================
+    // 🌙 AUTO NIGHT MODE (රෑ 11:00 ට)
     cron.schedule("0 23 * * *", async () => {
         for (const groupId of TARGET_GROUP_IDS) {
             try {
                 const chat = await client.getChatById(groupId);
-                await chat.setMessagesAdminsOnly(true); // Only Admins mode දානවා
+                await chat.setMessagesAdminsOnly(true); 
                 await chat.sendMessage("🌙 *රාත්‍රී 11:00 Group Admin Mode Active වී ඇත.* නැවත උදේ 6:00 ට open වේ. Good Night All!😴 Bot generated message.don't reply");
-                console.log(`🌙 Night mode activated for ${groupId}`);
             } catch (e) { console.log("Night mode error", e); }
         }
     }, { scheduled: true, timezone: "Asia/Colombo" });
 
-    // ========================================
-    // ☀️ AUTO MORNING MODE (උදේ 6:00 ට ගෲප් අරියි)
-    // ========================================
+    // ☀️ AUTO MORNING MODE (උදේ 6:00 ට)
     cron.schedule("0 6 * * *", async () => {
         for (const groupId of TARGET_GROUP_IDS) {
             try {
                 const chat = await client.getChatById(groupId);
-                await chat.setMessagesAdminsOnly(false); // හැමෝටම මැසේජ් දාන්න දෙනවා
+                await chat.setMessagesAdminsOnly(false); 
                 await chat.sendMessage("☀️ *Good Morning All!* ගෲප් එක Open.😊Bot generated message.don't reply");
-                console.log(`☀️ Morning mode activated for ${groupId}`);
             } catch (e) { console.log("Morning mode error", e); }
         }
     }, { scheduled: true, timezone: "Asia/Colombo" });
@@ -220,11 +214,14 @@ client.on("message", async (message) => {
         // 🌍 NON-SRI-LANKAN Check
         if (info.actualNumber && !isSriLankan(info.actualNumber)) {
             const removed = await directRemoveParticipant(groupId, message.author, "Non-Sri-Lankan number");
-            if (removed) await client.sendMessage(groupId, `🌍 @${message.author.split('@')[0]} Sorry, only Sri Lankan numbers (+94) are allowed in this group.`, { mentions: [message.author] });
+            if (removed) {
+                const senderContact = await client.getContactById(message.author);
+                await client.sendMessage(groupId, `🌍 @${message.author.split('@')[0]} Sorry, only Sri Lankan numbers (+94) are allowed in this group.`, { mentions: [senderContact] });
+            }
             return;
         }
 
-        // 🔗 RELIABLE SMART LINK FILTER SYSTEM
+        // 🔗 SMART LINK FILTER
         const hasLinkIndicator = textLower.includes("http://") || 
                                  textLower.includes("https://") || 
                                  textLower.includes("www.") || 
@@ -237,14 +234,16 @@ client.on("message", async (message) => {
 
         if (hasLinkIndicator) {
             const chat = await message.getChat();
-            const participant = chat.participants.find(p => p.id._serialized === message.author);
-            const isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
+            
+            // ආරක්ෂිතව participants චෙක් කිරීම
+            let isAdmin = false;
+            if (chat.participants) {
+                const participant = chat.participants.find(p => p.id._serialized === message.author);
+                isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
+            }
 
             if (!isAdmin) {
-                // 1️⃣ Telegram ලින්ක් සම්පූර්ණයෙන්ම බ්ලොක් වේ
                 const isTelegramLink = textLower.includes("t.me/") || textLower.includes("telegram.me/");
-
-                // 2️⃣ අධ්‍යාපනික ප්ලැට්ෆෝම් ලින්ක් (YouTube, Zoom, Drive ආදිය) 100% ක් අවසර ඇත
                 const isAllowedEducationalLink = textLower.includes("youtube.com") || 
                                                  textLower.includes("youtu.be") || 
                                                  textLower.includes("drive.google.com") || 
@@ -254,7 +253,6 @@ client.on("message", async (message) => {
                                                  textLower.includes("forms.gle") || 
                                                  textLower.includes("classroom.google.com");
 
-                // 3️⃣ Business / Scam Keywords (ව්‍යාපාරික වචන ලැයිස්තුව)
                 const scamOrBusinessKeywords = [
                     "earn money", "crypto", "forex", "business", "job opportunity", 
                     "free cash", "marketing", "signals", "trading", "invest", 
@@ -263,9 +261,7 @@ client.on("message", async (message) => {
 
                 const containsScamOrBusiness = scamOrBusinessKeywords.some(keyword => textLower.includes(keyword));
 
-                // තීරණය කිරීම (Should Block?):
                 let shouldBlock = false;
-
                 if (isTelegramLink) {
                     shouldBlock = true; 
                 } else if (containsScamOrBusiness) {
@@ -275,20 +271,29 @@ client.on("message", async (message) => {
                 }
 
                 if (shouldBlock) {
-                    try { await message.delete(true); } catch(e) {} 
+                    console.log("🚨 [FILTER] Link Block Triggered!");
+                    
+                    try { 
+                        await message.delete(true); 
+                        console.log("✅ Message successfully deleted.");
+                    } catch(e) { 
+                        console.log("⚠️ Could not delete message:", e); 
+                    } 
 
                     let warnings = linkWarningTracker.get(message.author) || 0;
                     warnings++;
                     linkWarningTracker.set(message.author, warnings);
 
+                    const senderContact = await client.getContactById(message.author);
+
                     if (warnings === 1) {
-                        await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} මෙම කණ්ඩායම තුළ අවසර නොලත් ලින්ක් හෝ ව්‍යාපාරික/ටෙලිග්‍රෑම් ලින්ක් Share කිරීම තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. අධ්‍යාපනික ලින්ක් සහ අධ්‍යාපනික වට්ස්ඇප් ගෲප් ලින්ක් පමණක් අවසර ඇත. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🚫`, { mentions: [message.author] });
+                        await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} මෙම කණ්ඩායම තුළ අවසර නොලත් ලින්ක් හෝ ව්‍යාපාරික/ටෙලිග්‍රෑම් ලින්ක් Share කිරීම තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. අධ්‍යාපනික ලින්ක් සහ අධ්‍යාපනික වට්ස්ඇප් ගෲප් ලින්ක් පමණක් අවසර ඇත. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🚫`, { mentions: [senderContact] });
                     } else {
-                        const removed = await directRemoveParticipant(groupId, message.author, "Sending Unauthorized/Scam Links (2nd warning reached)");
+                        const removed = await directRemoveParticipant(groupId, message.author, "Sending Unauthorized Links");
                         if (removed) {
                             blacklistedUsers.add(message.author);
                             if (ENABLE_AUTO_REMOVE) {
-                                await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} අවවාද නොතකා නැවත තහනම් ලින්ක් දැමූ නිසා ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [message.author] });
+                                await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} අවවාද නොතකා නැවත තහනම් ලින්ක් දැමූ නිසා ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [senderContact] });
                             }
                         }
                     }
@@ -297,28 +302,33 @@ client.on("message", async (message) => {
             }
         }
 
-        // 🤬 BAD WORDS FILTER (2-Chance Warning System)
+        // 🤬 BAD WORDS FILTER 
         const containsBadWord = BAD_WORDS.some(word => textLower.includes(word.toLowerCase()));
         if (containsBadWord) {
             const chat = await message.getChat();
-            const participant = chat.participants.find(p => p.id._serialized === message.author);
-            const isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
+            let isAdmin = false;
+            if (chat.participants) {
+                const participant = chat.participants.find(p => p.id._serialized === message.author);
+                isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
+            }
 
             if (!isAdmin) {
-                try { await message.delete(true); } catch(e) {} 
+                try { await message.delete(true); } catch(e) { console.log("⚠️ Could not delete bad word:", e); } 
 
                 let warnings = badWordWarningTracker.get(message.author) || 0;
                 warnings++;
                 badWordWarningTracker.set(message.author, warnings);
 
+                const senderContact = await client.getContactById(message.author);
+
                 if (warnings === 1) {
-                    await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} මෙම කණ්ඩායම තුළ අපහාසාත්මක හෝ තහනම් වචන භාවිතය තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත එවැනි වචන භාවිත කළහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🤬`, { mentions: [message.author] });
+                    await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} මෙම කණ්ඩායම තුළ අපහාසාත්මක හෝ තහනම් වචන භාවිතය තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත එවැනි වචන භාවිත කළහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🤬`, { mentions: [senderContact] });
                 } else {
-                    const removed = await directRemoveParticipant(groupId, message.author, "Bad Words (2nd warning reached)");
+                    const removed = await directRemoveParticipant(groupId, message.author, "Bad Words");
                     if (removed) {
                         blacklistedUsers.add(message.author);
                         if (ENABLE_AUTO_REMOVE) {
-                            await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} අවවාද නොතකා නැවත අපහාසාත්මක වචන භාවිත කළ නිසා ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [message.author] });
+                            await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} අවවාද නොතකා නැවත අපහාසාත්මක වචන භාවිත කළ නිසා ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [senderContact] });
                         }
                     }
                 }
@@ -326,18 +336,12 @@ client.on("message", async (message) => {
             return;
         }
 
-        // 🤖 AUTO-REPLY / FAQ 
-        if (textLower.includes("fee") || textLower.includes("ගාස්තුව") || textLower.includes("class fee") || textLower.includes("fee eka kiyda")) {
-            await message.reply("💡null");
-        }
-        else if (textLower.includes("time") || textLower.includes("වෙලාව") || textLower.includes("කවදද") || textLower.includes("class eka thiyenne")) {
-            await message.reply("⏰ null");
-        }
-
         // 🚨 SPAM CHECK
         await checkSpam(message, message.author, info.name, groupId);
 
-    } catch (error) {}
+    } catch (error) {
+        console.log("❌ [CRITICAL ERROR IN MESSAGE EVENT]:", error);
+    }
 });
 
 async function checkSpam(message, senderId, name, groupId) {
@@ -353,7 +357,10 @@ async function checkSpam(message, senderId, name, groupId) {
         const removed = await directRemoveParticipant(groupId, senderId, "Spam");
         if (removed) {
             blacklistedUsers.add(senderId);
-            if (ENABLE_AUTO_REMOVE) await client.sendMessage(groupId, `🚨 @${senderId.split('@')[0]} has been removed for SPAMMING.`, { mentions: [senderId] });
+            if (ENABLE_AUTO_REMOVE) {
+                const senderContact = await client.getContactById(senderId);
+                await client.sendMessage(groupId, `🚨 @${senderId.split('@')[0]} has been removed for SPAMMING.`, { mentions: [senderContact] });
+            }
         }
     }
 }
