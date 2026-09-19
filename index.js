@@ -167,13 +167,13 @@ client.on("group_join", async (notification) => {
             if (!info) continue;
             
             if (blacklistedUsers.has(userId)) {
-                await client.sendMessage(groupId, `🚫 @${userId.split('@')[0]} You are blacklisted from this group.`, { mentions: [userId] });
+                await client.sendMessage(groupId, `🚫 @${userId.split('@')[0]} You are blacklisted from this group.`, { mentions: [info.contact] });
                 await directRemoveParticipant(groupId, userId, "Blacklisted");
                 continue;
             }
 
             if (!isSriLankan(info.actualNumber)) {
-                await client.sendMessage(groupId, `🌍 @${userId.split('@')[0]} Sorry, only Sri Lankan numbers (+94) are allowed in this group. You will be removed.`, { mentions: [userId] });
+                await client.sendMessage(groupId, `🌍 @${userId.split('@')[0]} Sorry, only Sri Lankan numbers (+94) are allowed in this group. You will be removed.`, { mentions: [info.contact] });
                 await directRemoveParticipant(groupId, userId, "Non-Sri-Lankan number");
                 continue;
             }
@@ -215,13 +215,12 @@ client.on("message", async (message) => {
         if (info.actualNumber && !isSriLankan(info.actualNumber)) {
             const removed = await directRemoveParticipant(groupId, message.author, "Non-Sri-Lankan number");
             if (removed) {
-                const senderContact = await client.getContactById(message.author);
-                await client.sendMessage(groupId, `🌍 @${message.author.split('@')[0]} Sorry, only Sri Lankan numbers (+94) are allowed in this group.`, { mentions: [senderContact] });
+                await client.sendMessage(groupId, `🌍 @${message.author.split('@')[0]} Sorry, only Sri Lankan numbers (+94) are allowed in this group.`, { mentions: [info.contact] });
             }
             return;
         }
 
-        // 🔗 SMART LINK FILTER
+        // 🔗 CRASH-PROOF SMART LINK FILTER
         const hasLinkIndicator = textLower.includes("http://") || 
                                  textLower.includes("https://") || 
                                  textLower.includes("www.") || 
@@ -233,13 +232,18 @@ client.on("message", async (message) => {
                                  textLower.includes("t.me");
 
         if (hasLinkIndicator) {
-            const chat = await message.getChat();
-            
-            // ආරක්ෂිතව participants චෙක් කිරීම
             let isAdmin = false;
-            if (chat.participants) {
-                const participant = chat.participants.find(p => p.id._serialized === message.author);
-                isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
+            
+            // 🚨 WWebJS බග් එක නිසා Crash වීම වැළැක්වීමට Try-Catch එකක් යොදා ඇත
+            try {
+                const chat = await message.getChat();
+                if (chat && chat.participants) {
+                    const participant = chat.participants.find(p => p.id._serialized === message.author);
+                    isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
+                }
+            } catch (err) {
+                console.log("⚠️ [WARNING] Could not verify admin status due to WWebJS Bug. Assuming normal user.");
+                isAdmin = false;
             }
 
             if (!isAdmin) {
@@ -271,7 +275,7 @@ client.on("message", async (message) => {
                 }
 
                 if (shouldBlock) {
-                    console.log("🚨 [FILTER] Link Block Triggered!");
+                    console.log("🚨 [FILTER] Link Block Triggered! Deleting message...");
                     
                     try { 
                         await message.delete(true); 
@@ -284,16 +288,14 @@ client.on("message", async (message) => {
                     warnings++;
                     linkWarningTracker.set(message.author, warnings);
 
-                    const senderContact = await client.getContactById(message.author);
-
                     if (warnings === 1) {
-                        await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} මෙම කණ්ඩායම තුළ අවසර නොලත් ලින්ක් හෝ ව්‍යාපාරික/ටෙලිග්‍රෑම් ලින්ක් Share කිරීම තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. අධ්‍යාපනික ලින්ක් සහ අධ්‍යාපනික වට්ස්ඇප් ගෲප් ලින්ක් පමණක් අවසර ඇත. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🚫`, { mentions: [senderContact] });
+                        await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} මෙම කණ්ඩායම තුළ අවසර නොලත් ලින්ක් හෝ ව්‍යාපාරික/ටෙලිග්‍රෑම් ලින්ක් Share කිරීම තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. අධ්‍යාපනික ලින්ක් සහ අධ්‍යාපනික වට්ස්ඇප් ගෲප් ලින්ක් පමණක් අවසර ඇත. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🚫`, { mentions: [info.contact] });
                     } else {
                         const removed = await directRemoveParticipant(groupId, message.author, "Sending Unauthorized Links");
                         if (removed) {
                             blacklistedUsers.add(message.author);
                             if (ENABLE_AUTO_REMOVE) {
-                                await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} අවවාද නොතකා නැවත තහනම් ලින්ක් දැමූ නිසා ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [senderContact] });
+                                await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} අවවාද නොතකා නැවත තහනම් ලින්ක් දැමූ නිසා ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [info.contact] });
                             }
                         }
                     }
@@ -305,11 +307,16 @@ client.on("message", async (message) => {
         // 🤬 BAD WORDS FILTER 
         const containsBadWord = BAD_WORDS.some(word => textLower.includes(word.toLowerCase()));
         if (containsBadWord) {
-            const chat = await message.getChat();
             let isAdmin = false;
-            if (chat.participants) {
-                const participant = chat.participants.find(p => p.id._serialized === message.author);
-                isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
+            
+            try {
+                const chat = await message.getChat();
+                if (chat && chat.participants) {
+                    const participant = chat.participants.find(p => p.id._serialized === message.author);
+                    isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
+                }
+            } catch (err) {
+                isAdmin = false;
             }
 
             if (!isAdmin) {
@@ -319,21 +326,27 @@ client.on("message", async (message) => {
                 warnings++;
                 badWordWarningTracker.set(message.author, warnings);
 
-                const senderContact = await client.getContactById(message.author);
-
                 if (warnings === 1) {
-                    await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} මෙම කණ්ඩායම තුළ අපහාසාත්මක හෝ තහනම් වචන භාවිතය තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත එවැනි වචන භාවිත කළහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🤬`, { mentions: [senderContact] });
+                    await client.sendMessage(groupId, `⚠️ @${message.author.split('@')[0]} මෙම කණ්ඩායම තුළ අපහාසාත්මක හෝ තහනම් වචන භාවිතය තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත එවැනි වචන භාවිත කළහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🤬`, { mentions: [info.contact] });
                 } else {
                     const removed = await directRemoveParticipant(groupId, message.author, "Bad Words");
                     if (removed) {
                         blacklistedUsers.add(message.author);
                         if (ENABLE_AUTO_REMOVE) {
-                            await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} අවවාද නොතකා නැවත අපහාසාත්මක වචන භාවිත කළ නිසා ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [senderContact] });
+                            await client.sendMessage(groupId, `🚫 @${message.author.split('@')[0]} අවවාද නොතකා නැවත අපහාසාත්මක වචන භාවිත කළ නිසා ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [info.contact] });
                         }
                     }
                 }
             }
             return;
+        }
+
+        // 🤖 AUTO-REPLY / FAQ 
+        if (textLower.includes("fee") || textLower.includes("ගාස්තුව") || textLower.includes("class fee") || textLower.includes("fee eka kiyda")) {
+            await message.reply("💡null");
+        }
+        else if (textLower.includes("time") || textLower.includes("වෙලාව") || textLower.includes("කවදද") || textLower.includes("class eka thiyenne")) {
+            await message.reply("⏰ null");
         }
 
         // 🚨 SPAM CHECK
@@ -358,8 +371,9 @@ async function checkSpam(message, senderId, name, groupId) {
         if (removed) {
             blacklistedUsers.add(senderId);
             if (ENABLE_AUTO_REMOVE) {
-                const senderContact = await client.getContactById(senderId);
-                await client.sendMessage(groupId, `🚨 @${senderId.split('@')[0]} has been removed for SPAMMING.`, { mentions: [senderContact] });
+                const info = await getContactInfo(senderId);
+                const contact = info ? info.contact : senderId;
+                await client.sendMessage(groupId, `🚨 @${senderId.split('@')[0]} has been removed for SPAMMING.`, { mentions: [contact] });
             }
         }
     }
