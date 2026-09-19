@@ -156,7 +156,6 @@ client.on("group_join", async (notification) => {
         console.log(`\n📥 [GROUP JOIN DETECTED]`);
         console.log(`📍 Group: ${groupId}`);
 
-        // 🛡️ Admin කෙනෙක්ද ඇඩ් කළේ කියලා බලන කෑල්ල (ක්‍රෑෂ් වෙන්නෙ නෑ)
         let addedByAdmin = false;
         try {
             const chat = await client.getChatById(groupId);
@@ -177,7 +176,6 @@ client.on("group_join", async (notification) => {
 
             if (blacklistedUsers.has(userId)) {
                 if (addedByAdmin) {
-                    // Admin කෙනෙක් ඇඩ් කළොත් Blacklist එකෙන් අයින් කරනවා
                     blacklistedUsers.delete(userId);
                     saveBlacklist();
                     console.log(`✅ [UNBAN] Admin manually added ${info.name}.`);
@@ -241,6 +239,33 @@ client.on("message", async (message) => {
         
         const groupId = message.from;
         if (!message.author) return;
+
+        // 🛠️ ADMIN UNBAN COMMAND
+        if (message.body.startsWith(".unban")) {
+            let isAdmin = false;
+            try {
+                const chat = await message.getChat();
+                if (chat && chat.participants) {
+                    const participant = chat.participants.find(p => p.id._serialized === message.author);
+                    isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
+                }
+            } catch (err) {}
+
+            if (isAdmin) {
+                let number = message.body.replace(".unban", "").replace(/[^0-9]/g, "");
+                if (number) {
+                    const unbanId = `${number}@c.us`;
+                    if (blacklistedUsers.has(unbanId)) {
+                        blacklistedUsers.delete(unbanId);
+                        saveBlacklist();
+                        await message.reply(`✅ +${number} සාර්ථකව Blacklist එකෙන් ඉවත් කරන ලදී. දැන් ඔවුන්ට Link එක හරහා ගෲප් එකට ජොයින් විය හැක.`);
+                    } else {
+                        await message.reply(`⚠️ +${number} Blacklist එකේ නොමැත.`);
+                    }
+                }
+                return; 
+            }
+        }
 
         const info = await getContactInfo(message.author);
         if (!info) return;
