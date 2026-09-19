@@ -87,6 +87,7 @@ client.on("ready", () => {
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
     console.log("Features Active: Any YouTube Link Allowed | Bad Words | Auto-Ban & Admin Bypass | Night Mode");
     console.log(`Total Blacklisted Users: ${blacklistedUsers.size}`);
+    console.log("📨 Welcome DM: LID → @c.us resolution ENABLED");
     console.log("========================================\n");
 
     cron.schedule("0 23 * * *", async () => {
@@ -113,13 +114,81 @@ client.on("ready", () => {
 async function getContactInfo(id) {
     try {
         if (!id) return null;
+
         const contact = await client.getContactById(id);
         if (!contact) return null;
-        const actualId = contact.id && contact.id._serialized ? contact.id._serialized : "";
-        const actualNumber = actualId ? actualId.split("@")[0] : "";
-        const name = contact.pushname || contact.name || contact.shortName || "Unknown User";
-        return { contact, name, actualId, actualNumber };
+
+        const originalId =
+            contact.id && contact.id._serialized
+                ? contact.id._serialized
+                : id;
+
+        const name =
+            contact.pushname ||
+            contact.name ||
+            contact.shortName ||
+            "Unknown User";
+
+        // IMPORTANT:
+        // WhatsApp can send group_join participants as @lid IDs.
+        // Resolve the LID to the real @c.us phone ID immediately.
+        let resolvedPhoneId = null;
+        let resolvedNumber = "";
+
+        try {
+            const resolved = await client.pupPage.evaluate(async (participantId) => {
+                try {
+                    const WWebJS = window.WWebJS;
+                    if (!WWebJS || !WWebJS.enforceLidAndPnRetrieval) {
+                        return null;
+                    }
+
+                    const result =
+                        await WWebJS.enforceLidAndPnRetrieval(participantId);
+
+                    return {
+                        lid: result && result.lid
+                            ? result.lid._serialized
+                            : null,
+                        phone: result && result.phone
+                            ? result.phone._serialized
+                            : null
+                    };
+                } catch (e) {
+                    return null;
+                }
+            }, id);
+
+            if (resolved && resolved.phone) {
+                resolvedPhoneId = resolved.phone;
+                resolvedNumber = resolved.phone.split("@")[0];
+            }
+        } catch (e) {}
+
+        // If already a normal @c.us ID, keep it.
+        if (!resolvedPhoneId && originalId.endsWith("@c.us")) {
+            resolvedPhoneId = originalId;
+            resolvedNumber = originalId.split("@")[0];
+        }
+
+        // Fallbacks for older/non-LID contacts.
+        if (!resolvedPhoneId && contact.number) {
+            resolvedNumber = String(contact.number).replace(/\D/g, "");
+            if (resolvedNumber) {
+                resolvedPhoneId = `${resolvedNumber}@c.us`;
+            }
+        }
+
+        return {
+            contact,
+            name,
+            actualId: resolvedPhoneId || originalId,
+            actualNumber: resolvedNumber,
+            originalId,
+            dmId: resolvedPhoneId || originalId
+        };
     } catch (error) {
+        console.log("⚠️ getContactInfo error:", error.message || error);
         return null;
     }
 }
@@ -200,7 +269,11 @@ client.on("group_join", async (notification) => {
             }
 
             if (!isSriLankan(info.actualNumber)) {
-                await client.sendMessage(groupId, `🌍 @${userId.split('@')[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group. You will be removed.`, { mentions: [userId] });
+                await client.sendMessage(
+                    groupId,
+                    `🌍 @${info.actualNumber || userId.split('@')[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group. You will be removed.`,
+                    { mentions: [info.dmId || userId] }
+                );
                 await directRemoveParticipant(groupId, userId, "Non-Sri-Lankan number");
                 continue;
             }
@@ -235,7 +308,36 @@ Please follow these group guidelines to maintain a good learning environment.
 Thank you! / ස්තූතියි!
 🤖 _System Generated Message. Please do not reply._`;
 
-            await client.sendMessage(userId, welcomeMsg);
+            // Always send the welcome message to the resolved phone ID.
+            // Do NOT use the original @lid ID here.
+            const welcomeRecipient = info.dmId || info.actualId;
+
+            if (!welcomeRecipient) {
+                console.log(`⚠️ Could not resolve DM recipient for ${userId}`);
+                continue;
+            }
+
+            try {
+                await client.sendMessage(welcomeRecipient, welcomeMsg);
+                console.log(`✅ Welcome DM sent to ${info.name} -> ${welcomeRecipient}`);
+            } catch (dmError) {
+                console.log(`❌ Welcome DM failed for ${info.name}:`, dmError.message || dmError);
+
+                // One retry after refreshing the LID/PN mapping.
+                try {
+                    const refreshed = await getContactInfo(userId);
+                    const retryRecipient = refreshed && (refreshed.dmId || refreshed.actualId);
+
+                    if (retryRecipient) {
+                        await client.sendMessage(retryRecipient, welcomeMsg);
+                        console.log(`✅ Welcome DM retry succeeded -> ${retryRecipient}`);
+                    } else {
+                        console.log(`❌ Welcome DM retry skipped: no resolved recipient.`);
+                    }
+                } catch (retryError) {
+                    console.log(`❌ Welcome DM retry failed:`, retryError.message || retryError);
+                }
+            }
         }
     } catch (error) {}
 });
