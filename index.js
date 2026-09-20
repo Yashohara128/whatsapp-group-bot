@@ -78,7 +78,7 @@ client.on("authenticated", () => {
     console.log("✅ WhatsApp authenticated");
 });
 
-client.on("ready", () => {
+client.on("ready", async () => {
     console.log("\n========================================");
     console.log("🤖 BOT READY - AUTO-EXPIRE BAN SYSTEM");
     console.log("========================================");
