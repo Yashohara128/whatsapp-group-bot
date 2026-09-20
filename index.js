@@ -95,7 +95,7 @@ client.on("ready", () => {
     }
 
 
-    cron.schedule("31 10 * * *", async () => {
+    cron.schedule("40 10 * * *", async () => {
         for (const groupId of TARGET_GROUP_IDS) {
             try {
                 const chat = await client.getChatById(groupId);
