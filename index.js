@@ -84,34 +84,8 @@ client.on("ready", () => {
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
 
-// 🛠️ මේ තියෙන්නේ ටෙස්ට් කරන කෑල්ල! (බොට් ඔන් වෙලා තත්පර 15න් ගෲප් ලොක් කරනවා)
-    setTimeout(async () => {
-        console.log("🛠️ Testing Admin Only feature...");
-        for (const groupId of TARGET_GROUP_IDS) {
-            try {
-                const chat = await client.getChatById(groupId);
-                await chat.setMessagesAdminsOnly(true);
-                console.log(`✅ Test Success: Group ${groupId} locked!`);
-            } catch (e) {
-                console.error(`❌ Test Failed for ${groupId}:`, e.message);
-            }
-        }
-    }, 15000);
 
- setTimeout(async () => {
-        console.log("⏳ Initializing existing group members...");
-        for (const groupId of TARGET_GROUP_IDS) {
-            try {
-                await client.getChatById(groupId);
-                console.log(`✅ Sync completed for: ${groupId.split('@')[0]}`);
-            } catch (err) {
-                console.log(`⚠️ Waiting for group sync: ${groupId.split('@')[0]}`);
-            }
-        }
-        console.log("----------------------------------------\n");
-    }, 15000); 
-
-    cron.schedule("15 10 * * *", async () => {
+    cron.schedule("31 10 * * *", async () => {
         for (const groupId of TARGET_GROUP_IDS) {
             try {
                 const chat = await client.getChatById(groupId);
