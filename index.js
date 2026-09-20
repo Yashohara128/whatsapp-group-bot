@@ -85,6 +85,16 @@ client.on("ready", () => {
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
 
 
+// අලුත් කෑල්ල: WhatsApp සර්වර් එකෙන් ගෲප් ටික ලෝඩ් කරගැනීම
+    console.log("⏳ Loading all chats from WhatsApp servers... (This might take a few seconds)");
+    try {
+        const chats = await client.getChats();
+        console.log(`✅ Successfully loaded ${chats.length} chats into memory!`);
+    } catch (e) {
+        console.log("❌ Failed to load chats:", e);
+    }
+
+
     cron.schedule("31 10 * * *", async () => {
         for (const groupId of TARGET_GROUP_IDS) {
             try {
