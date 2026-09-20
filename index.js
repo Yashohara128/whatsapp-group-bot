@@ -85,7 +85,7 @@ client.on("ready", async () => {
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
 
 
-    cron.schedule("53 10 * * *", async () => {
+    cron.schedule("00 11 * * *", async () => {
         for (const groupId of TARGET_GROUP_IDS) {
             try {
                 const chat = await client.getChatById(groupId);
