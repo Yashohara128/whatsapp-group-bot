@@ -2,6 +2,7 @@ const { Client, LocalAuth, MessageMedia } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const cron = require("node-cron"); 
 const fs = require("fs"); 
+const path = require("path"); // 👈 මේක අනිවාර්යයෙන්ම දාලා තියෙන්න ඕනේ
 
 const TARGET_GROUP_IDS = [
     "120363427144307038@g.us",
@@ -546,31 +547,34 @@ client.on("message_create", async (message) => {
         else if (campusAnswers[msgCommand]) {
             await message.reply(campusAnswers[msgCommand]);
         }
-        // 📄 සිංහල Guide PDF එක යැවීම
+        // 📄 සිංහල Guide PDF එක යැවීම (Absolute Path හරහා)
         else if (msgCommand === "/guidepdf-si") {
             try {
-                const media = MessageMedia.fromFilePath('./ifsls-guide-si.pdf');
-                await message.reply(media, undefined, { caption: "🌍මෙන්න IFSLS 2026/27 සිංහල මාර්ගෝපදේශක PDF එක!" });
+                const filePath = path.join(__dirname, 'ifsls-guide-si.pdf');
+                const media = MessageMedia.fromFilePath(filePath);
+                await message.reply(media, undefined, { caption: "🇱🇰 මෙන්න IFSLS 2026/27 සිංහල මාර්ගෝපදේශක PDF එක!" });
             } catch (err) {
-                await message.reply("⚠️ මචං, සර්වර් එකේ සිංහල PDF ෆයිල් එක (ifsls-guide-si.pdf) හොයාගන්න බැහැ. Admin කෙනෙක්ගෙන් අහන්නකො පොඩ්ඩක්!");
+                await message.reply("⚠️ මචං, සර්වර් එකේ සිංහල PDF ෆයිල් එක (ifsls-guide-si.pdf) හොයාගන්න බැහැ!");
             }
         }
-        // 📄 දෙමළ Guide PDF එක යැවීම
+        // 📄 දෙමළ Guide PDF එක යැවීම (Absolute Path හරහා)
         else if (msgCommand === "/guidepdf-ta") {
             try {
-                const media = MessageMedia.fromFilePath('./ifsls-guide-ta.pdf');
-                await message.reply(media, undefined, { caption: "🌍இங்கே IFSLS 2026/27 தமிழ் வழிகாட்டி PDF (தமிழ் வழிகாட்டி)!" });
+                const filePath = path.join(__dirname, 'ifsls-guide-ta.pdf');
+                const media = MessageMedia.fromFilePath(filePath);
+                await message.reply(media, undefined, { caption: "🌍 இங்கே IFSLS 2026/27 தமிழ் வழிகாட்டி PDF (தமிழ் வழிகாட்டி)!" });
             } catch (err) {
-                await message.reply("⚠️மனிதனே, சேவையகத்தில் தமிழ் PDF கோப்பை (ifsls-guide-ta.pdf) நீங்கள் கண்டுபிடிக்க முடியாது! ஒரு நிர்வாகி கொஞ்சம்!");
+                await message.reply("⚠️ மனிதனே, சேவையகத்தில் தமிழ் PDF கோப்பை (ifsls-guide-ta.pdf) நீங்கள் கண்டுபிடிக்க முடியாது!");
             }
         }
-        // 📄 ඉංග්‍රීසි Guide PDF එක යැවීම
+        // 📄 ඉංග්‍රීසි Guide PDF එක යැවීම (Absolute Path හරහා)
         else if (msgCommand === "/guidepdf-en") {
             try {
-                const media = MessageMedia.fromFilePath('./ifsls-guide-en.pdf');
-                await message.reply(media, undefined, { caption: "🌍Here's IFSLS 2026/27 English Guide PDF (English Guide)!" });
+                const filePath = path.join(__dirname, 'ifsls-guide-en.pdf');
+                const media = MessageMedia.fromFilePath(filePath);
+                await message.reply(media, undefined, { caption: "🇬🇧 Here's IFSLS 2026/27 English Guide PDF (English Guide)!" });
             } catch (err) {
-                await message.reply("⚠️Dude, you can't find the English PDF File (ifsls-guide-en.pdf) in the server. could you ask the admin?");
+                await message.reply("⚠️ Dude, you can't find the English PDF File (ifsls-guide-en.pdf) in the server!");
             }
         }
         // ==========================================
