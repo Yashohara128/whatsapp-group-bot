@@ -549,15 +549,15 @@ client.on("message_create", async (message) => {
         }
         // 📄 සිංහල Guide PDF (Google Drive Link)
         else if (msgCommand === "/guidepdf-si") {
-            await client.sendMessage(groupId, "🇱🇰 *IFSLS 2026/27 සිංහල මාර්ගෝපදේශක PDF එක පහත ලින්ක් එකෙන් ඩවුන්ලෝඩ් කරගන්න:*\n\nhttps://drive.google.com/file/d/YOUR_DRIVE_FILE_ID/view?usp=sharing");
+            await client.sendMessage(groupId, "🇱🇰 *IFSLS 2026/27 සිංහල මාර්ගෝපදේශක PDF එක පහත ලින්ක් එකෙන් ඩවුන්ලෝඩ් කරගන්න:*\n\nhttps://drive.google.com/file/d/122Q6dk3Q8mlM0yWTlzLVDqKyIH4KjSFG/view?usp=sharing");
         }
         // 📄 දෙමළ Guide PDF (Google Drive Link)
         else if (msgCommand === "/guidepdf-ta") {
-            await client.sendMessage(groupId, "🌍 *IFSLS 2026/27 தமிழ் வழிகாட்டி PDF ஐ கீழே உள்ள இணைப்பில் பதிவிறக்கம் செய்யவும்:*\n\nhttps://drive.google.com/file/d/YOUR_DRIVE_FILE_ID/view?usp=sharing");
+            await client.sendMessage(groupId, "🌍 *IFSLS 2026/27 தமிழ் வழிகாட்டி PDF ஐ கீழே உள்ள இணைப்பில் பதிவிறக்கம் செய்யவும்:*\n\nhttps://drive.google.com/file/d/1-AMByxSgGDfOwKE3mxTZgxvSSpBbtjOz/view?usp=sharing");
         }
         // 📄 ඉංග්‍රීසි Guide PDF (Google Drive Link)
         else if (msgCommand === "/guidepdf-en") {
-            await client.sendMessage(groupId, "🇬🇧 *Download the IFSLS 2026/27 English Guide PDF from the link below:*\n\nhttps://drive.google.com/file/d/YOUR_DRIVE_FILE_ID/view?usp=sharing");
+            await client.sendMessage(groupId, "🇬🇧 *Download the IFSLS 2026/27 English Guide PDF from the link below:*\n\nhttps://drive.google.com/file/d/15eUJyKdYOcgeczEtkKXtwDucswSnJAUs/view?usp=sharing");
         }
         // ==========================================
 
