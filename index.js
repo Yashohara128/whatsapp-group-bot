@@ -15,7 +15,7 @@ const SPAM_WINDOW_MS = 10 * 1000;
 const SPAM_LIMIT = 3;
 const BAD_WORDS = ["hutto", "uba", "thopi", "pakyala","palayan","pnnyo"]; 
 
-// ⏳ බෑන් වන කෙනෙකුට නැවත ජොයින් වීමට ගත විය යුතු කාලය (පැය 24ක් ලෙස සකසා ඇත - මිලලිසෙකන්ඩ් වලින්)
+// ⏳ බෑන් වන කෙනෙකුට නැවත ජොයින් වීමට ගත විය යුතු කාලය (පැය 24ක් ලෙස සකසා ඇත)
 const BAN_DURATION_MS = 24 * 60 * 60 * 1000; 
 
 // ==========================================
@@ -363,8 +363,11 @@ client.on("group_join", async (notification) => {
                                      `📌 */about* - IFSLS ගැන විස්තර.\n` +
                                      `📌 */eligibility* - ණය ලබාගැනීමේ සුදුසුකම්.\n` +
                                      `📌 */applysteps* - අයදුම් කරන පියවර.\n` +
-                                     `📌 */ministrycontact* - Ministry Department එක contact කරන විදිහ\n` +
-                                     `📌 */guidepdf* - IFSLS මාර්ගෝපදේශක PDF එක ලබාගැනීමට 📄\n\n` +
+                                     `📌 */ministrycontact* - Ministry Department එක contact කරන විදිහ\n\n` +
+                                     `📄 *Guide Books (භාෂා 3න්ම):*\n` +
+                                     `🇱🇰 */guidepdf-si* (සිංහල මාර්ගෝපදේශකය)\n` +
+                                     `🌍 */guidepdf-ta* (දෙමළ මාර්ගෝපදේශකය)\n` +
+                                     `🇬🇧 */guidepdf-en* (ඉංග්‍රීසි මාර්ගෝපදේශකය)\n\n` +
                                      `🏫 *කැම්පස් වල ඔයාලට දෙන Degrees වලට අදාල විස්තර බලාගන්න අවශ්‍යනම් කැම්පස් එකේ නමට කලින් / දාලා campus නම ගෲප් එකට සෙන්ඩ් කරන්න.*\n` +
                                      `(උදාහරණ: */sliit*, */nsbm*, */cinec*, */saegis*)\n\n` +
                                      `💡 *දැන්ම Group එකට ගිහින් /menu කියලා Type කරලා බලන්නකො ළමයි!* 😎`;
@@ -524,8 +527,11 @@ client.on("message_create", async (message) => {
                             `📂 */documents* - සම්මුඛ පරීක්ෂණ ලියකියවිලි\n` +
                             `📝 */applysteps* - අයදුම් කරන පියවර\n` +
                             `⏰ */deadline* - අවසන් දිනය\n` +
-                            `✅ */ministrycontact* - Ministry Department එක contact කරන විදිහ\n` +
-                            `📄 */guidepdf* - IFSLS මාර්ගෝපදේශක PDF එක ලබාගැනීමට\n\n` +
+                            `✅ */ministrycontact* - Ministry Department එක contact කරන විදිහ\n\n` +
+                            `*📄 මාර්ගෝපදේශක PDF (භාෂා 3න්ම):*\n` +
+                            `🇱🇰 */guidepdf-si* - සිංහල මාර්ගෝපදේශකය\n` +
+                            `🌍 */guidepdf-ta* - දෙමළ මාර්ගෝපදේශකය\n` +
+                            `🇬🇧 */guidepdf-en* - ඉංග්‍රීසි මාර්ගෝපදේශකය\n\n` +
                             `*🏫 කැම්පස් අනුව උපාධි සහ අදාළ A/L සුදුසුකම් බැලීමට පහත නම Type කරන්න:*\n` +
                             `*/sliit* | */nsbm* | */cinec* | */kiu*\n` +
                             `*/sltc* | */saegis* | */horizon* | */icbt*\n` +
@@ -540,14 +546,31 @@ client.on("message_create", async (message) => {
         else if (campusAnswers[msgCommand]) {
             await message.reply(campusAnswers[msgCommand]);
         }
-        // 📄 අලුතින් එකතු කළ Media Handler එක (PDF එක යැවීම සඳහා)
-        else if (msgCommand === "/guidepdf") {
+        // 📄 සිංහල Guide PDF එක යැවීම
+        else if (msgCommand === "/guidepdf-si") {
             try {
-                // සර්වර් එකේ ෆයිල් නම 'ifsls-guide.pdf' විය යුතුය (නැතහොත් නම වෙනස් කරගන්න)
-                const media = MessageMedia.fromFilePath('./ifsls-guide.pdf');
-                await message.reply(media, undefined, { caption: "📄 මෙන්න IFSLS 2026/27 සම්පූර්ණ මාර්ගෝපදේශක PDF එක!" });
+                const media = MessageMedia.fromFilePath('./ifsls-guide-si.pdf');
+                await message.reply(media, undefined, { caption: "🌍මෙන්න IFSLS 2026/27 සිංහල මාර්ගෝපදේශක PDF එක!" });
             } catch (err) {
-                await message.reply("⚠️ මචං, දැනට සර්වර් එකේ PDF ෆයිල් එක (ifsls-guide.pdf) හොයාගන්න බැහැ! කරුණාකර Admin කෙනෙක්ට දැනුම් දෙන්න.");
+                await message.reply("⚠️ මචං, සර්වර් එකේ සිංහල PDF ෆයිල් එක (ifsls-guide-si.pdf) හොයාගන්න බැහැ. Admin කෙනෙක්ගෙන් අහන්නකො පොඩ්ඩක්!");
+            }
+        }
+        // 📄 දෙමළ Guide PDF එක යැවීම
+        else if (msgCommand === "/guidepdf-ta") {
+            try {
+                const media = MessageMedia.fromFilePath('./ifsls-guide-ta.pdf');
+                await message.reply(media, undefined, { caption: "🌍இங்கே IFSLS 2026/27 தமிழ் வழிகாட்டி PDF (தமிழ் வழிகாட்டி)!" });
+            } catch (err) {
+                await message.reply("⚠️மனிதனே, சேவையகத்தில் தமிழ் PDF கோப்பை (ifsls-guide-ta.pdf) நீங்கள் கண்டுபிடிக்க முடியாது! ஒரு நிர்வாகி கொஞ்சம்!");
+            }
+        }
+        // 📄 ඉංග්‍රීසි Guide PDF එක යැවීම
+        else if (msgCommand === "/guidepdf-en") {
+            try {
+                const media = MessageMedia.fromFilePath('./ifsls-guide-en.pdf');
+                await message.reply(media, undefined, { caption: "🌍Here's IFSLS 2026/27 English Guide PDF (English Guide)!" });
+            } catch (err) {
+                await message.reply("⚠️Dude, you can't find the English PDF File (ifsls-guide-en.pdf) in the server. could you ask the admin?");
             }
         }
         // ==========================================
