@@ -18,6 +18,165 @@ const BAD_WORDS = ["hutto", "uba", "thopi", "pakyala","palayan","pnnyo"];
 // ⏳ බෑන් වන කෙනෙකුට නැවත ජොයින් වීමට ගත විය යුතු කාලය (පැය 24ක් ලෙස සකසා ඇත - මිලලිසෙකන්ඩ් වලින්)
 const BAN_DURATION_MS = 24 * 60 * 60 * 1000; 
 
+// ==========================================
+// 🎓 1. IFSLS පොදු ප්‍රශ්න සහ පිළිතුරු (FAQs)
+// ==========================================
+const ifslsAnswers = {
+    "/about": "🎓 *IFSLS යනු කුමක්ද?*\nමෙය ශ්‍රී ලංකා රජය මගින් රාජ්‍ය නොවන විශ්වවිද්‍යාල වල උපාධියක් හැදෑරීම සඳහා සිසුන්ට ලබාදෙන 100% ක් පොලී රහිත ශිෂ්‍ය ණය යෝජනා ක්‍රමයකි.",
+    "/eligibility": "✅ *මූලික සුදුසුකම්:*\n1️⃣ A/L වර්ෂ: 2023, 2024 හෝ 2025\n2️⃣ ප්‍රතිඵල: විෂයයන් 3ම එකවර සමත් වීම (අවම 'S' 3ක්).\n3️⃣ CGT ලකුණු: අවම 30ක්.\n4️⃣ ඉංග්‍රීසි: O/L හෝ A/L ඉංග්‍රීසි විෂයට අවම 'S' සාමාර්ථයක්.\n5️⃣ වයස: 2026 සැප්තැම්බර් 27 දිනට වයස 25 ට අඩු වීම.",
+    "/loan": "💰 *ණය මුදල සහ අමතර වියදම්:*\nඋපාධිය සඳහා උපරිම රු. 1,500,000 දක්වා ණය මුදලක් ගෙවනු ලැබේ. මීට අමතරව, ඔබේ දෛනික වියදම් සඳහා (Stipend) වසරකට රු. 75,000 බැගින් (වසර 4ට ලක්ෂ 3ක්) වෙනම මුදලක් ලබාගත හැක. සම්පූර්ණ පොලිය රජය විසින් දරයි.",
+    "/repayment": "⏳ *ණය ආපසු ගෙවීම:*\nඋපාධිය අවසන් වී වසරක (1 year) සහන කාලයක් හිමි වේ. ඉන්පසු වසර 7කින් හෝ 8කින් සමාන වාරික වශයෙන් ණය මුදල ගෙවා නිම කළ යුතුය. (සම්පූර්ණ ණය කාලය වසර 12කි).",
+    "/disqualified": "❌ *අයදුම් කළ නොහැක්කේ කාටද?*\nරජයේ කැම්පස් (UGC) සඳහා තේරී පත්වී ඇති/ලියාපදිංචි වී ඇති සිසුන්, විද්‍යාපීඨ (College of Education), HND වැනි වසර 2කට වැඩි රජයේ ඩිප්ලෝමා සඳහා තේරී ඇති සිසුන්ට අයදුම් කළ නොහැක.",
+    "/guarantors": "✍️ *ඇපකරුවන්:*\nපළමු ඇපකරු ලෙස මව, පියා හෝ නීත්‍යානුකූල භාරකරු අත්සන් කළ යුතු අතර, දෙවන ඇපකරු ලෙස සමීප ඥාතියෙකු අත්සන් කළ යුතුය.",
+    "/bridging": "🌉 *ඈඳුනු පාඨමාලා (Bridging Courses):*\nඔබ IT හෝ Management උපාධියක් කිරීමට අපේක්ෂා කරන්නේ නම්, නමුත් A/L සඳහා ICT හෝ අදාළ විෂයයන් හදාරා නොමැති නම්, කැම්පස් එක මගින් පවත්වන කෙටි කාලීන 'ඈඳුනු පාඨමාලාවක්' සමත් වීමෙන් පසු අදාළ උපාධිය හැදෑරිය හැක.",
+    "/private": "👤 *Private Candidates (පෞද්ගලික අයදුම්කරුවන්):*\nපෞද්ගලිකව උසස් පෙළ පෙනී සිටි අයදුම්කරුවන්, පාසලේ අස්වීමේ සහතිකය වෙනුවට 'ග්‍රාම නිලධාරී සහතික කළ (ප්‍රාදේශීය ලේකම් අනුමත කළ) චරිත සහතිකයක්' හෝ 'සාම විනිසුරුවරයෙකුගෙන් (JP) ලබාගත් චරිත සහතිකයක්' සම්මුඛ පරීක්ෂණයේදී ඉදිරිපත් කළ යුතුය.",
+    "/documents": "📂 *ඉන්ටවිව් එකට රැගෙන යා යුතු ලියකියවිලි (Originals):*\n1. ජාතික හැඳුනුම්පත (NIC)\n2. උප්පැන්න සහතිකය\n3. O/L සහ A/L සහතික\n4. Z-Score ලේඛනය (විභාග දෙපාර්තමේන්තුවෙන්)\n5. Online Application එකේ Print Out එක\n6. පාසලේ අස්වීමේ සහතිකය (හෝ Private අයගේ චරිත සහතිකය)",
+    "/applysteps": "📝 *අයදුම් කරන ආකාරය:*\n1. www.studentloans.mohe.gov.lk වෙත පිවිසෙන්න.\n2. NIC අංකයෙන් Register වෙන්න.\n3. O/L, A/L ප්‍රතිඵල සහ පෞද්ගලික විස්තර පුරවන්න.\n4. ඔබට අවශ්‍ය කැම්පස් සහ උපාධි කැමැත්තේ අනුපිළිවෙලට (Preferences) තෝරන්න.\n5. තහවුරු කර Submit කර, Application එක Print කරගන්න.",
+    "/deadline": "⏰ *අවසන් දිනය:*\n2026 සැප්තැම්බර් 27 දින මධ්‍යම රාත්‍රී 12.00 ට පෙර Online හරහා අයදුම්පත් යොමු කළ යුතුය."
+};
+
+// ==========================================
+// 🏫 2. කැම්පස්, සියලුම උපාධි සහ අවශ්‍ය A/L සුදුසුකම්
+// ==========================================
+const campusAnswers = {
+    "/sliit": "🎓 *SLIIT Campus*\n\n" +
+              "⚙️ *Engineering* (ගණිත ධාරාවෙන් 'S' 3ක්):\n" +
+              "• BSc Eng (Hons) in Electrical & Electronic\n" +
+              "• BSc Eng (Hons) in Mechanical\n" +
+              "• BSc Eng (Hons) in Civil\n" +
+              "• BSc Eng (Hons) in Materials\n\n" +
+              "🧮 *Mathematics* (ගණිත ධාරාවෙන් 'S' 3ක්):\n" +
+              "• BSc (Hons) in Financial Math & Applied Stat\n\n" +
+              "💻 *IT & Computing* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+              "• BSc (Hons) in IT\n" +
+              "• BSc (Hons) in Software Eng (CS)\n\n" +
+              "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+              "• BBA (Hons)\n\n" +
+              "📚 *Education* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+              "• BEd (Hons) in Social Sciences / Physical Sciences / English",
+
+    "/nsbm": "🎓 *NSBM Green University*\n\n" +
+             "⚖️ *Law* (ඕනෑම ධාරාවකින් 'C' 3ක් සහ ඉංග්‍රීසි 'C'):\n" +
+             "• LLB (Hons) Law\n\n" +
+             "💻 *IT & Computing* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+             "• BSc (Hons) Computer Networks\n" +
+             "• BSc in Multimedia\n\n" +
+             "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+             "• BSc in Business Mgt (Project Mgt)\n\n" +
+             "🎨 *Design* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+             "• Bachelor of Interior Design",
+
+    "/cinec": "🎓 *CINEC Campus*\n\n" +
+              "⚙️ *Engineering* (ගණිත ධාරාවෙන් 'S' 3ක්):\n" +
+              "• BSc Eng (Hons) Automotive\n" +
+              "• BSc Eng (Hons) Mechanical\n" +
+              "• BSc Eng (Hons) Mechatronics\n" +
+              "• BSc Eng Civil\n" +
+              "• BSc (Hons) Electronics & Telecom\n\n" +
+              "🔬 *Science/Health* (ජීව විද්‍යා ධාරාවෙන් 'S' 3ක්):\n" +
+              "• BSc (Hons) Cosmetic Science\n" +
+              "• BSc (Hons) Medical & Health Product Mgt\n" +
+              "• BSc (Hons) Chemistry\n" +
+              "• BSc (Hons) Industrial Pharmaceutical\n" +
+              "• BSc (Hons) Biomedical\n\n" +
+              "💻 *IT & Computing* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+              "• BSc (Hons) Software Eng\n" +
+              "• BSc (Hons) Computer Science\n\n" +
+              "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+              "• BBM (Hons) Supply Chain / Marketing / HR / Business Admin / Banking / Accounting\n\n" +
+              "📚 *Education & Arts* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+              "• BEd (Hons) IT / Early Childhood / Sports\n" +
+              "• BA (Hons) English / BA in English",
+
+    "/kiu": "🎓 *KIU Campus*\n\n" +
+            "🔬 *Health Science* (ජීව විද්‍යා ධාරාවෙන් 'S' 3ක්):\n" +
+            "• BSc (Hons) Biomedical Science\n" +
+            "• BSc (Hons) Acupuncture\n\n" +
+            "⚖️ *Law* (ඕනෑම ධාරාවකින් 'C' 2ක් හා 'S' 1ක්):\n" +
+            "• LLB (Hons)\n\n" +
+            "💻 *IT & Computing* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+            "• BSc (Hons) MIS\n" +
+            "• BSc (Hons) Software Eng\n" +
+            "• BSc (Hons) Computer Networks & Cyber Sec\n" +
+            "• BSc (Hons) Data Science\n\n" +
+            "📊 *Business & Arts* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+            "• BBM (Hons) HR / Marketing / Business Analytics / Accounting\n" +
+            "• BSc (Hons) Psychology",
+
+    "/horizon": "🎓 *HORIZON Campus*\n\n" +
+                "🔬 *Science & Tech* (ජීව විද්‍යා හෝ Tech ධාරාවෙන් 'S' 3ක්):\n" +
+                "• BSc (Hons) Biotechnology\n" +
+                "• Bachelor of Biosystems Tech (Hons)\n\n" +
+                "💻 *IT & Computing* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+                "• BSc (Hons) IT\n" +
+                "• BSc (Hons) Data Science\n" +
+                "• BSc (Hons) IT (Networking)\n\n" +
+                "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+                "• BSc in Mgt (HR)\n" +
+                "• BSc (Hons) Marketing\n" +
+                "• BSc (Hons) Accounting & Finance\n\n" +
+                "📚 *Education* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+                "• BEd (Hons) Biological Science / IT",
+
+    "/sltc": "🎓 *SLTC (Sri Lanka Technological Campus)*\n\n" +
+             "⚙️ *Engineering* (ගණිත ධාරාවෙන් 'S' 3ක්):\n" +
+             "• BSc (Hons) Electronics & Telecom\n" +
+             "• BSc (Hons) Electrical Power\n" +
+             "• BSc (Hons) Eng in ICT\n" +
+             "• BSc (Hons) Electronics Eng Mgt\n" +
+             "• BSc (Hons) Eng in Civil\n\n" +
+             "🔬 *Technology & Science* (ගණිත/ජීව/Tech ධාරාවෙන් 'S' 3ක්):\n" +
+             "• BTech (Hons) Electronics / Agricultural Tech\n" +
+             "• BSc (Hons) Biosystems Eng\n\n" +
+             "💻 *IT & Computing* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+             "• BSc (Hons) Data Science / Software Eng / Cyber Security\n" +
+             "• BSc in Cloud Computing\n\n" +
+             "📊 *Business & Apparel* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+             "• BBM (Hons) HR / Supply Chain / Operations / Marketing / Accounting\n" +
+             "• BSc (Hons) E-Tourism / Logistics\n" +
+             "• BSc Tourism & Hospitality Mgt\n" +
+             "• BSc in Fashion Merchandise Mgt",
+
+    "/saegis": "🎓 *SAEGIS Campus*\n\n" +
+               "💻 *IT* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BSc (Hons) IT / Software Eng / Computer Science | BSc in IT\n\n" +
+               "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BBM (Hons) Marketing / HR / Tourism / Logistics / Accounting | BBM (Hons) | BBA\n\n" +
+               "📚 *Arts* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BA in English",
+
+    "/icbt": "🎓 *ICBT Campus*\n\n" +
+             "💻 *IT* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BSc (Hons) Software Eng / IT (Cyber Security) / IT (Data Science) / IT (AI)\n\n" +
+             "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BBM (Hons)",
+
+    "/bci": "🎓 *BCI Campus*\n\n" +
+            "💻 *IT* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BSc (Hons) IT / Software Eng\n\n" +
+            "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BBM (Hons) / BBM (Hons) Accounting\n\n" +
+            "📚 *Education* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BEd (Hons) Primary Edu / Early Childhood | BSc (Hons) Counseling Psychology",
+
+    "/icasl": "🎓 *ICASL*\n\n" +
+              "📊 *Accounting* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
+              "• BSc Applied Accounting (Special) / BBM (Hons) Business Analytics\n" +
+              "• BSc Applied Accounting (General) / BBM in Business Analytics",
+
+    "/esoft": "🎓 *ESOFT Metro Campus*\n\n" +
+              "💻 *IT* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BSc (Hons) in IT\n\n" +
+              "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BBM (Hons) Business Mgt",
+
+    "/siba": "🎓 *SIBA Campus*\n\n" +
+             "💻 *IT* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BSc in ICT / BSc in IT\n\n" +
+             "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BBM (Hons)",
+
+    "/slita": "🎓 *SLITA*\n\n" +
+              "👗 *Apparel* (ඕනෑම ධාරාවකින් හෝ Tech ධාරාවෙන් 'S' 3ක්):\n• BSc in Textile & Apparel Tech / Textile & Apparel Studies\n\n" +
+              "🌿 *Environment* (Tech ධාරාවෙන් 'S' 3ක්):\n• BTech (Hons) Environmental Tech",
+
+    "/niibs": "🎓 *NIIBS*\n💻 *IT* (ඕනෑම ධාරාවකින් 'S' 3ක්): BSc (Hons) in IT",
+    
+    "/ichem": "🎓 *ICHEM*\n🔬 *Science* (ජීව විද්‍යා / ගණිත ධාරාවෙන් 'S' 3ක්): BSc (Hons) Chemical Science",
+    
+    "/lyc": "🎓 *LYC*\n📚 *Education* (ඕනෑම ධාරාවකින් 'S' 3ක්): BEd (Hons) Primary Education",
+    
+    "/bms": "🎓 *BMS*\n📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්): BBM (Hons) Business Mgt"
+};
+
 const spamTracker = new Map();
 const linkWarningTracker = new Map();   
 const badWordWarningTracker = new Map(); 
@@ -83,7 +242,6 @@ client.on("ready", async () => {
     console.log("🤖 BOT READY - AUTO-EXPIRE BAN SYSTEM");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
-
 
     cron.schedule("00 23 * * *", async () => {
         for (const groupId of TARGET_GROUP_IDS) {
@@ -353,6 +511,41 @@ client.on("message_create", async (message) => {
             }
             return;
         }
+
+        // ==========================================
+        // 💡 3. IFSLS FAQ & Campus Commands Logic
+        // ==========================================
+        const msgCommand = textLower.trim();
+
+        if (msgCommand === "/menu" || msgCommand === "/help") {
+            const menuMsg = `*🎓 IFSLS 2026/27 සම්පූර්ණ තොරතුරු මෙනුව 🎓*\n\n` +
+                            `*පොදු තොරතුරු සඳහා පහත කමාන්ඩ් Type කරන්න:*\n` +
+                            `📘 */about* - IFSLS යනු කුමක්ද?\n` +
+                            `✅ */eligibility* - මූලික සුදුසුකම්\n` +
+                            `💰 */loan* - ණය මුදල සහ දීමනාව\n` +
+                            `⏳ */repayment* - ණය ආපසු ගෙවීම\n` +
+                            `❌ */disqualified* - අයදුම් කළ නොහැක්කේ කාටද?\n` +
+                            `✍️ */guarantors* - ඇපකරුවන්\n` +
+                            `🌉 */bridging* - ඈඳුනු පාඨමාලා\n` +
+                            `👤 */private* - Private අයදුම්කරුවන්\n` +
+                            `📂 */documents* - සම්මුඛ පරීක්ෂණ ලියකියවිලි\n` +
+                            `📝 */applysteps* - අයදුම් කරන පියවර\n` +
+                            `⏰ */deadline* - අවසන් දිනය\n\n` +
+                            `*🏫 කැම්පස් අනුව උපාධි සහ අදාළ A/L සුදුසුකම් බැලීමට පහත නම Type කරන්න:*\n` +
+                            `*/sliit* | */nsbm* | */cinec* | */kiu*\n` +
+                            `*/sltc* | */saegis* | */horizon* | */icbt*\n` +
+                            `*/bci* | */icasl* | */esoft* | */siba*\n` +
+                            `*/slita* | */niibs* | */ichem* | */lyc* | */bms*`;
+            
+            await message.reply(menuMsg);
+        }
+        else if (ifslsAnswers[msgCommand]) {
+            await message.reply(ifslsAnswers[msgCommand]);
+        }
+        else if (campusAnswers[msgCommand]) {
+            await message.reply(campusAnswers[msgCommand]);
+        }
+        // ==========================================
 
         await checkSpam(message, senderId, info.name, groupId);
 
