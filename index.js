@@ -1,4 +1,4 @@
-const { Client, LocalAuth } = require("whatsapp-web.js");
+const { Client, LocalAuth, MessageMedia } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const cron = require("node-cron"); 
 const fs = require("fs"); 
@@ -23,7 +23,7 @@ const BAN_DURATION_MS = 24 * 60 * 60 * 1000;
 // ==========================================
 const ifslsAnswers = {
     "/about": "🎓 *IFSLS යනු කුමක්ද?*\nමෙය ශ්‍රී ලංකා රජය මගින් රාජ්‍ය නොවන විශ්වවිද්‍යාල වල උපාධියක් හැදෑරීම සඳහා සිසුන්ට ලබාදෙන 100% ක් පොලී රහිත ශිෂ්‍ය ණය යෝජනා ක්‍රමයකි.",
-    "/ministrycontact": "✅ *ඔයාට ministry department එක සම්බන්ධ කරගන්න අවශ්‍යනම් පහත දුරකථන අංක භාවිතා කරන්න පුලුවන්* 011 2879727\n 070 3555970\n 070 3555971\n  070 3555972\n 070 3555973\n 070 3555974\n 070 3555975\n 070 3555976\n 070 3555977\n 070 3555978\n 070 3555979",
+    "/ministrycontact": "✅ *ඔයාට ministry department එක සම්බන්ධ කරගන්න අවශ්‍යනම් පහත දුරකථන අංක භාවිතා කරන්න පුලුවන්*\n011 2879727\n070 3555970\n070 3555971\n070 3555972\n070 3555973\n070 3555974\n070 3555975\n070 3555976\n070 3555977\n070 3555978\n070 3555979",
     "/eligibility": "✅ *මූලික සුදුසුකම්:*\n1️⃣ A/L වර්ෂ: 2023, 2024 හෝ 2025\n2️⃣ ප්‍රතිඵල: විෂයයන් 3ම එකවර සමත් වීම (අවම 'S' 3ක්).\n3️⃣ CGT ලකුණු: අවම 30ක්.\n4️⃣ ඉංග්‍රීසි: O/L හෝ A/L ඉංග්‍රීසි විෂයට අවම 'S' සාමාර්ථයක්.\n5️⃣ වයස: 2026 සැප්තැම්බර් 27 දිනට වයස 25 ට අඩු වීම.",
     "/loan": "💰 *ණය මුදල සහ අමතර වියදම්:*\nඋපාධිය සඳහා උපරිම රු. 1,500,000 දක්වා ණය මුදලක් ගෙවනු ලැබේ. මීට අමතරව, ඔබේ දෛනික වියදම් සඳහා (Stipend) වසරකට රු. 75,000 බැගින් (වසර 4ට ලක්ෂ 3ක්) වෙනම මුදලක් ලබාගත හැක. සම්පූර්ණ පොලිය රජය විසින් දරයි.",
     "/repayment": "⏳ *ණය ආපසු ගෙවීම:*\nඋපාධිය අවසන් වී වසරක (1 year) සහන කාලයක් හිමි වේ. ඉන්පසු වසර 7කින් හෝ 8කින් සමාන වාරික වශයෙන් ණය මුදල ගෙවා නිම කළ යුතුය. (සම්පූර්ණ ණය කාලය වසර 12කි).",
@@ -183,7 +183,7 @@ const linkWarningTracker = new Map();
 const badWordWarningTracker = new Map(); 
 
 const BLACKLIST_FILE = "./blacklist.json";
-let blacklistedUsers = {}; // දැන් මේක Object එකක් (userId -> banExpiryTime)
+let blacklistedUsers = {}; 
 
 if (fs.existsSync(BLACKLIST_FILE)) {
     try {
@@ -197,7 +197,6 @@ function saveBlacklist() {
     } catch(e) { }
 }
 
-// 🧹 කල් ඉකුත් වූ (Expired) බෑන් ස්වයංක්‍රීයව ඉවත් කිරීමේ ශ්‍රිතය
 function cleanExpiredBans() {
     const now = Date.now();
     let updated = false;
@@ -314,7 +313,7 @@ async function directRemoveParticipant(groupId, participantId) {
 
 client.on("group_join", async (notification) => {
     try {
-        cleanExpiredBans(); // ජොයින් වෙද්දීල් පැරණි බෑන්ස් ක්ලියර් කරයි
+        cleanExpiredBans(); 
 
         const groupId = typeof notification.chatId === 'object' ? notification.chatId._serialized : String(notification.chatId);
         if (!TARGET_GROUP_IDS.includes(groupId)) return;
@@ -332,7 +331,6 @@ client.on("group_join", async (notification) => {
             let isBanned = false;
             const now = Date.now();
             
-            // නම්බර් එක හෝ අයිඩී එක බ්ලැක්ලිස්ට් එකේ ඇද්ද සහ කාලය ඉවර වී ඇද්ද බැලීම
             for (let bannedId in blacklistedUsers) {
                 if ((bannedId === userId || bannedId.includes(info.actualNumber)) && now < blacklistedUsers[bannedId]) {
                     isBanned = true;
@@ -357,17 +355,17 @@ client.on("group_join", async (notification) => {
             await client.sendMessage(userId, welcomeMsg);
             console.log(`✅ First Welcome successfully sent to: ${info.name}`);
 
-            // ⏳ තත්පර 3ක Delay එකක් (3 Seconds Delay)
             await new Promise(resolve => setTimeout(resolve, 3000));
 
-            // 2 වැනි Welcome Message එක (Commands List එක ගැන දැනුවත් කිරීම)
             const secondWelcomeMsg = `🤖 *Smart Bot Commands (ස්වයංක්‍රීය සහය)* 🤖\n\n` +
-                                     `ළමයි ඔයාලට ශිෂ්‍ය ණය ගැන අවශ්‍ය මූලික තොරතුරු ක්ෂණිකව Bot හරහා දැන් ලබාගන්න  පුළුවන්. ඒ සඳහා *Group එක ඇතුළට ගොස්* / type කරලා පහත Commands ටයිප් කරලා send කරන්න.\n\n` +
+                                     `ළමයි ඔයාලට ශිෂ්‍ය ණය ගැන අවශ්‍ය මූලික තොරතුරු ක්ෂණිකව Bot හරහා දැන් ලබාගන්න පුළුවන්. ඒ සඳහා *Group එක ඇතුළට ගොස්* / type කරලා පහත Commands ටයිප් කරලා send කරන්න.\n\n` +
                                      `📌 */menu* - සියලුම විස්තර සහ Commands බලාගැනීමට.\n` +
                                      `📌 */about* - IFSLS ගැන විස්තර.\n` +
                                      `📌 */eligibility* - ණය ලබාගැනීමේ සුදුසුකම්.\n` +
-                                     `📌 */applysteps* - අයදුම් කරන පියවර.\n\n` +
-                                     `🏫 *කැම්පස් ගැන විස්තර බලාගන්න නම් කැම්පස් එකේ නමට කලින් / දාලා campus නම ගෲප් එකට සෙන්ඩ් කරන්න.*\n` +
+                                     `📌 */applysteps* - අයදුම් කරන පියවර.\n` +
+                                     `📌 */ministrycontact* - Ministry Department එක contact කරන විදිහ\n` +
+                                     `📌 */guidepdf* - IFSLS මාර්ගෝපදේශක PDF එක ලබාගැනීමට 📄\n\n` +
+                                     `🏫 *කැම්පස් වල ඔයාලට දෙන Degrees වලට අදාල විස්තර බලාගන්න අවශ්‍යනම් කැම්පස් එකේ නමට කලින් / දාලා campus නම ගෲප් එකට සෙන්ඩ් කරන්න.*\n` +
                                      `(උදාහරණ: */sliit*, */nsbm*, */cinec*, */saegis*)\n\n` +
                                      `💡 *දැන්ම Group එකට ගිහින් /menu කියලා Type කරලා බලන්නකො ළමයි!* 😎`;
 
@@ -434,8 +432,10 @@ client.on("message_create", async (message) => {
                 const isAllowedDocs = textLower.includes("docs.google.com");
                 const isAllowedForms = textLower.includes("forms.gle");
                 const isAllowedClassroom = textLower.includes("classroom.google.com");
+                const isAllowedMinistry = textLower.includes("studentloans.mohe.gov.lk") || textLower.includes("mohe.gov.lk") || textLower.includes("https://studentloans.mohe.gov.lk/loan_application/");
+                const isAllowedFB = textLower.includes("facebook.com") || textLower.includes("fb.watch") || textLower.includes("fb.me");
 
-                const isAllowedEducationalLink = isAllowedYT || isAllowedDrive || isAllowedZoom || isAllowedTeams || isAllowedDocs || isAllowedForms || isAllowedClassroom;
+                const isAllowedEducationalLink = isAllowedYT || isAllowedDrive || isAllowedZoom || isAllowedTeams || isAllowedDocs || isAllowedForms || isAllowedClassroom || isAllowedMinistry || isAllowedFB;
                 
                 const scamOrBusinessKeywords = ["earn money", "crypto", "forex", "business", "job opportunity", "free cash", "marketing", "signals", "trading", "invest", "lottery", "win cash", "fast money", "income"];
                 const containsScamOrBusiness = scamOrBusinessKeywords.some(keyword => textLower.includes(keyword));
@@ -523,8 +523,9 @@ client.on("message_create", async (message) => {
                             `👤 */private* - Private අයදුම්කරුවන්\n` +
                             `📂 */documents* - සම්මුඛ පරීක්ෂණ ලියකියවිලි\n` +
                             `📝 */applysteps* - අයදුම් කරන පියවර\n` +
-                            `⏰ */deadline* - අවසන් දිනය\n\n` +
-                            `✅ */ministrycontact* - Ministry Department එක contact කරන විදිහ\n\n` +
+                            `⏰ */deadline* - අවසන් දිනය\n` +
+                            `✅ */ministrycontact* - Ministry Department එක contact කරන විදිහ\n` +
+                            `📄 */guidepdf* - IFSLS මාර්ගෝපදේශක PDF එක ලබාගැනීමට\n\n` +
                             `*🏫 කැම්පස් අනුව උපාධි සහ අදාළ A/L සුදුසුකම් බැලීමට පහත නම Type කරන්න:*\n` +
                             `*/sliit* | */nsbm* | */cinec* | */kiu*\n` +
                             `*/sltc* | */saegis* | */horizon* | */icbt*\n` +
@@ -538,6 +539,16 @@ client.on("message_create", async (message) => {
         }
         else if (campusAnswers[msgCommand]) {
             await message.reply(campusAnswers[msgCommand]);
+        }
+        // 📄 අලුතින් එකතු කළ Media Handler එක (PDF එක යැවීම සඳහා)
+        else if (msgCommand === "/guidepdf") {
+            try {
+                // සර්වර් එකේ ෆයිල් නම 'ifsls-guide.pdf' විය යුතුය (නැතහොත් නම වෙනස් කරගන්න)
+                const media = MessageMedia.fromFilePath('./ifsls-guide.pdf');
+                await message.reply(media, undefined, { caption: "📄 මෙන්න IFSLS 2026/27 සම්පූර්ණ මාර්ගෝපදේශක PDF එක!" });
+            } catch (err) {
+                await message.reply("⚠️ මචං, දැනට සර්වර් එකේ PDF ෆයිල් එක (ifsls-guide.pdf) හොයාගන්න බැහැ! කරුණාකර Admin කෙනෙක්ට දැනුම් දෙන්න.");
+            }
         }
         // ==========================================
 
