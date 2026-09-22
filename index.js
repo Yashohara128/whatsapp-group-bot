@@ -27,13 +27,46 @@ const ifslsAnswers = {
     "/ministrycontact": "✅ *ඔයාට ministry department එක සම්බන්ධ කරගන්න අවශ්‍යනම් පහත දුරකථන අංක භාවිතා කරන්න පුලුවන්*\n011 2879727\n070 3555970\n070 3555971\n070 3555972\n070 3555973\n070 3555974\n070 3555975\n070 3555976\n070 3555977\n070 3555978\n070 3555979",
     "/eligibility": "✅ *මූලික සුදුසුකම්:*\n1️⃣ A/L වර්ෂ: 2023, 2024 හෝ 2025\n2️⃣ ප්‍රතිඵල: විෂයයන් 3ම එකවර සමත් වීම (අවම 'S' 3ක්).\n3️⃣ CGT ලකුණු: අවම 30ක්.\n4️⃣ ඉංග්‍රීසි: O/L හෝ A/L ඉංග්‍රීසි විෂයට අවම 'S' සාමාර්ථයක්.\n5️⃣ වයස: 2026 සැප්තැම්බර් 27 දිනට වයස 25 ට අඩු වීම.",
     "/loan": "💰 *ණය මුදල සහ අමතර වියදම්:*\nඋපාධිය සඳහා උපරිම රු. 1,500,000 දක්වා ණය මුදලක් ගෙවනු ලැබේ. මීට අමතරව, ඔබේ දෛනික වියදම් සඳහා (Stipend) වසරකට රු. 75,000 බැගින් (වසර 4ට ලක්ෂ 3ක්) වෙනම මුදලක් ලබාගත හැක. සම්පූර්ණ පොලිය රජය විසින් දරයි.",
+    
+    "/maxloan": "💰 *උපරිම ණය මුදල (Maximum Loan Amounts):*\n\n" +
+                "🎓 *වසර 4ක උපාධි සඳහා:*\n" +
+                "• මානව ශාස්ත්‍ර හා සමාජ විද්‍යා - රු. 800,000\n" +
+                "• කළමනාකරණය සහ වාණිජ - රු. 900,000\n" +
+                "• විද්‍යා (රසායනික/ජීව/කෘෂි) - රු. 1,200,000\n" +
+                "• විද්‍යා (භෞතික) - රු. 1,000,000\n" +
+                "• ඉංජිනේරු - රු. 1,500,000\n" +
+                "• ජෛව / ඉංජිනේරු තාක්ෂණය - රු. 1,000,000\n" +
+                "• IT (පරිගණකවේදී) - රු. 800,000\n" +
+                "• IT (විද්‍යාවේදී) - රු. 1,000,000\n\n" +
+                "🎓 *වසර 3ක උපාධි සඳහා:*\n" +
+                "• මානව ශාස්ත්‍ර / සමාජ විද්‍යා / වාණිජ - රු. 600,000\n" +
+                "• ඉංජිනේරු තාක්ෂණය - රු. 800,000\n" +
+                "• IT (පරිගණකවේදී) - රු. 600,000\n" +
+                "• IT (විද්‍යාවේදී) - රු. 800,000",
+    
     "/repayment": "⏳ *ණය ආපසු ගෙවීම:*\nඋපාධිය අවසන් වී වසරක (1 year) සහන කාලයක් හිමි වේ. ඉන්පසු වසර 7කින් හෝ 8කින් සමාන වාරික වශයෙන් ණය මුදල ගෙවා නිම කළ යුතුය. (සම්පූර්ණ ණය කාලය වසර 12කි).",
     "/disqualified": "❌ *අයදුම් කළ නොහැක්කේ කාටද?*\nරජයේ කැම්පස් (UGC) සඳහා තේරී පත්වී ඇති/ලියාපදිංචි වී ඇති සිසුන්, විද්‍යාපීඨ (College of Education), HND වැනි වසර 2කට වැඩි රජයේ ඩිප්ලෝමා සඳහා තේරී ඇති සිසුන්ට අයදුම් කළ නොහැක.",
     "/guarantors": "✍️ *ඇපකරුවන්:*\nපළමු ඇපකරු ලෙස මව, පියා හෝ නීත්‍යානුකූල භාරකරු අත්සන් කළ යුතු අතර, දෙවන ඇපකරු ලෙස සමීප ඥාතියෙකු අත්සන් කළ යුතුය.",
     "/bridging": "🌉 *ඈඳුනු පාඨමාලා (Bridging Courses):*\nඔබ IT හෝ Management උපාධියක් කිරීමට අපේක්ෂා කරන්නේ නම්, නමුත් A/L සඳහා ICT හෝ අදාළ විෂයයන් හදාරා නොමැති නම්, කැම්පස් එක මගින් පවත්වන කෙටි කාලීන 'ඈඳුනු පාඨමාලාවක්' සමත් වීමෙන් පසු අදාළ උපාධිය හැදෑරිය හැක.",
+    
+    "/bridginginfo": "🌉 *ඈඳුනු පාඨමාලා (Bridging Courses) ගාස්තු සහ නිලධාරීන්:*\n\n" +
+                     "🏛 *SLIIT:* රු. 25,000/= (චාමිනී වීරක්කොඩි - 011 754 3392)\n" +
+                     "🏛 *CINEC:* රු. 75,000/= (රුවනි කරුණාදාස - 076 9442866)\n" +
+                     "🏛 *HORIZON:* රු. 25,000/= (සංජීව කුරුප්පු - 071 1175175)\n" +
+                     "🏛 *KIU:* රු. 25,000/= (සමිත ඉෂාර - 076 7334744)\n" +
+                     "🏛 *SLTC:* රු. 20,000/= (තරිඳු නිම්සර - 070 5689968 / අසිත - 071 140 5836)\n" +
+                     "🏛 *SAEGIS:* රු. 25,000/= (දෙශානු කල්න - 074 3478176)\n" +
+                     "🏛 *ESOFT:* රු. 20,000/= (එන්. තොපූක්ෂාන් - 077 7825038)\n" +
+                     "🏛 *ICBT:* ගාස්තු නැත (විනෝත් රවීන්ද්‍රකුමාර් - 077 3427287)\n" +
+                     "🏛 *BCI:* රු. 25,000/= (අශානි පෙරේරා - 074 016 5896 / ප්‍රසාද්‍යා - 070 603 5100)\n" +
+                     "🏛 *NIIBS:* රු. 25,000/= (ආචාර්ය සජීව ප්‍රේමසිංහ - 0112 904 675)\n" +
+                     "🏛 *SIBA:* රු. 25,000/= (ටී.ආර්.එස්.සිරිගංගොඩ - 070 7 940 940 / සාග්‍යා - 081 24 21 693)\n" +
+                     "🏛 *ICASL:* රු. 20,000/= (ඉසුරි සමරවික්‍රම - 0112 807 407)",
+    
     "/private": "👤 *Private Candidates (පෞද්ගලික අයදුම්කරුවන්):*\nපෞද්ගලිකව උසස් පෙළ පෙනී සිටි අයදුම්කරුවන්, පාසලේ අස්වීමේ සහතිකය වෙනුවට 'ග්‍රාම නිලධාරී සහතික කළ (ප්‍රාදේශීය ලේකම් අනුමත කළ) චරිත සහතිකයක්' හෝ 'සාම විනිසුරුවරයෙකුගෙන් (JP) ලබාගත් චරිත සහතිකයක්' සම්මුඛ පරීක්ෂණයේදී ඉදිරිපත් කළ යුතුය.",
     "/documents": "📂 *ඉන්ටවිව් එකට රැගෙන යා යුතු ලියකියවිලි (Originals):*\n1. ජාතික හැඳුනුම්පත (NIC)\n2. උප්පැන්න සහතිකය\n3. O/L සහ A/L සහතික(Z score සහිත)\n4. Online Application එකේ Print Out එක (විදුහල්පති සහතික කරන ලද)\n5.පාසලේ අස්වීමේ සහතිකය (හෝ Private අයගේ චරිත සහතිකය) \n6.Bridging Courses Results(Bridging කරලා තියනවනම්)\n7.Course Changing Letter(Courses Change කරනවනම්)",
     "/applysteps": "📝 *අයදුම් කරන ආකාරය:*\n1. https://studentloans.mohe.gov.lk/loan_application/ වෙත පිවිසෙන්න.\n2. NIC අංකයෙන් Register වෙන්න.\n3. O/L, A/L ප්‍රතිඵල සහ පෞද්ගලික විස්තර පුරවන්න.\n4. ඔබට අවශ්‍ය කැම්පස් සහ උපාධි කැමැත්තේ අනුපිළිවෙලට (Preferences) තෝරන්න.\n5. තහවුරු කර Submit කර, Application එක Print කරගන්න.",
+    
     "/deadline": "⏰ *අවසන් දිනය:*\n2026 සැප්තැම්බර් 27 දින මධ්‍යම රාත්‍රී 12.00 ට පෙර Online හරහා අයදුම්පත් යොමු කළ යුතුය."
 };
 
@@ -42,142 +75,233 @@ const ifslsAnswers = {
 // ==========================================
 const campusAnswers = {
     "/sliit": "🎓 *SLIIT Campus*\n\n" +
-              "⚙️ *Engineering* (ගණිත ධාරාවෙන් 'S' 3ක්):\n" +
-              "• BSc Eng (Hons) in Electrical & Electronic\n" +
-              "• BSc Eng (Hons) in Mechanical\n" +
-              "• BSc Eng (Hons) in Civil\n" +
-              "• BSc Eng (Hons) in Materials\n\n" +
-              "🧮 *Mathematics* (ගණිත ධාරාවෙන් 'S' 3ක්):\n" +
-              "• BSc (Hons) in Financial Math & Applied Stat\n\n" +
-              "💻 *IT & Computing* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-              "• BSc (Hons) in IT\n" +
-              "• BSc (Hons) in Software Eng (CS)\n\n" +
-              "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-              "• BBA (Hons)\n\n" +
-              "📚 *Education* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-              "• BEd (Hons) in Social Sciences / Physical Sciences / English",
-
+              "📘 *Faculty of Humanities & Sciences*\n" +
+              "• Bachelor of Education Honours in Social Sciences\n" +
+              "  ✔️ *උ/පෙළ:* වාණිජ හෝ කලා අංශයෙන් එකවර 'S' 3ක්.\n" +
+              "  ✔️ *සා/පෙළ:* සිංහල/දෙමළ, ගණිතය සහ ඉංග්‍රීසි සඳහා අවම 'S' 3ක්.\n\n" +
+              "• Bachelor of Education Honours in Physical Sciences\n" +
+              "  ✔️ *උ/පෙළ:* සංයුක්ත/උසස් ගණිතය, රසායන විද්‍යාව, භෞතික විද්‍යාව, ICT, සහ ගණිතය අතරින් 'S' 3ක්.\n" +
+              "  ✔️ *සා/පෙළ:* සිංහල/දෙමළ, ගණිතය සහ ඉංග්‍රීසි සඳහා අවම 'S' 3ක්.\n\n" +
+              "• Bachelor of Arts Honours in English\n" +
+              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් (ඉංග්‍රීසි ප්‍රධාන විෂය විය යුතුයි) *හෝ* ඉංග්‍රීසි මාධ්‍යයෙන් හැදෑරූ ඕනෑම අංශයකින් 'S' 3ක්.\n\n" +
+              "📊 *Faculty of Business*\n" +
+              "• Bachelor of Business Administration Honours\n" +
+              "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+              "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n" +
+              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*\n\n" +
+              "⚙️ *Faculty of Engineering*\n" +
+              "• BSc Honours in Financial Mathematics and Applied Statistics\n" +
+              "  ✔️ *උ/පෙළ:* සංයුක්ත ගණිතය සමඟ වෙනත් විෂයයන් දෙකක් සඳහා 'S' 3ක්.\n\n" +
+              "• BSc Engineering Honours (Electrical & Electronic / Mechanical / Civil / Materials)\n" +
+              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා අංශයෙන් (සංයුක්ත ගණිතය, භෞතික විද්‍යාව, රසායන විද්‍යාව) අවම 'C' 2ක් සහ 'S' 1ක්.\n\n" +
+              "💻 *Faculty of Computing*\n" +
+              "• BSc in Information Technology\n" +
+              "• BSc Honours in Software Engineering\n" +
+              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
+              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
+    
     "/nsbm": "🎓 *NSBM Green University*\n\n" +
-             "⚖️ *Law* (ඕනෑම ධාරාවකින් 'C' 3ක් සහ ඉංග්‍රීසි 'C'):\n" +
-             "• LLB (Hons) Law\n\n" +
-             "💻 *IT & Computing* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-             "• BSc (Hons) Computer Networks\n" +
-             "• BSc in Multimedia\n\n" +
-             "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-             "• BSc in Business Mgt (Project Mgt)\n\n" +
-             "🎨 *Design* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-             "• Bachelor of Interior Design",
+             "📘 *Faculty of Humanities & Social Sciences*\n" +
+             "• Bachelor of Laws (Honours) - LLB\n" +
+             "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'C' 3ක් සහ ඉංග්‍රීසි සඳහා අවම 'S' 1ක්.\n" +
+             "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි සහ මව් භාෂාව සඳහා සම්මාන ඇතුළුව 'C' 3ක් සහ ගණිතය ඇතුළුව සාමාර්ථ 6ක්.\n\n" +
+             "📊 *Faculty of Business*\n" +
+             "• BSc in Business Management (Project Management) (Special)\n" +
+             "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+             "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි 'C' සහ ගණිතය 'S' සාමාර්ථයක්.\n" +
+             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය ඈඳුනු පාඨමාලාවක් සමත් විය යුතුය).*\n\n" +
+             "⚙️ *Faculty of Engineering & Science*\n" +
+             "• Bachelor of Interior Design\n" +
+             "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'S' 3ක් සහ ඉංග්‍රීසි සඳහා 'S' 1ක්.\n" +
+             "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි 'C' සහ ගණිතය 'C' සාමාර්ථයක්.\n\n" +
+             "💻 *Faculty of Computing*\n" +
+             "• BSc Honours in Computer Networks\n" +
+             "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක් සහ ඉංග්‍රීසි සඳහා 'S' 1ක්.\n" +
+             "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි 'C' සාමාර්ථයක්.\n" +
+             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*\n\n" +
+             "• BSc in Multimedia\n" +
+             "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් සහ ඉංග්‍රීසි සඳහා 'S' 1ක්.\n" +
+             "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි 'C' සහ ගණිතය 'C' සාමාර්ථයක්.",
 
     "/cinec": "🎓 *CINEC Campus*\n\n" +
-              "⚙️ *Engineering* (ගණිත ධාරාවෙන් 'S' 3ක්):\n" +
-              "• BSc Eng (Hons) Automotive\n" +
-              "• BSc Eng (Hons) Mechanical\n" +
-              "• BSc Eng (Hons) Mechatronics\n" +
-              "• BSc Eng Civil\n" +
-              "• BSc (Hons) Electronics & Telecom\n\n" +
-              "🔬 *Science/Health* (ජීව විද්‍යා ධාරාවෙන් 'S' 3ක්):\n" +
-              "• BSc (Hons) Cosmetic Science\n" +
-              "• BSc (Hons) Medical & Health Product Mgt\n" +
-              "• BSc (Hons) Chemistry\n" +
-              "• BSc (Hons) Industrial Pharmaceutical\n" +
-              "• BSc (Hons) Biomedical\n\n" +
-              "💻 *IT & Computing* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-              "• BSc (Hons) Software Eng\n" +
-              "• BSc (Hons) Computer Science\n\n" +
-              "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-              "• BBM (Hons) Supply Chain / Marketing / HR / Business Admin / Banking / Accounting\n\n" +
-              "📚 *Education & Arts* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-              "• BEd (Hons) IT / Early Childhood / Sports\n" +
-              "• BA (Hons) English / BA in English",
-
+              "📘 *Faculty of Humanities & Education*\n" +
+              "• Bachelor of Education Honours in Information Technology / Early Childhood Education / Physical Education & Sports\n" +
+              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'S' 3ක්.\n" +
+              "  ✔️ *සා/පෙළ:* සිංහල/දෙමළ, ගණිතය සහ ඉංග්‍රීසි ඇතුළුව අවම 'S' 3ක්.\n\n" +
+              "• Bachelor of Arts Honours in English / BA in English\n" +
+              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් (ගෞරව උපාධිය සඳහා ඉංග්‍රීසි ප්‍රධාන විෂය විය යුතුයි).\n" +
+              "  ✔️ *සා/පෙළ:* BA in English සඳහා ඉංග්‍රීසි 'C' සාමාර්ථයක්.\n\n" +
+              "📊 *Faculty of Management & Social Sciences*\n" +
+              "• Bachelor of Management Honours (Supply Chain / Business Administration / HRM / Banking & Finance / Accounting / Marketing)\n" +
+              "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+              "  ✔️ *සා/පෙළ:* ගණිතය 'S' සාමාර්ථයක්. (Accounting & Banking සඳහා සා/පෙළ ගණිතය සහ ව්‍යාපාර අධ්‍යනය 'C' සාමාර්ථ අවශ්‍යයි).\n\n" +
+              "🔬 *Faculty of Health Science / Science*\n" +
+              "• BSc Honours in Cosmetic Sciences / Industrial Pharmaceutical Science\n" +
+              "  ✔️ *උ/පෙළ:* රසායන විද්‍යාව හෝ විද්‍යාව සඳහා තාක්ෂණය සමඟ (ජීව විද්‍යාව, භෞතික විද්‍යාව ආදී) වෙනත් විෂයයන් දෙකක් සඳහා 'S' 3ක්.\n\n" +
+              "• BSc Honours in Medical & Health Product Management\n" +
+              "  ✔️ *උ/පෙළ:* ජීව විද්‍යා, භෞතික විද්‍යා හෝ තාක්ෂණ අංශයෙන් 'S' 3ක්.\n\n" +
+              "• BSc Honours in Chemistry\n" +
+              "  ✔️ *උ/පෙළ:* ජීව විද්‍යා හෝ භෞතික විද්‍යා අංශයෙන් 'S' 3ක්.\n\n" +
+              "• BSc Honours in Biomedical Sciences\n" +
+              "  ✔️ *උ/පෙළ:* ජීව විද්‍යාව, රසායන විද්‍යාව සහ භෞතික විද්‍යාව/කෘෂිකර්මය සඳහා 'C' 3ක්.\n\n" +
+              "⚙️ *Faculty of Engineering Technology*\n" +
+              "• BSc Engineering Honours (Automotive / Civil / Electronics & Telecommunication / Mechanical / Mechatronics)\n" +
+              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා අංශයෙන් (සංයුක්ත ගණිතය, භෞතික විද්‍යාව, රසායන විද්‍යාව) අවම 'C' 2ක් සහ 'S' 1ක්.\n\n" +
+              "💻 *Faculty of Computing*\n" +
+              "• BSc Honours in Software Engineering / Computer Science (Network Security & Forensics)\n" +
+              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
+              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
+    
     "/kiu": "🎓 *KIU Campus*\n\n" +
-            "🔬 *Health Science* (ජීව විද්‍යා ධාරාවෙන් 'S' 3ක්):\n" +
-            "• BSc (Hons) Biomedical Science\n" +
-            "• BSc (Hons) Acupuncture\n\n" +
-            "⚖️ *Law* (ඕනෑම ධාරාවකින් 'C' 2ක් හා 'S' 1ක්):\n" +
-            "• LLB (Hons)\n\n" +
-            "💻 *IT & Computing* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-            "• BSc (Hons) MIS\n" +
-            "• BSc (Hons) Software Eng\n" +
-            "• BSc (Hons) Computer Networks & Cyber Sec\n" +
-            "• BSc (Hons) Data Science\n\n" +
-            "📊 *Business & Arts* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-            "• BBM (Hons) HR / Marketing / Business Analytics / Accounting\n" +
-            "• BSc (Hons) Psychology",
+            "📘 *Faculty of Humanities & Social Sciences*\n" +
+            "• BSc Honours in Psychology\n" +
+            "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+            "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
+            "• Bachelor of Laws (Honours) - LLB\n" +
+            "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'C' 2ක් සහ 'S' 1ක්.\n" +
+            "  ✔️ *සා/පෙළ:* මව් භාෂාව සහ ඉංග්‍රීසි සඳහා 'C' සාමාර්ථයක්.\n\n" +
+            "📊 *Faculty of Management*\n" +
+            "• Bachelor of Management Honours (HR / Marketing / Business Analytics / Accounting)\n" +
+            "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+            "  ✔️ *සා/පෙළ:* ගණිතය සඳහා 'S' සාමාර්ථයක් (Accounting සඳහා සා/පෙළ ගණිතය සහ ව්‍යාපාර අධ්‍යනය 'C' අවශ්‍යයි).\n\n" +
+            "🔬 *Faculty of Health Sciences*\n" +
+            "• BSc Honours in Biomedical Science / Acupuncture\n" +
+            "  ✔️ *උ/පෙළ:* ජීව විද්‍යාව, රසායන විද්‍යාව සහ භෞතික විද්‍යාව/කෘෂිකර්මය සඳහා 'S' 3ක්.\n\n" +
+            "💻 *Faculty of Computing*\n" +
+            "• BSc Honours in Management Information Systems / Software Engineering / Computer Networks & Cyber Security / Data Science\n" +
+            "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
+            "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
 
     "/horizon": "🎓 *HORIZON Campus*\n\n" +
-                "🔬 *Science & Tech* (ජීව විද්‍යා හෝ Tech ධාරාවෙන් 'S' 3ක්):\n" +
-                "• BSc (Hons) Biotechnology\n" +
-                "• Bachelor of Biosystems Tech (Hons)\n\n" +
-                "💻 *IT & Computing* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-                "• BSc (Hons) IT\n" +
-                "• BSc (Hons) Data Science\n" +
-                "• BSc (Hons) IT (Networking)\n\n" +
-                "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-                "• BSc in Mgt (HR)\n" +
-                "• BSc (Hons) Marketing\n" +
-                "• BSc (Hons) Accounting & Finance\n\n" +
-                "📚 *Education* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-                "• BEd (Hons) Biological Science / IT",
+                "📘 *Faculty of Education*\n" +
+                "• Bachelor of Education Honours in Biological Sciences / Information Technology\n" +
+                "  ✔️ *උ/පෙළ:* ජීව විද්‍යාව, රසායන විද්‍යාව, භෞතික විද්‍යාව, කෘෂිකර්මය අතරින් 'S' 3ක්.\n" +
+                "  ✔️ *සා/පෙළ:* සිංහල/දෙමළ, ගණිතය සහ ඉංග්‍රීසි සඳහා අවම 'S' 3ක්.\n\n" +
+                "📊 *Faculty of Management*\n" +
+                "• Bachelor of Management (Honours) / BSc in Management (HRM)\n" +
+                "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+                "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
+                "⚙️ *Faculty of Science / Technology*\n" +
+                "• BSc Honours in Biotechnology / Bachelor of Biosystems Technology Honours\n" +
+                "  ✔️ *උ/පෙළ:* ජීව විද්‍යා හෝ ජෛව පද්ධති තාක්ෂණ අංශයෙන් 'S' 3ක්.\n\n" +
+                "💻 *Faculty of Information Technology*\n" +
+                "• BSc Honours in Information Technology / Data Science / IT (Networking)\n" +
+                "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
+                "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
 
     "/sltc": "🎓 *SLTC (Sri Lanka Technological Campus)*\n\n" +
-             "⚙️ *Engineering* (ගණිත ධාරාවෙන් 'S' 3ක්):\n" +
-             "• BSc (Hons) Electronics & Telecom\n" +
-             "• BSc (Hons) Electrical Power\n" +
-             "• BSc (Hons) Eng in ICT\n" +
-             "• BSc (Hons) Electronics Eng Mgt\n" +
-             "• BSc (Hons) Eng in Civil\n\n" +
-             "🔬 *Technology & Science* (ගණිත/ජීව/Tech ධාරාවෙන් 'S' 3ක්):\n" +
-             "• BTech (Hons) Electronics / Agricultural Tech\n" +
-             "• BSc (Hons) Biosystems Eng\n\n" +
-             "💻 *IT & Computing* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-             "• BSc (Hons) Data Science / Software Eng / Cyber Security\n" +
-             "• BSc in Cloud Computing\n\n" +
-             "📊 *Business & Apparel* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-             "• BBM (Hons) HR / Supply Chain / Operations / Marketing / Accounting\n" +
-             "• BSc (Hons) E-Tourism / Logistics\n" +
-             "• BSc Tourism & Hospitality Mgt\n" +
-             "• BSc in Fashion Merchandise Mgt",
+             "📊 *Faculty of Business & Management*\n" +
+             "• Bachelor of Business Management Honours (Supply Chain / Operations / Marketing / Accounting) / BSc in Tourism & Hospitality\n" +
+             "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+             "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
+             "⚙️ *Faculty of Engineering*\n" +
+             "• BSc Engineering Honours (Electronics & Telecom / Electrical Power / ICT / Civil)\n" +
+             "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා අංශයෙන් (සංයුක්ත ගණිතය, භෞතික විද්‍යාව, රසායන විද්‍යාව) අවම 'C' 2ක් සහ 'S' 1ක්.\n\n" +
+             "• Bachelor of Technology Honours (Electronics / Agricultural Tech) / BSc Honours in Biosystems Engineering\n" +
+             "  ✔️ *උ/පෙළ:* භෞතික, ජීව විද්‍යා හෝ තාක්ෂණ අංශයෙන් 'S' 3ක්.\n\n" +
+             "💻 *Faculty of Computing*\n" +
+             "• BSc Honours in Data Science / Software Engineering / Cyber Security / Cloud Computing\n" +
+             "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
+             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
 
-    "/saegis": "🎓 *SAEGIS Campus*\n\n" +
-               "💻 *IT* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BSc (Hons) IT / Software Eng / Computer Science | BSc in IT\n\n" +
-               "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BBM (Hons) Marketing / HR / Tourism / Logistics / Accounting | BBM (Hons) | BBA\n\n" +
-               "📚 *Arts* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BA in English",
+    "/saegis":"🎓 *SAEGIS Campus*\n\n" +
+               "📘 *Faculty of Humanities & Social Sciences*\n" +
+               "• Bachelor of Arts in English\n" +
+               "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'S' 3ක්.\n\n" +
+               "📊 *Faculty of Business*\n" +
+               "• Bachelor of Business Administration / BBM Honours (Marketing / HRM / Tourism / Logistics)\n" +
+               "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+               "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
+               "💻 *Faculty of Computing*\n" +
+               "• BSc in Information Technology / BSc Honours in IT / Software Engineering / Computer Science\n" +
+               "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
+               "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් සමත් විය යුතුය).*",
 
     "/icbt": "🎓 *ICBT Campus*\n\n" +
-             "💻 *IT* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BSc (Hons) Software Eng / IT (Cyber Security) / IT (Data Science) / IT (AI)\n\n" +
-             "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BBM (Hons)",
-
+             "📊 *Faculty of Business*\n" +
+             "• Bachelor of Business Management Honours\n" +
+             "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+             "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
+             "💻 *Faculty of Computing*\n" +
+             "• BSc Honours in Software Engineering / IT (Cyber Security / Data Science / AI)\n" +
+             "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
+             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් සමත් විය යුතුය).*",
+    
     "/bci": "🎓 *BCI Campus*\n\n" +
-            "💻 *IT* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BSc (Hons) IT / Software Eng\n\n" +
-            "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BBM (Hons) / BBM (Hons) Accounting\n\n" +
-            "📚 *Education* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BEd (Hons) Primary Edu / Early Childhood | BSc (Hons) Counseling Psychology",
-
-    "/icasl": "🎓 *ICASL*\n\n" +
-              "📊 *Accounting* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n" +
-              "• BSc Applied Accounting (Special) / BBM (Hons) Business Analytics\n" +
-              "• BSc Applied Accounting (General) / BBM in Business Analytics",
-
+            "📘 *Faculty of Humanities & Social Sciences*\n" +
+            "• Bachelor of Education Honours (Primary Education / Early Childhood)\n" +
+            "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+            "  ✔️ *සා/පෙළ:* සිංහල/දෙමළ සහ ගණිතය සඳහා 'S' ද, ඉංග්‍රීසි සඳහා 'C' සාමාර්ථයක්ද ලබා තිබීම.\n\n" +
+            "• BSc Honours in Counseling Psychology\n" +
+            "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් සහ ඉංග්‍රීසි සඳහා 'S' 1ක්.\n\n" +
+            "📊 *Faculty of Business*\n" +
+            "• Bachelor of Business Management Honours\n" +
+            "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+            "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
+            "💻 *Faculty of Computing*\n" +
+            "• BSc Honours in Information Technology / Software Engineering\n" +
+            "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
+            "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් සමත් විය යුතුය).*",
+    
+    "/icasl": "🎓 *ICASL Campus*\n\n" +
+              "📊 *Faculty of Business*\n" +
+              "• BSc in Applied Accounting (Special / General)\n" +
+              "  ✔️ *උ/පෙළ:* ගිණුම්කරණය ඇතුළුව වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+              "  ✔️ *සා/පෙළ:* ගණිතය සහ ව්‍යාපාර අධ්‍යනය හා ගිණුම්කරණය සඳහා 'C' සාමාර්ථයක්.\n\n" +
+              "• BBM Honours in Business Analytics\n" +
+              "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+              "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.",
+    
     "/esoft": "🎓 *ESOFT Metro Campus*\n\n" +
-              "💻 *IT* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BSc (Hons) in IT\n\n" +
-              "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BBM (Hons) Business Mgt",
+              "📊 *Faculty of Business*\n" +
+              "• Bachelor of Business Management Honours\n" +
+              "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+              "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
+              "💻 *Faculty of Computing*\n" +
+              "• BSc Honours in Information Technology\n" +
+              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'S' 3ක් ලබා තිබීම.",
 
     "/siba": "🎓 *SIBA Campus*\n\n" +
-             "💻 *IT* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BSc in ICT / BSc in IT\n\n" +
-             "📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්):\n• BBM (Hons)",
+             "📊 *Faculty of Business*\n" +
+             "• Bachelor of Business Management Honours\n" +
+             "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+             "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
+             "💻 *Faculty of Computing*\n" +
+             "• BSc in Information Technology\n" +
+             "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
+             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් සමත් විය යුතුය).*",
 
-    "/slita": "🎓 *SLITA*\n\n" +
-              "👗 *Apparel* (ඕනෑම ධාරාවකින් හෝ Tech ධාරාවෙන් 'S' 3ක්):\n• BSc in Textile & Apparel Tech / Textile & Apparel Studies\n\n" +
-              "🌿 *Environment* (Tech ධාරාවෙන් 'S' 3ක්):\n• BTech (Hons) Environmental Tech",
-
-    "/niibs": "🎓 *NIIBS*\n💻 *IT* (ඕනෑම ධාරාවකින් 'S' 3ක්): BSc (Hons) in IT",
+    "/slita": "🎓 *SLITA Campus*\n\n" +
+              "⚙️ *Faculty of Engineering & Technology*\n" +
+              "• BSc in Textile & Apparel Technology / Textile & Apparel Studies\n" +
+              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා, ජීව විද්‍යා හෝ තාක්ෂණ අංශයෙන් 'S' 3ක් (Apparel Studies සඳහා ඕනෑම අංශයකින් 'S' 3ක්).\n" +
+              "  ✔️ *සා/පෙළ:* ගණිතය සහ විද්‍යාව සඳහා අවම වශයෙන් වාර දෙකක් තුළ 'C' සාමාර්ථයක්.\n\n" +
+              "• Bachelor of Technology Honours in Environmental Technology\n" +
+              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් එකවර ලබා තිබීම.",
     
-    "/ichem": "🎓 *ICHEM*\n🔬 *Science* (ජීව විද්‍යා / ගණිත ධාරාවෙන් 'S' 3ක්): BSc (Hons) Chemical Science",
+    "/niibs": "🎓 *NIIBS Campus*\n\n" +
+              "💻 *Faculty of Computing*\n" +
+              "• BSc Honours in Information Technology\n" +
+              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'S' 3ක් ලබා තිබීම.",
     
-    "/lyc": "🎓 *LYC*\n📚 *Education* (ඕනෑම ධාරාවකින් 'S' 3ක්): BEd (Hons) Primary Education",
+    "/ichem": "🎓 *ICHEM Campus*\n\n" +
+              "🔬 *Faculty of Science*\n" +
+              "• BSc Honours in Chemical Science\n" +
+              "  ✔️ *උ/පෙළ:* ජීව විද්‍යා හෝ භෞතික විද්‍යා අංශයෙන් එකවර 'S' 3ක් ලබා තිබීම.",
     
-    "/bms": "🎓 *BMS*\n📊 *Business* (ඕනෑම ධාරාවකින් 'S' 3ක්): BBM (Hons) Business Mgt"
+    "/lyc": "🎓 *LYC Campus*\n\n" +
+            "📘 *Faculty of Education*\n" +
+            "• Bachelor of Education Honours in Primary Education\n" +
+            "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'S' 3ක් ලබා තිබීම.\n" +
+            "  ✔️ *සා/පෙළ:* සිංහල/දෙමළ, ගණිතය සහ ඉංග්‍රීසි සඳහා අවම 'S' 3ක් ලබා තිබීම.",
+    
+    "/bms": "🎓 *BMS*\n\n" +
+            "📊 *Faculty of Business*\n" +
+            "• Bachelor of Business Management Honours\n" +
+            "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+            "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්."
 };
+
 
 const spamTracker = new Map();
 const linkWarningTracker = new Map();   
@@ -364,6 +488,7 @@ client.on("group_join", async (notification) => {
                                      `📌 */about* - IFSLS ගැන විස්තර.\n` +
                                      `📌 */eligibility* - ණය ලබාගැනීමේ සුදුසුකම්.\n` +
                                      `📌 */applysteps* - අයදුම් කරන පියවර.\n` +
+                                     `📌 */afterapply* - අයදුම් කිරීමෙන් පසු.\n` +
                                      `📌 */ministrycontact* - Ministry Department එක contact කරන විදිහ\n\n` +
                                      `📄 *Guide Books (භාෂා 3න්ම):*\n` +
                                      `🇱🇰 */guidepdf-si* (සිංහල මාර්ගෝපදේශකය)\n` +
@@ -520,13 +645,16 @@ client.on("message_create", async (message) => {
                             `📘 */about* - IFSLS යනු කුමක්ද?\n` +
                             `✅ */eligibility* - මූලික සුදුසුකම්\n` +
                             `💰 */loan* - ණය මුදල සහ දීමනාව\n` +
+                            `💰 */maxloan* - උපරිම ණය මුදල් සිමාව\n` +
                             `⏳ */repayment* - ණය ආපසු ගෙවීම\n` +
                             `❌ */disqualified* - අයදුම් කළ නොහැක්කේ කාටද?\n` +
                             `✍️ */guarantors* - ඇපකරුවන්\n` +
-                            `🌉 */bridging* - ඈඳුනු පාඨමාලා\n` +
+                            `🌉 */bridging* - ඈඳුනු පාඨමාලා කල යුතු අය\n` +
+                            `🌉 */bridginginfo* - ඈඳුනු පාඨමාලා කරන්නේ කොහොමද?\n` +
                             `👤 */private* - Private අයදුම්කරුවන්\n` +
                             `📂 */documents* - සම්මුඛ පරීක්ෂණ ලියකියවිලි\n` +
                             `📝 */applysteps* - අයදුම් කරන පියවර\n` +
+                            `📝 */afterapplysteps* - අයදුම් කිරීමෙන් පසු \n` +
                             `⏰ */deadline* - අවසන් දිනය\n` +
                             `✅ */ministrycontact* - Ministry Department එක contact කරන විදිහ\n\n` +
                             `*📄 මාර්ගෝපදේශක PDF (භාෂා 3න්ම):*\n` +
