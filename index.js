@@ -66,6 +66,59 @@ const ifslsAnswers = {
     "/private": "👤 *Private Candidates (පෞද්ගලික අයදුම්කරුවන්):*\nපෞද්ගලිකව උසස් පෙළ පෙනී සිටි අයදුම්කරුවන්, පාසලේ අස්වීමේ සහතිකය වෙනුවට 'ග්‍රාම නිලධාරී සහතික කළ (ප්‍රාදේශීය ලේකම් අනුමත කළ) චරිත සහතිකයක්' හෝ 'සාම විනිසුරුවරයෙකුගෙන් (JP) ලබාගත් චරිත සහතිකයක්' සම්මුඛ පරීක්ෂණයේදී ඉදිරිපත් කළ යුතුය.",
     "/documents": "📂 *ඉන්ටවිව් එකට රැගෙන යා යුතු ලියකියවිලි (Originals):*\n1. ජාතික හැඳුනුම්පත (NIC)\n2. උප්පැන්න සහතිකය\n3. O/L සහ A/L සහතික(Z score සහිත)\n4. Online Application එකේ Print Out එක (විදුහල්පති සහතික කරන ලද)\n5.පාසලේ අස්වීමේ සහතිකය (හෝ Private අයගේ චරිත සහතිකය) \n6.Bridging Courses Results(Bridging කරලා තියනවනම්)\n7.Course Changing Letter(Courses Change කරනවනම්)",
     "/applysteps": "📝 *අයදුම් කරන ආකාරය:*\n1. https://studentloans.mohe.gov.lk/loan_application/ වෙත පිවිසෙන්න.\n2. NIC අංකයෙන් Register වෙන්න.\n3. O/L, A/L ප්‍රතිඵල සහ පෞද්ගලික විස්තර පුරවන්න.\n4. ඔබට අවශ්‍ය කැම්පස් සහ උපාධි කැමැත්තේ අනුපිළිවෙලට (Preferences) තෝරන්න.\n5. තහවුරු කර Submit කර, Application එක Print කරගන්න.",
+    "/afterapplysteps": "🎓 *අයදුම් කළ පසු ඊළඟ පියවර (After Apply Steps):*\n\n" +
+                        "1️⃣ *සම්මුඛ පරීක්ෂණයට කැඳවීම:* අයදුම්පත්‍ර භාරගැනීම අවසන් වී මාසයක් ඇතුළත, සුදුසුකම් ලැබූ සිසුන්ට Online Interview එක සඳහා Email එකක් මගින් දැනුම් දෙනු ලැබේ. තේරුණු සිසුන්ගේ නාමලේඛනය studentloans.mohe.gov.lk වෙබ් අඩවියේ පළ කෙරේ.\n\n" +
+                        "2️⃣ *Interview එකට සූදානම් වීම:* Online Interview එකට පෙර අවශ්‍ය ලියකියවිලි වල (Application එකේ මුද්‍රිත පිටපත, NIC, උප්පැන්න, O/L සහ A/L සහතික මුල් පිටපත්, පාසලේ අස්වීමේ සහතිකය, ග්‍රාම නිලධාරී සහතිකය ආදී) Scan කොපි අමාත්‍යාංශයෙන් දෙන Email එකට යැවිය යුතුය.\n\n" +
+                        "3️⃣ *පාඨමාලාවට තේරී පත්වීම:* Interview එකෙන් පසු තේරී පත් වූ උපාධිය සහ කැම්පස් එක වෙබ් අඩවියේ පළ කරන අතර, කැම්පස් එකේ Physical ලියාපදිංචි වන දිනය Email එකක් මගින් දැනුම් දෙනු ඇත.\n\n" +
+                        "4️⃣ *අභියාචනා (Appeals):* තේරීම් ප්‍රතිඵල ආවට පස්සේ මොකක් හරි වෙනසක් කරගන්න (Course/Campus මාරු කරගන්න) ඕන නම්, ප්‍රතිඵල ඇවිත් මාසයක් ඇතුළත වෙබ් අඩවිය හරහා අභියාචනයක් දාන්න පුළුවන්.",
+
+    "/specialnotes": "📢🎓 *IFSLS 11th INTAKE – INTERVIEW IMPORTANT NOTICE* 🎓📢\n\n" +
+                     "IFSLS 11th Intake සඳහා අයදුම් කර ඇති සියලුම සිසුන්ගේ අවධානයටයි.\n" +
+                     "Interview එක සම්බන්ධයෙන් පහත පියවර පිළිවෙලට මතක තබාගන්න. 👇✨\n\n" +
+                     "━━━━━━━━━━━━━━━━━━\n\n" +
+                     "📩 *FIRST – CONFIRMATION EMAIL*\n\n" +
+                     "මුලින්ම Ministry එකෙන් Interview Confirmation Email එකක් ලැබෙනවා. 📬\n\n" +
+                     "👉 Email එක හොඳින් කියවන්න.\n" +
+                     "👉 ලබා දී ඇති instructions අනිවාර්යයෙන් follow කරන්න. ✅\n" +
+                     "👉 Online / Physical Interview සඳහා option එකක් ලබා දී තිබේ නම්, තමන්ට අවශ්‍ය option එක select කර confirm කරන්න.\n" +
+                     "👉 ⏰ Email එකේ සඳහන් DEADLINE එකට පෙර confirmation එක අනිවාර්යයෙන් complete කරන්න.\n\n" +
+                     "🚨 ⚠️ DEADLINE එක miss කරන්න එපා! ⚠️\n" +
+                     "📌 Confirmation එක complete කළ බව නැවතත් check කරගන්න. ✅\n\n" +
+                     "━━━━━━━━━━━━━━━━━━\n\n" +
+                     "📩 *SECOND – DATE & TIME EMAIL*\n\n" +
+                     "Confirmation එක complete කළාට පසුව, Interview එකට අදාළ Date, Time සහ අනෙකුත් instructions ඇතුළත් දෙවන Email එක ලැබෙනවා. 📅⏰\n\n" +
+                     "💻 Online Interview නම්:\n" +
+                     "🔗 Email එකේ ලබා දී ඇති platform / link එක හරහා interview එකට join වෙන්න.\n\n" +
+                     "🏢 Physical Interview නම්:\n" +
+                     "📍 Email එකේ ලබා දී ඇති Ministry location, Date සහ Time අනුව physically attend වෙන්න.\n\n" +
+                     "📌 Date, Time සහ Online Link / Physical Location එක save කරගන්න. 💾\n\n" +
+                     "━━━━━━━━━━━━━━━━━━\n\n" +
+                     "📑 *DOCUMENTS – කලින්ම සූදානම් කරගන්න*\n\n" +
+                     "📋 පහත documents කලින්ම සූදානම් කරගෙන සිටීම වැදගත්:\n\n" +
+                     "🪪 NIC / Passport\n" +
+                     "📜 Original Birth Certificate\n" +
+                     "📜 Original G.C.E. A/L Certificate\n" +
+                     "📜 Original G.C.E. O/L Certificate\n" +
+                     "🏫 School Leaving Certificate\n" +
+                     "📄 Grama Niladhari (GN) Certificate\n" +
+                     "📝 Printed Application Copy + Principal’s Certificate\n" +
+                     "📊 Bridging Course Result – applicable නම්\n" +
+                     "📄 Course Changing Letter – applicable නම්\n\n" +
+                     "💻 Online Interview නම්:\n" +
+                     "Required documents වල scanned copies, Ministry එකෙන් ලබා දෙන official instructions අනුව සඳහන් කර ඇති email address එකට submit කරන්න. 📧\n\n" +
+                     "🏢 Physical Interview නම්:\n" +
+                     "Email එකේ සඳහන් කර ඇති required original documents සමඟ interview එකට සහභාගී වන්න. 📑\n\n" +
+                     "━━━━━━━━━━━━━━━━━━\n\n" +
+                     "⚠️📌 *IMPORTANT REMINDER*\n\n" +
+                     "📩 Ministry එකෙන් ලැබෙන emails නිතර check කරන්න.\n" +
+                     "📂 Inbox + Spam/Junk folders ද පරීක්ෂා කරන්න.\n" +
+                     "⏰ Confirmation Deadline එක අනිවාර්යයෙන් මතක තබාගන්න.\n" +
+                     "📌 Ministry එකෙන් ලබා දෙන latest official instructions පමණක් follow කරන්න. ✅\n\n" +
+                     "━━━━━━━━━━━━━━━━━━\n\n" +
+                     "🎓🌟 *ALL THE VERY BEST FOR YOUR IFSLS INTERVIEW!* 🌟🎓\n\n" +
+                     "ඔබ සියලු දෙනාටම සාර්ථක Interview එකක් සහ සුභ අනාගතයක් ප්‍රාර්ථනා කරනවා! ❤️✨\n\n" +
+                     "GOOD LUCK & ALL THE BEST! 🍀🎓❤️\n\n" +
+                     "IFSLS STUDENT COMMUNITY",
     
     "/deadline": "⏰ *අවසන් දිනය:*\n2026 සැප්තැම්බර් 27 දින මධ්‍යම රාත්‍රී 12.00 ට පෙර Online හරහා අයදුම්පත් යොමු කළ යුතුය."
 };
@@ -655,6 +708,7 @@ client.on("message_create", async (message) => {
                             `📂 */documents* - සම්මුඛ පරීක්ෂණ ලියකියවිලි\n` +
                             `📝 */applysteps* - අයදුම් කරන පියවර\n` +
                             `📝 */afterapplysteps* - අයදුම් කිරීමෙන් පසු \n` +
+                            `📌 */specialnotes* - interview සදහා වැදගත් වන විස්තර\n` +
                             `⏰ */deadline* - අවසන් දිනය\n` +
                             `✅ */ministrycontact* - Ministry Department එක contact කරන විදිහ\n\n` +
                             `*📄 මාර්ගෝපදේශක PDF (භාෂා 3න්ම):*\n` +
