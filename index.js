@@ -13,7 +13,7 @@ const TARGET_GROUP_IDS = [
 const CHROME_PATH = "/usr/bin/chromium-browser";
 const ENABLE_AUTO_REMOVE = true;
 const SPAM_WINDOW_MS = 10 * 1000;
-const SPAM_LIMIT = 3;
+const SPAM_LIMIT = 6;
 const BAD_WORDS = ["hutto", "uba", "thopi", "pakyala","palayan","pnnyo"]; 
 
 // ⏳ බෑන් වන කෙනෙකුට නැවත ජොයින් වීමට ගත විය යුතු කාලය (පැය 24ක් ලෙස සකසා ඇත)
