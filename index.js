@@ -727,6 +727,39 @@ client.on("message_create", async (message) => {
         }
 
         // ==========================================
+        // 🚫 STATUS GROUP MENTION FILTER (Admins Only)
+        // ==========================================
+        const isStatusMention = textLower.includes("mentioned this group") || 
+                                textLower.includes("in a status") || 
+                                textLower.includes("තත්වයක් තුළ මෙම සමූහය");
+
+        if (isStatusMention) {
+            let isAdmin = false;
+            try {
+                const chat = await message.getChat();
+                if (chat && chat.participants) {
+                    const participant = chat.participants.find(p => p.id._serialized === senderId);
+                    isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
+                }
+            } catch (err) { }
+
+            if (!isAdmin) {
+                try { await message.delete(true); } catch(e) {} 
+                
+                const removed = await directRemoveParticipant(groupId, senderId);
+                if (removed) {
+                    blacklistedUsers[senderId] = Date.now() + BAN_DURATION_MS;
+                    if (info.actualId) blacklistedUsers[info.actualId] = Date.now() + BAN_DURATION_MS;
+                    saveBlacklist(); 
+                    if (ENABLE_AUTO_REMOVE) {
+                        await client.sendMessage(groupId, `🚫 @${senderId.split('@')[0]} (*${info.name}*)\nGroup එක Status වල Mention කිරීම තහනම් බැවින් පැය 24කට ඔබව ඉවත් කරන ලදී.`, { mentions: [senderId] });
+                    }
+                }
+                return; 
+            }
+        }
+
+        // ==========================================
         // 💡 3. IFSLS FAQ & Campus Commands Logic
         // ==========================================
         const msgCommand = textLower.trim();
