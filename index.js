@@ -676,7 +676,7 @@ client.on("message_create", async (message) => {
                                        
                     await client.sendMessage(groupId, warningMsg, { mentions: [senderId] });
                 }
-                    } else {
+                 else {
                         const removed = await directRemoveParticipant(groupId, senderId);
                         if (removed) {
                             blacklistedUsers[senderId] = Date.now() + BAN_DURATION_MS;
