@@ -139,9 +139,7 @@ const ifslsAnswers = {
                      "🎓🌟 *ALL THE VERY BEST FOR YOUR IFSLS INTERVIEW!* 🌟🎓\n\n" +
                      "ඔබ සියලු දෙනාටම සාර්ථක Interview එකක් සහ සුභ අනාගතයක් ප්‍රාර්ථනා කරනවා! ❤️✨\n\n" +
                      "GOOD LUCK & ALL THE BEST! 🍀🎓❤️\n\n" +
-                     "IFSLS STUDENT COMMUNITY",
-    
-    "/deadline": "⏰ *අවසන් දිනය:*\n2026 සැප්තැම්බර් 27 දින මධ්‍යම රාත්‍රී 12.00 ට පෙර Online හරහා අයදුම්පත් යොමු කළ යුතුය."
+                     "IFSLS STUDENT COMMUNITY",    
 };
 
 // ==========================================
@@ -822,7 +820,7 @@ client.on("message_create", async (message) => {
         // ==========================================
         else if (msgCommand === "/deadline") {
             // 💡 මෙතන තියෙන දිනය (2026-10-15) ඔයාගේ නියම deadline එකට වෙනස් කරගන්න
-            const deadlineDate = new Date("2026-09-26T23:59:59").getTime(); 
+            const deadlineDate = new Date("2026-09-27T23:59:59").getTime(); 
             const now = new Date().getTime();
             const timeLeft = deadlineDate - now;
 
