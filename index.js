@@ -816,8 +816,33 @@ client.on("message_create", async (message) => {
         else if (msgCommand === "/guidepdf-en") {
             await client.sendMessage(groupId, "🇬🇧 *Download the IFSLS 2026/27 English Guide PDF from the link below:*\n\nhttps://drive.google.com/file/d/15eUJyKdYOcgeczEtkKXtwDucswSnJAUs/view?usp=sharing");
         }
-        // ==========================================
 
+        // ==========================================
+        // ⏳ DEADLINE COUNTDOWN FEATURE
+        // ==========================================
+        else if (msgCommand === "/deadline") {
+            // 💡 මෙතන තියෙන දිනය (2026-10-15) ඔයාගේ නියම deadline එකට වෙනස් කරගන්න
+            const deadlineDate = new Date("2026-09-26T23:59:59").getTime(); 
+            const now = new Date().getTime();
+            const timeLeft = deadlineDate - now;
+
+            if (timeLeft > 0) {
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                const countdownMsg = `⏳ *IFSLS 11th Intake Application Deadline*\n\n` +
+                                     `අයදුම්පත් භාරගන්නා අවසන් දිනයට තව:\n` +
+                                     `*දින ${days}යි, පැය ${hours}යි, විනාඩි ${minutes}යි, තත්පර ${seconds}යි!* 🏃‍♂️💨\n\n` +
+                                     `ඉක්මන් කරන්න! අවසන් මොහොත වෙනකන් ඉන්න එපා. අදම අයදුම් කරන්න. ✅`;
+                
+                await message.reply(countdownMsg);
+            } else {
+                await message.reply("🚫 *IFSLS 11th Intake සඳහා අයදුම්පත් භාරගන්නා කාලය දැන් අවසන් වී ඇත!*");
+            }
+        }
+        
         await checkSpam(message, senderId, info.name, groupId);
 
     } catch (error) {}
