@@ -659,8 +659,23 @@ client.on("message_create", async (message) => {
                     warnings++;
                     linkWarningTracker.set(senderId, warnings);
 
-                    if (warnings === 1) {
-                        await client.sendMessage(groupId, `⚠️ @${senderId.split('@')[0]} (*${info.name}*)\nමෙම කණ්ඩායම තුළ වෙනත් WhatsApp Group ලින්ක්, ටෙලිග්‍රෑම් ලින්ක් හෝ ව්‍යාපාරික දේවල් Share කිරීම තහනම්! ඔයාට group link share කරගන්න අවශ්‍යනම් group admin කෙනෙක් හරහා යොමු කරන්න🤠 මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ කරුණාකර link එක group එකෙන් ඉවත් කරගන්න.. 🚫`, { mentions: [senderId] });
+                   if (warnings === 1) {
+                    const warningMsg = `⚠️ @${senderId.split('@')[0]} (*${info.name}*)\n` +
+                                       `මෙම කණ්ඩායම තුළ වෙනත් WhatsApp Group ලින්ක්, ටෙලිග්‍රෑම් ලින්ක් හෝ ව්‍යාපාරික දේවල් Share කිරීම තහනම්! ඔයාට group link share කරගන්න අවශ්‍යනම් group admin කෙනෙක් හරහා යොමු කරන්න 🤠.\n\n` +
+                                       `මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ කරුණාකර link එක group එකෙන් ඉවත් කරගන්න. 🚫\n\n` +
+                                       `ඔබට මෙම සමූහය සඳහා අවසර ඇති links වනුයේ පහත සඳහන් links පමණී:\n` +
+                                       `• studentloans.mohe.gov.lk\n` +
+                                       `• youtube.com\n` +
+                                       `• drive.google.com\n` +
+                                       `• zoom.us\n` +
+                                       `• teams.microsoft.com\n` +
+                                       `• docs.google.com\n` +
+                                       `• forms.gle\n` +
+                                       `• classroom.google.com\n` +
+                                       `• facebook.com`;
+                                       
+                    await client.sendMessage(groupId, warningMsg, { mentions: [senderId] });
+                }
                     } else {
                         const removed = await directRemoveParticipant(groupId, senderId);
                         if (removed) {
