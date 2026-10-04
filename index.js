@@ -10,12 +10,10 @@ const TARGET_GROUP_IDS = [
     "120363431402119738@g.us"
 ];
 
-// 🔥 මම අමතක කරපු Admin Bypass ලිස්ට් එක මෙන්න 🔥
+// 🔥 Admin Bypass ලිස්ට් එක (මෙම අංක වලට කවදාවත් Warning හෝ Ban වීම් සිදු නොවේ)
 const EXTRA_ADMINS = [
-    "94722268122",// ඔයාගේ නම්බර් එක (මෙයාට කවදාවත් Warning එන්නේ නෑ)
-    "94762068122",
-    
-    
+    "94722268122",
+    "94762068122"
 ];
 
 const CHROME_PATH = "/usr/bin/chromium-browser";
@@ -173,7 +171,7 @@ const campusAnswers = {
     "/nsbm": "🎓 *NSBM Green University*\n\n" +
              "📘 *Faculty of Humanities & Social Sciences*\n" +
              "• Bachelor of Laws (Honours) - LLB\n" +
-             "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'C' 3ක් සහ ඉංග්‍රීසි සඳහා අවම 'S' 1ක්.\n" +
+             "  ✔️️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'C' 3ක් සහ ඉංග්‍රීසි සඳහා අවම 'S' 1ක්.\n" +
              "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි සහ මව් භාෂාව සඳහා සම්මාන ඇතුළුව 'C' 3ක් සහ ගණිතය ඇතුළුව සාමාර්ථ 6ක්.\n\n" +
              "📊 *Faculty of Business*\n" +
              "• BSc in Business Management (Project Management) (Special)\n" +
@@ -191,7 +189,7 @@ const campusAnswers = {
              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*\n\n" +
              "• BSc in Multimedia\n" +
              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් සහ ඉංග්‍රීසි සඳහා 'S' 1ක්.\n" +
-             "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි 'C' සහ ගණිතය 'C' සාමාර්ථයක්.",
+             "  ✔️️ *සා/පෙළ:* ඉංග්‍රීසි 'C' සහ ගණිතය 'C' සාමාර්ථයක්.",
 
     "/cinec": "🎓 *CINEC Campus*\n\n" +
               "📘 *Faculty of Humanities & Education*\n" +
@@ -226,9 +224,9 @@ const campusAnswers = {
             "📘 *Faculty of Humanities & Social Sciences*\n" +
             "• BSc Honours in Psychology\n" +
             "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක්.\n" +
-            "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
+            "  ✔️️ *සා/පෙළ:* ඉංග්‍රීසි සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
             "• Bachelor of Laws (Honours) - LLB\n" +
-            "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'C' 2ක් සහ 'S' 1ක්.\n" +
+            "  ✔️️ *උ/පෙළ:* ඕනෑම අංශයකින් 'C' 2ක් සහ 'S' 1ක්.\n" +
             "  ✔️ *සා/පෙළ:* මව් භාෂාව සහ ඉංග්‍රීසි සඳහා 'C' සාමාර්ථයක්.\n\n" +
             "📊 *Faculty of Management*\n" +
             "• Bachelor of Management Honours (HR / Marketing / Business Analytics / Accounting)\n" +
@@ -249,7 +247,7 @@ const campusAnswers = {
                 "  ✔️ *සා/පෙළ:* සිංහල/දෙමළ, ගණිතය සහ ඉංග්‍රීසි සඳහා අවම 'S' 3ක්.\n\n" +
                 "📊 *Faculty of Management*\n" +
                 "• Bachelor of Management (Honours) / BSc in Management (HRM)\n" +
-                "  ✔️️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+                "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
                 "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
                 "⚙️ *Faculty of Science / Technology*\n" +
                 "• BSc Honours in Biotechnology / Bachelor of Biosystems Technology Honours\n" +
@@ -285,17 +283,17 @@ const campusAnswers = {
                "💻 *Faculty of Computing*\n" +
                "• BSc in Information Technology / BSc Honours in IT / Software Engineering / Computer Science\n" +
                "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
-               "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් සමත් විය යුතුය).*",
+               "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
 
     "/icbt": "🎓 *ICBT Campus*\n\n" +
              "📊 *Faculty of Business*\n" +
              "• Bachelor of Business Management Honours\n" +
              "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
-             "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
+             "  ✔️️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
              "💻 *Faculty of Computing*\n" +
              "• BSc Honours in Software Engineering / IT (Cyber Security / Data Science / AI)\n" +
              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
-             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් සමත් විය යුතුය).*",
+             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
 
     "/bci": "🎓 *BCI Campus*\n\n" +
             "📘 *Faculty of Humanities & Social Sciences*\n" +
@@ -357,7 +355,7 @@ const campusAnswers = {
     "/ichem": "🎓 *ICHEM Campus*\n\n" +
               "🔬 *Faculty of Science*\n" +
               "• BSc Honours in Chemical Science\n" +
-              "  ✔️️ *උ/පෙළ:* ජීව විද්‍යා හෝ භෞතික විද්‍යා අංශයෙන් එකවර 'S' 3ක් ලබා තිබීම.",
+              "  ✔️ *උ/පෙළ:* ජීව විද්‍යා හෝ භෞතික විද්‍යා අංශයෙන් එකවර 'S' 3ක් ලබා තිබීම.",
 
     "/lyc": "🎓 *LYC Campus*\n\n" +
             "📘 *Faculty of Education*\n" +
@@ -578,22 +576,29 @@ client.on("group_join", async (notification) => {
     }
 });
 
-// 🔥🔥🔥 100% වැඩ කරන අලුත්ම Admin Checker Function එක 🔥🔥🔥
+// 🔥🔥🔥 100% වැඩ කරන අලුත්ම Admin Checker Function එක (EXTRA_ADMINS සමඟ) 🔥🔥🔥
 async function checkIsAdmin(message, senderId) {
     try {
-        const pureNumber = senderId.split('@')[0].split(':')[0];
+        const authorId = message.author || message.from || senderId || "";
+        const pureNumber = authorId.split('@')[0].split(':')[0];
         
-        // 1. කලින් දීපු Bypass ලිස්ට් එකේ ඉන්නවද කියලා බලනවා
+        // 1. EXTRA_ADMINS ලිස්ට් එක පරීක්ෂා කිරීම (මෙම අංක වලට කවදාවත් බ්ලොක් වෙන්නේ නෑ)
         if (EXTRA_ADMINS.includes(pureNumber)) return true;
 
-        // 2. නැත්නම් WhatsApp එකෙන් සාමාන්‍ය විදිහට Admin ද බලනවා
+        // 2. WhatsApp ගෲප් participants හරහා පරීක්ෂා කිරීම
         const chat = await message.getChat();
         if (chat && chat.participants) {
-            const participant = chat.participants.find(p => p.id._serialized.includes(pureNumber) || p.id.user === pureNumber);
+            const participant = chat.participants.find(p => 
+                p.id._serialized === authorId || 
+                p.id.user === pureNumber || 
+                p.id._serialized.includes(pureNumber)
+            );
             if (participant && (participant.isAdmin || participant.isSuperAdmin)) return true;
         }
         return false;
-    } catch (e) { return false; }
+    } catch (e) { 
+        return false; 
+    }
 }
 
 client.on("message_create", async (message) => {
@@ -631,7 +636,7 @@ client.on("message_create", async (message) => {
         const hasLinkIndicator = isNativeGroupInvite || textLower.includes("http://") || textLower.includes("https://") || textLower.includes("www.") || textLower.includes(".com") || textLower.includes(".net") || textLower.includes(".org") || textLower.includes(".me") || textLower.includes(".co") || textLower.includes("t.me") || textLower.includes("chat.whatsapp.com");
 
         if (hasLinkIndicator) {
-            const isAdmin = await checkIsAdmin(message, senderId); // 🔥 අලුත් Admin චෙක් එක මෙතන තියෙනවා
+            const isAdmin = await checkIsAdmin(message, senderId); // 🔥 Admin ද නැද්ද යන්න පරික්ෂා කිරීම
             if (!isAdmin) {
                 const isTelegramLink = textLower.includes("t.me/") || textLower.includes("telegram.me/");
                 const isWhatsAppGroupLink = isNativeGroupInvite || textLower.includes("chat.whatsapp.com"); 
@@ -699,7 +704,7 @@ client.on("message_create", async (message) => {
 
         const containsBadWord = BAD_WORDS.some(word => textLower.includes(word.toLowerCase()));
         if (containsBadWord) {
-            const isAdmin = await checkIsAdmin(message, senderId); // 🔥 අලුත් Admin චෙක් එක මෙතන තියෙනවා
+            const isAdmin = await checkIsAdmin(message, senderId);
             if (!isAdmin) {
                 try { await message.delete(true); } catch(e) {} 
                 let warnings = badWordWarningTracker.get(senderId) || 0;
@@ -731,7 +736,7 @@ client.on("message_create", async (message) => {
                                 textLower.includes("තත්වයක් තුළ මෙම සමූහය");
 
         if (isStatusMention) {
-            const isAdmin = await checkIsAdmin(message, senderId); // 🔥 අලුත් Admin චෙක් එක මෙතන තියෙනවා
+            const isAdmin = await checkIsAdmin(message, senderId);
             if (!isAdmin) {
                 try { await message.delete(true); } catch(e) {} 
                 
@@ -810,7 +815,7 @@ client.on("message_create", async (message) => {
         // ⏳ DEADLINE COUNTDOWN FEATURE
         // ==========================================
         else if (msgCommand === "/deadline") {
-            const deadlineDate = new Date("2026-09-27T23:59:59").getTime(); 
+            const deadlineDate = new Date("2026-10-15T23:59:59").getTime(); 
             const now = new Date().getTime();
             const timeLeft = deadlineDate - now;
 
