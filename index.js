@@ -13,7 +13,8 @@ const TARGET_GROUP_IDS = [
 // 🔥 Admin Bypass ලිස්ට් එක (මෙම අංක වලට කවදාවත් Warning හෝ Ban වීම් සිදු නොවේ)
 const EXTRA_ADMINS = [
     "94722268122",
-    "94762068122"
+    "94762068122",
+    "94703401676" 
 ];
 
 const CHROME_PATH = "/usr/bin/chromium-browser";
@@ -57,7 +58,7 @@ const ifslsAnswers = {
                 "• මාසයකට රු. 6,250/= බැගින් ගණනය කර, ත්‍රෛමාසිකව (මාස 3කට වරක්) රු. 18,750/= ක් ලෙස ශිෂ්‍යයා වෙත ගෙවනු ලැබේ (ගෙවීමේ ක්‍රමය campus එක හා degree semester එක අනුව තීරණය වේ)\n" +
                 "• වසර 4 ක උපාධියක් සඳහා උපරිම රු. 300,000/= ක් ද, වසර 3 ක උපාධියක් සඳහා රු. 225,000/= ක් ද ලබාගත හැක\n" +
                 "• මුදල් ලබාගැනීමට අදාළ බැංකුවෙන් නිකුත් කරන වවුචරයක් අත්සන් කළ යුතුය.",
-    "/conditions": "⚠ *උපාධිය හදාරන කාලය තුළ අනිවාර්ය නීති රීති:*\n\n" +
+    "/conditions": "⚠️ *උපාධිය හදාරන කාලය තුළ අනිවාර්ය නීති රීති:*\n\n" +
                    "1️⃣ *පැමිණීම සහ ප්‍රතිඵල:* සෑම අනිවාර්ය අධ්‍යයන විෂයයක් සඳහාම අවම වශයෙන් 'C' (සම්මාන) සාමාර්ථයක් ලබාගත යුතු අතර, 80% ක පැමිණීමක් අනිවාර්ය වේ.\n" +
                    "2️⃣ *විභාග අසමත් වීම:* යම් විෂයයක් අසමත් වුවහොත්, නැවත විභාග ගාස්තු ගෙවා ඊළඟ වාරයේදී එය සමත් විය යුතුය.\n" +
                    "3️⃣ *පාඨමාලාව අතහැරීම:* පෞද්ගලික හේතුවක් මත පාඨමාලාව අතහැරියහොත්, බැංකුව ගෙවූ සම්පූර්ණ මුදල සහ පොලිය එකවර ගෙවිය යුතුය.\n" +
@@ -171,7 +172,7 @@ const campusAnswers = {
     "/nsbm": "🎓 *NSBM Green University*\n\n" +
              "📘 *Faculty of Humanities & Social Sciences*\n" +
              "• Bachelor of Laws (Honours) - LLB\n" +
-             "  ✔️️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'C' 3ක් සහ ඉංග්‍රීසි සඳහා අවම 'S' 1ක්.\n" +
+             "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'C' 3ක් සහ ඉංග්‍රීසි සඳහා අවම 'S' 1ක්.\n" +
              "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි සහ මව් භාෂාව සඳහා සම්මාන ඇතුළුව 'C' 3ක් සහ ගණිතය ඇතුළුව සාමාර්ථ 6ක්.\n\n" +
              "📊 *Faculty of Business*\n" +
              "• BSc in Business Management (Project Management) (Special)\n" +
@@ -224,9 +225,9 @@ const campusAnswers = {
             "📘 *Faculty of Humanities & Social Sciences*\n" +
             "• BSc Honours in Psychology\n" +
             "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක්.\n" +
-            "  ✔️️ *සා/පෙළ:* ඉංග්‍රීසි සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
+            "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
             "• Bachelor of Laws (Honours) - LLB\n" +
-            "  ✔️️ *උ/පෙළ:* ඕනෑම අංශයකින් 'C' 2ක් සහ 'S' 1ක්.\n" +
+            "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'C' 2ක් සහ 'S' 1ක්.\n" +
             "  ✔️ *සා/පෙළ:* මව් භාෂාව සහ ඉංග්‍රීසි සඳහා 'C' සාමාර්ථයක්.\n\n" +
             "📊 *Faculty of Management*\n" +
             "• Bachelor of Management Honours (HR / Marketing / Business Analytics / Accounting)\n" +
@@ -234,7 +235,7 @@ const campusAnswers = {
             "  ✔️ *සා/පෙළ:* ගණිතය සඳහා 'S' සාමාර්ථයක් (Accounting සඳහා සා/පෙළ ගණිතය සහ ව්‍යාපාර අධ්‍යනය 'C' අවශ්‍යයි).\n\n" +
             "🔬 *Faculty of Health Sciences*\n" +
             "• BSc Honours in Biomedical Science / Acupuncture\n" +
-            "  ✔️️ *උ/පෙළ:* ජීව විද්‍යාව, රසායන විද්‍යාව සහ භෞතික විද්‍යාව/කෘෂිකර්මය සඳහා 'S' 3ක්.\n\n" +
+            "  ✔️ *උ/පෙළ:* ජීව විද්‍යාව, රසායන විද්‍යාව සහ භෞතික විද්‍යාව/කෘෂිකර්මය සඳහා 'S' 3ක්.\n\n" +
             "💻 *Faculty of Computing*\n" +
             "• BSc Honours in Management Information Systems / Software Engineering / Computer Networks & Cyber Security / Data Science\n" +
             "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
@@ -283,17 +284,17 @@ const campusAnswers = {
                "💻 *Faculty of Computing*\n" +
                "• BSc in Information Technology / BSc Honours in IT / Software Engineering / Computer Science\n" +
                "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
-               "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
+               "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් සමත් විය යුතුය).*",
 
     "/icbt": "🎓 *ICBT Campus*\n\n" +
              "📊 *Faculty of Business*\n" +
              "• Bachelor of Business Management Honours\n" +
              "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
-             "  ✔️️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
+             "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
              "💻 *Faculty of Computing*\n" +
              "• BSc Honours in Software Engineering / IT (Cyber Security / Data Science / AI)\n" +
              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
-             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
+             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් සමත් විය යුතුය).*",
 
     "/bci": "🎓 *BCI Campus*\n\n" +
             "📘 *Faculty of Humanities & Social Sciences*\n" +
@@ -345,7 +346,7 @@ const campusAnswers = {
               "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා, ජීව විද්‍යා හෝ තාක්ෂණ අංශයෙන් 'S' 3ක් (Apparel Studies සඳහා ඕනෑම අංශයකින් 'S' 3ක්).\n" +
               "  ✔️ *සා/පෙළ:* ගණිතය සහ විද්‍යාව සඳහා අවම වශයෙන් වාර දෙකක් තුළ 'C' සාමාර්ථයක්.\n\n" +
               "• Bachelor of Technology Honours in Environmental Technology\n" +
-              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් එකවර ලබා තිබීම.",
+              "  ✔️️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් එකවර ලබා තිබීම.",
 
     "/niibs": "🎓 *NIIBS Campus*\n\n" +
               "💻 *Faculty of Computing*\n" +
@@ -614,9 +615,14 @@ client.on("message_create", async (message) => {
         const info = await getContactInfo(senderId);
         if (!info) return;
 
+        // 🔥 මෙතනින් Admin ද කියලා මුලින්ම හොයාගන්නවා
+        const isAdmin = await checkIsAdmin(message, senderId);
+
+        // 🖨️️ ටර්මිනල් එකේ හරියටම ලොග් එක ප්‍රින්ට් වෙන තැන
         console.log("\n----------------------------------------");
         console.log(`📩 Group ID : ${groupId}`);
-        console.log(`👤 Name     : ${info.name}`);
+        console.log(`👤 Name     : ${info.name} (${info.actualNumber})`);
+        console.log(`👑 Is Admin : ${isAdmin}`);
         console.log(`💬 Type     : ${message.type}`);
         console.log(`💬 Message  : ${message.body || "[Media / Sticker / Invite]"}`);
         console.log("----------------------------------------");
@@ -636,7 +642,7 @@ client.on("message_create", async (message) => {
         const hasLinkIndicator = isNativeGroupInvite || textLower.includes("http://") || textLower.includes("https://") || textLower.includes("www.") || textLower.includes(".com") || textLower.includes(".net") || textLower.includes(".org") || textLower.includes(".me") || textLower.includes(".co") || textLower.includes("t.me") || textLower.includes("chat.whatsapp.com");
 
         if (hasLinkIndicator) {
-            const isAdmin = await checkIsAdmin(message, senderId); // 🔥 Admin ද නැද්ද යන්න පරික්ෂා කිරීම
+            // 🔥 කලින් හොයාගත්ත isAdmin එක මෙතන පාවිච්චි වෙනවා
             if (!isAdmin) {
                 const isTelegramLink = textLower.includes("t.me/") || textLower.includes("telegram.me/");
                 const isWhatsAppGroupLink = isNativeGroupInvite || textLower.includes("chat.whatsapp.com"); 
@@ -670,7 +676,7 @@ client.on("message_create", async (message) => {
                     linkWarningTracker.set(senderId, warnings);
 
                    if (warnings === 1) {
-                    const warningMsg = `⚠️ @${senderId.split('@')[0]} (*${info.name}*)\n` +
+                    const warningMsg = `⚠️️ @${senderId.split('@')[0]} (*${info.name}*)\n` +
                                        `මෙම කණ්ඩායම තුළ වෙනත් WhatsApp Group ලින්ක්, ටෙලිග්‍රෑම් ලින්ක් හෝ ව්‍යාපාරික දේවල් Share කිරීම තහනම්! ඔයාට group link share කරගන්න අවශ්‍යනම් group admin කෙනෙක් හරහා යොමු කරන්න 🤠.\n\n` +
                                        `මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ කරුණාකර link එක group එකෙන් ඉවත් කරගන්න. 🚫\n\n` +
                                        `ඔබට මෙම සමූහය සඳහා අවසර ඇති links වනුයේ පහත සඳහන් links පමණී:\n` +
@@ -704,7 +710,6 @@ client.on("message_create", async (message) => {
 
         const containsBadWord = BAD_WORDS.some(word => textLower.includes(word.toLowerCase()));
         if (containsBadWord) {
-            const isAdmin = await checkIsAdmin(message, senderId);
             if (!isAdmin) {
                 try { await message.delete(true); } catch(e) {} 
                 let warnings = badWordWarningTracker.get(senderId) || 0;
@@ -736,7 +741,6 @@ client.on("message_create", async (message) => {
                                 textLower.includes("තත්වයක් තුළ මෙම සමූහය");
 
         if (isStatusMention) {
-            const isAdmin = await checkIsAdmin(message, senderId);
             if (!isAdmin) {
                 try { await message.delete(true); } catch(e) {} 
                 
@@ -815,7 +819,7 @@ client.on("message_create", async (message) => {
         // ⏳ DEADLINE COUNTDOWN FEATURE
         // ==========================================
         else if (msgCommand === "/deadline") {
-            const deadlineDate = new Date("2026-10-15T23:59:59").getTime(); 
+            const deadlineDate = new Date("2026-09-27T23:59:59").getTime(); 
             const now = new Date().getTime();
             const timeLeft = deadlineDate - now;
 
