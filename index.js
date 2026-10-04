@@ -84,8 +84,8 @@ const ifslsAnswers = {
                      "🏛 *SIBA:* රු. 25,000/= (ටී.ආර්.එස්.සිරිගංගොඩ - 070 7 940 940 / සාග්‍යා - 081 24 21 693)\n" +
                      "🏛 *ICASL:* රු. 20,000/= (ඉසුරි සමරවික්‍රම - 0112 807 407)",
     
-    "/private": "👤 *Private Candidates (පෞද්ගලික අයදුම්කරුවන්):*\nපෞද්ගලිකව උසස් පෙළ පෙනී සිටි අයදුම්කරුවන්, පාසලේ අස්වීමේ සහතිකය,'ග්‍රාම නිලධාරී සහතික කළ (ප්‍රාදේශීය ලේකම් අනුමත කළ) චරිත සහතිකයක්' හෝ 'සාම විනිසුරුවරයෙකුගෙන් (JP) ලබාගත් චරිත සහතිකයක්' සම්මුඛ පරීක්ෂණයේදී ඉදිරිපත් කළ යුතුය.",
-    "/documents": "📂 *ඉන්ටවිව් එකට රැගෙන යා යුතු ලියකියවිලි (Originals):*\n1. ජාතික හැඳුනුම්පත (NIC)\n2. උප්පැන්න සහතිකය\n3. O/L සහ A/L සහතික(Z score සහිත)\n4. Online Application එකේ Print Out එක (විදුහල්පති සහතික කරන ලද)\n5.පාසලේ අස්වීමේ සහතිකය,චරිත සහතිකය \n6.Bridging Courses Results(Bridging කරලා තියනවනම්)\n7.Course Changing Letter(Courses Change කරනවනම්)",
+    "/private": "👤 *Private Candidates (පෞද්ගලික අයදුම්කරුවන්):*\nපෞද්ගලිකව උසස් පෙළ පෙනී සිටි අයදුම්කරුවන්, පාසලේ අස්වීමේ සහතිකය,'ග්‍රාම නිලධාරී සහතිකය (ප්‍රාදේශීය ලේකම් අනුමත කළ,පදිංචිය ස්ථිර කරගැනිම සදහා)' හෝ 'සාම විනිසුරුවරයෙකුගෙන් (JP) ලබාගත් චරිත සහතිකයක්' සම්මුඛ පරීක්ෂණයේදී ඉදිරිපත් කළ යුතුය.",
+    "/documents": "📂 *ඉන්ටවිව් එකට රැගෙන යා යුතු ලියකියවිලි (Originals):*\n1. ජාතික හැඳුනුම්පත (NIC)\n2. උප්පැන්න සහතිකය\n3. O/L සහ A/L සහතික(Z score සහිත)\n4. Online Application එකේ Print Out එක (විදුහල්පති හෝ සාමවිනිසුරු (JP) සහතික කරන ලද)\n5.පාසලේ අස්වීමේ සහතිකය, ග්‍රාම සේවා සහතිකය \n6.Bridging Courses Results(Bridging කරලා තියනවනම්)\n7.Course Changing Letter(Courses Change කරනවනම්)",
     "/applysteps": "📝 *අයදුම් කරන ආකාරය:*\n1. https://studentloans.mohe.gov.lk/loan_application/ වෙත පිවිසෙන්න.\n2. NIC අංකයෙන් Register වෙන්න.\n3. O/L, A/L ප්‍රතිඵල සහ පෞද්ගලික විස්තර පුරවන්න (වැඩි විස්තර සදහා guide book එකේ සදහන් ලියාපදිංචි පියවරයන් අනුගමනය කරන්න)\n4. ඔබට අවශ්‍ය කැම්පස් සහ උපාධි කැමැත්තේ අනුපිළිවෙලට (Preferences) තෝරන්න.\n5. තහවුරු කර Submit කර, Application එක Print කරගන්න.",
     "/afterapplysteps": "🎓 *අයදුම් කළ පසු ඊළඟ පියවර (After Apply Steps):*\n\n" +
                         "1️⃣ *සම්මුඛ පරීක්ෂණයට කැඳවීම:* අයදුම්පත්‍ර භාරගැනීම අවසන් වී මාසයක් පමණ ඇතුළත, සුදුසුකම් ලැබූ සිසුන්ට Online Interview එක සඳහා Email එකක් මගින් දැනුම් දෙනු ලැබේ. තේරුණු සිසුන්ගේ නාමලේඛනය studentloans.mohe.gov.lk වෙබ් අඩවියේ පළ කෙරේ.\n\n" +
@@ -139,7 +139,7 @@ const ifslsAnswers = {
                      "🎓🌟 *ALL THE VERY BEST FOR YOUR IFSLS INTERVIEW!* 🌟🎓\n\n" +
                      "ඔබ සියලු දෙනාටම සාර්ථක Interview එකක් සහ සුභ අනාගතයක් ප්‍රාර්ථනා කරනවා! ❤️✨\n\n" +
                      "GOOD LUCK & ALL THE BEST! 🍀🎓❤️\n\n" +
-                     "IFSLS STUDENT COMMUNITY",    
+                     "IFSLS STUDENT COMMUNITY",   
 };
 
 // ==========================================
@@ -286,7 +286,7 @@ const campusAnswers = {
                "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
                "💻 *Faculty of Computing*\n" +
                "• BSc in Information Technology / BSc Honours in IT / Software Engineering / Computer Science\n" +
-               "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
+               "  ✔️️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
                "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් සමත් විය යුතුය).*",
 
     "/icbt": "🎓 *ICBT Campus*\n\n" +
@@ -547,9 +547,10 @@ client.on("group_join", async (notification) => {
                 continue;
             }
 
-            const welcomeMsg = `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓\n\n👋 Hello / ආයුබෝවන් *${info.name}*,\n\nPlease follow these group guidelines to maintain a good learning environment.\nකරුණාකර සමූහයේ යහපැවැත්ම උදෙසා පහත නීති මාලාව පිළිපදින්න.\n\n*GROUP RULES / නීති මාලාව:*\n1️⃣ Be respectful to everyone.\n(සියලුම සාමාජිකයින්ට ගෞරවයෙන් සලකන්න.)\n\n2️⃣ 🚫 No Spamming or flooding messages.\n(අනවශ්‍ය පණිවිඩ යැවීමෙන් වළකින්න.)\n\n3️⃣ 🚫 No unauthorized links (Other WhatsApp groups, Telegram, Scam/Business links). Only educational links are allowed.\n(වෙනත් WhatsApp Group, Telegram හෝ ව්‍යාපාරික ලින්ක් දැමීම සපුරා තහනම්. අධ්‍යාපනික ලින්ක් සඳහා පමණක් අවසර ඇත.)\n\n4️⃣ 🎓 For further questions regarding student loans, please contact the group admins. Please watch the YouTube playlist below for more information.\n(ශිෂ්‍ය ණය පිළිබඳ වැඩිදුර ප්‍රශ්න සඳහා සමූහයේ Admin වරුන් සම්බන්ධ කරගන්න. ණය පිළිබඳ සියලුම තොරතුරු දැනගැනීමට පහත YouTube Playlist එක අනිවාර්යයෙන්ම නරඹන්න.)\n📺 *YouTube Playlist:* https://youtube.com/playlist?list=PL-ZbzAh0pKykpa-odcUrDEg94PBbTQp9M&si=F9L3Spy-pLZJq31n\n\n⚠️ *Note:* Breaking these rules will result in an automatic permanent ban by the system.\n(මෙම නීති කඩකරන අයව පද්ධතිය මගින් ස්වයංක්‍රීයව සමූහයෙන් ඉවත් කරනු ලැබේ.)\n\nThank you! / ස්තූතියි!\n🤖 _System Generated Message. Please do not reply._`;
+            // 💡 වෙනස්කම: Unknown user ප්‍රශ්නය විසඳීම (නම වෙනුවට Number එක Mention කිරීම)
+            const welcomeMsg = `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓\n\n👋 Hello / ආයුබෝවන් @${info.actualNumber},\n\nPlease follow these group guidelines to maintain a good learning environment.\nකරුණාකර සමූහයේ යහපැවැත්ම උදෙසා පහත නීති මාලාව පිළිපදින්න.\n\n*GROUP RULES / නීති මාලාව:*\n1️⃣ Be respectful to everyone.\n(සියලුම සාමාජිකයින්ට ගෞරවයෙන් සලකන්න.)\n\n2️⃣ 🚫 No Spamming or flooding messages.\n(අනවශ්‍ය පණිවිඩ යැවීමෙන් වළකින්න.)\n\n3️⃣ 🚫 No unauthorized links (Other WhatsApp groups, Telegram, Scam/Business links). Only educational links are allowed.\n(වෙනත් WhatsApp Group, Telegram හෝ ව්‍යාපාරික ලින්ක් දැමීම සපුරා තහනම්. අධ්‍යාපනික ලින්ක් සඳහා පමණක් අවසර ඇත.)\n\n4️⃣ 🎓 For further questions regarding student loans, please contact the group admins. Please watch the YouTube playlist below for more information.\n(ශිෂ්‍ය ණය පිළිබඳ වැඩිදුර ප්‍රශ්න සඳහා සමූහයේ Admin වරුන් සම්බන්ධ කරගන්න. ණය පිළිබඳ සියලුම තොරතුරු දැනගැනීමට පහත YouTube Playlist එක අනිවාර්යයෙන්ම නරඹන්න.)\n📺 *YouTube Playlist:* https://youtube.com/playlist?list=PL-ZbzAh0pKykpa-odcUrDEg94PBbTQp9M&si=F9L3Spy-pLZJq31n\n\n⚠️ *Note:* Breaking these rules will result in an automatic permanent ban by the system.\n(මෙම නීති කඩකරන අයව පද්ධතිය මගින් ස්වයංක්‍රීයව සමූහයෙන් ඉවත් කරනු ලැබේ.)\n\nThank you! / ස්තූතියි!\n🤖 _System Generated Message. Please do not reply._`;
 
-            await client.sendMessage(userId, welcomeMsg);
+            await client.sendMessage(userId, welcomeMsg, { mentions: [userId] });
             console.log(`✅ First Welcome successfully sent to: ${info.name}`);
 
             await new Promise(resolve => setTimeout(resolve, 3000));
@@ -620,7 +621,9 @@ client.on("message_create", async (message) => {
             try {
                 const chat = await message.getChat();
                 if (chat && chat.participants) {
-                    const participant = chat.participants.find(p => p.id._serialized === senderId);
+                    // 💡 වෙනස්කම 1: Link දාද්දි Admin ව හරියටම අඳුරගැනීම
+                    const cleanSenderId = senderId.replace(/:\d+/, "");
+                    const participant = chat.participants.find(p => p.id._serialized === cleanSenderId);
                     isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
                 }
             } catch (err) { }
@@ -696,7 +699,9 @@ client.on("message_create", async (message) => {
             try {
                 const chat = await message.getChat();
                 if (chat && chat.participants) {
-                    const participant = chat.participants.find(p => p.id._serialized === senderId);
+                    // 💡 වෙනස්කම 2: Bad Word දාද්දි Admin ව අඳුරගැනීම
+                    const cleanSenderId = senderId.replace(/:\d+/, "");
+                    const participant = chat.participants.find(p => p.id._serialized === cleanSenderId);
                     isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
                 }
             } catch (err) { }
@@ -736,7 +741,9 @@ client.on("message_create", async (message) => {
             try {
                 const chat = await message.getChat();
                 if (chat && chat.participants) {
-                    const participant = chat.participants.find(p => p.id._serialized === senderId);
+                    // 💡 වෙනස්කම 3: Status Mention එකේදී Admin ව අඳුරගැනීම
+                    const cleanSenderId = senderId.replace(/:\d+/, "");
+                    const participant = chat.participants.find(p => p.id._serialized === cleanSenderId);
                     isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
                 }
             } catch (err) { }
