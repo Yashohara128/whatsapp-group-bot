@@ -1,4 +1,4 @@
-const { Client, LocalAuth, MessageMedia } = require("whatsapp-web.js");
+const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const cron = require("node-cron"); 
 const fs = require("fs"); 
@@ -13,8 +13,7 @@ const TARGET_GROUP_IDS = [
 // 🔥 Admin Bypass ලිස්ට් එක (මෙම අංක වලට කවදාවත් Warning හෝ Ban වීම් සිදු නොවේ)
 const EXTRA_ADMINS = [
     "94722268122",
-    "94762068122",
-    "94703401676" 
+    "94762068122" 
 ];
 
 const CHROME_PATH = "/usr/bin/chromium-browser";
@@ -89,7 +88,7 @@ const ifslsAnswers = {
                         "1️⃣ *සම්මුඛ පරීක්ෂණයට කැඳවීම:* අයදුම්පත්‍ර භාරගැනීම අවසන් වී මාසයක් පමණ ඇතුළත, සුදුසුකම් ලැබූ සිසුන්ට Online Interview එක සඳහා Email එකක් මගින් දැනුම් දෙනු ලැබේ. තේරුණු සිසුන්ගේ නාමලේඛනය studentloans.mohe.gov.lk වෙබ් අඩවියේ පළ කෙරේ.\n\n" +
                         "2️⃣ *Interview එකට සූදානම් වීම:* Online Interview එකට පෙර අවශ්‍ය ලියකියවිලි වල (Application එකේ මුද්‍රිත පිටපත, NIC, උප්පැන්න, O/L සහ A/L සහතික මුල් පිටපත්, පාසලේ අස්වීමේ සහතිකය, චරිත සහතිකය ආදී) Scan කොපි අමාත්‍යාංශයෙන් දෙන Email එකට යැවිය යුතුය.\n\n" +
                         "3️⃣ *පාඨමාලාවට තේරී පත්වීම:* Interview එකෙන් පසු තේරී පත් වූ උපාධිය සහ කැම්පස් එක වෙබ් අඩවියේ පළ කරන අතර, කැම්පස් Physical ලියාපදිංචි විය යුතු දිනයන් Email  මගින් දැනුම් දෙනු ඇත.\n\n" +
-                        "4️⃣ *අභියාචනා යොමු කිරීම (Appeals):* තේරීම් ප්‍රතිඵල පැමිණිමෙන් වෙනසක් කරගැනිමට (Course/Campus මාරු කරගන්න අවශ්‍යය)නම්, ප්‍රතිඵල පැමිණ මසක් තුල වෙබ් අඩවිය හරහා (https://studentloans.mohe.gov.lk) අභියාචනයක් අයදුම් කල හැක (අභියාචනා කළ නොහැකි අය: තෝරාගත් උපාධි පිරිනමන ආයතනවල දැනටමත් ලියාපදිංචි වී සිටින අයට අභියාචනා ඉදිරිපත් කළ නොහැක.   තෝරාගැනීමේ පදනම: අභියාචනා සලකා බලන්නේ පවතින පුරප්පාඩු මත වන අතර, පුරප්පාඩු වලට වඩා අභියාචනා සංඛ්‍යාව වැඩි වුවහොත් අයදුම්කරුවන්ගේ Z-අගය (Z-scores) සැලකිල්ලට ගනී.   ප්‍රතික්ෂේප වීම් හා අවසන් තීරණය: නියමිත කාලසීමාවෙන් පසු යොමු කරන අභියාචනා භාර නොගන්නා අතර, අභියාචනා සම්බන්ධයෙන් අමාත්‍යාංශ ලේකම්වරයා ගන්නා තීරණය අවසාන තීරණය ලෙස සැලකේ.)",
+                        "4️⃣ *අභියාචනා යොමු කිරීම (Appeals):* තේරීම් ප්‍රතිඵල පැමිණිමෙන් වෙනසක් කරගැනිමට (Course/Campus මාරු කරගන්න අවශ්‍යය)නම්, ප්‍රතිඵල පැමිණ මසක් තුල වෙබ් අඩවිය හරහා (https://studentloans.mohe.gov.lk) අභියාචනයක් අයදුම් කල හැක",
     "/specialnotes": "📢🎓 *IFSLS 11th INTAKE – INTERVIEW IMPORTANT NOTICE* 🎓📢\n\n" +
                      "IFSLS 11th Intake සඳහා අයදුම් කර ඇති සියලුම සිසුන්ගේ අවධානයටයි.\n" +
                      "Interview එක සම්බන්ධයෙන් පහත පියවර පිළිවෙලට මතක තබාගන්න. 👇✨\n\n" +
@@ -168,7 +167,7 @@ const campusAnswers = {
               "• BSc Honours in Software Engineering\n" +
               "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
               "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
-
+    
     "/nsbm": "🎓 *NSBM Green University*\n\n" +
              "📘 *Faculty of Humanities & Social Sciences*\n" +
              "• Bachelor of Laws (Honours) - LLB\n" +
@@ -190,7 +189,7 @@ const campusAnswers = {
              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*\n\n" +
              "• BSc in Multimedia\n" +
              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් සහ ඉංග්‍රීසි සඳහා 'S' 1ක්.\n" +
-             "  ✔️️ *සා/පෙළ:* ඉංග්‍රීසි 'C' සහ ගණිතය 'C' සාමාර්ථයක්.",
+             "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි 'C' සහ ගණිතය 'C' සාමාර්ථයක්.",
 
     "/cinec": "🎓 *CINEC Campus*\n\n" +
               "📘 *Faculty of Humanities & Education*\n" +
@@ -235,7 +234,7 @@ const campusAnswers = {
             "  ✔️ *සා/පෙළ:* ගණිතය සඳහා 'S' සාමාර්ථයක් (Accounting සඳහා සා/පෙළ ගණිතය සහ ව්‍යාපාර අධ්‍යනය 'C' අවශ්‍යයි).\n\n" +
             "🔬 *Faculty of Health Sciences*\n" +
             "• BSc Honours in Biomedical Science / Acupuncture\n" +
-            "  ✔️ *උ/පෙළ:* ජීව විද්‍යාව, රසායන විද්‍යාව සහ භෞතික විද්‍යාව/කෘෂිකර්මය සඳහා 'S' 3ක්.\n\n" +
+            "  ✔️️ *උ/පෙළ:* ජීව විද්‍යාව, රසායන විද්‍යාව සහ භෞතික විද්‍යාව/කෘෂිකර්මය සඳහා 'S' 3ක්.\n\n" +
             "💻 *Faculty of Computing*\n" +
             "• BSc Honours in Management Information Systems / Software Engineering / Computer Networks & Cyber Security / Data Science\n" +
             "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
@@ -270,7 +269,7 @@ const campusAnswers = {
              "  ✔️ *උ/පෙළ:* භෞතික, ජීව විද්‍යා හෝ තාක්ෂණ අංශයෙන් 'S' 3ක්.\n\n" +
              "💻 *Faculty of Computing*\n" +
              "• BSc Honours in Data Science / Software Engineering / Cyber Security / Cloud Computing\n" +
-             "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
+             "  ✔️️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
 
     "/saegis": "🎓 *SAEGIS Campus*\n\n" +
@@ -284,7 +283,7 @@ const campusAnswers = {
                "💻 *Faculty of Computing*\n" +
                "• BSc in Information Technology / BSc Honours in IT / Software Engineering / Computer Science\n" +
                "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
-               "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් සමත් විය යුතුය).*",
+               "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
 
     "/icbt": "🎓 *ICBT Campus*\n\n" +
              "📊 *Faculty of Business*\n" +
@@ -294,7 +293,7 @@ const campusAnswers = {
              "💻 *Faculty of Computing*\n" +
              "• BSc Honours in Software Engineering / IT (Cyber Security / Data Science / AI)\n" +
              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
-             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් සමත් විය යුතුය).*",
+             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
 
     "/bci": "🎓 *BCI Campus*\n\n" +
             "📘 *Faculty of Humanities & Social Sciences*\n" +
@@ -302,7 +301,7 @@ const campusAnswers = {
             "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක්.\n" +
             "  ✔️ *සා/පෙළ:* සිංහල/දෙමළ සහ ගණිතය සඳහා 'S' ද, ඉංග්‍රීසි සඳහා 'C' සාමාර්ථයක්ද ලබා තිබීම.\n\n" +
             "• BSc Honours in Counseling Psychology\n" +
-            "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් සහ ඉංග්‍රීසි සඳහා 'S' 1ක්.\n\n" +
+            "  ✔️️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් සහ ඉංග්‍රීසි සඳහා 'S' 1ක්.\n\n" +
             "📊 *Faculty of Business*\n" +
             "• Bachelor of Business Management Honours\n" +
             "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
@@ -310,7 +309,7 @@ const campusAnswers = {
             "💻 *Faculty of Computing*\n" +
             "• BSc Honours in Information Technology / Software Engineering\n" +
             "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
-            "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් සමත් විය යුතුය).*",
+            "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
 
     "/icasl": "🎓 *ICASL Campus*\n\n" +
               "📊 *Faculty of Business*\n" +
@@ -346,7 +345,7 @@ const campusAnswers = {
               "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා, ජීව විද්‍යා හෝ තාක්ෂණ අංශයෙන් 'S' 3ක් (Apparel Studies සඳහා ඕනෑම අංශයකින් 'S' 3ක්).\n" +
               "  ✔️ *සා/පෙළ:* ගණිතය සහ විද්‍යාව සඳහා අවම වශයෙන් වාර දෙකක් තුළ 'C' සාමාර්ථයක්.\n\n" +
               "• Bachelor of Technology Honours in Environmental Technology\n" +
-              "  ✔️️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් එකවර ලබා තිබීම.",
+              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් එකවර ලබා තිබීම.",
 
     "/niibs": "🎓 *NIIBS Campus*\n\n" +
               "💻 *Faculty of Computing*\n" +
@@ -368,7 +367,7 @@ const campusAnswers = {
             "📊 *Faculty of Business*\n" +
             "• Bachelor of Business Management Honours\n" +
             "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
-            "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්."
+            "  ✔️️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්."
 };
 
 const spamTracker = new Map();
@@ -583,7 +582,7 @@ async function checkIsAdmin(message, senderId) {
         const authorId = message.author || message.from || senderId || "";
         const pureNumber = authorId.split('@')[0].split(':')[0];
         
-        // 1. EXTRA_ADMINS ලිස්ට් එක පරීක්ෂා කිරීම (මෙම අංක වලට කවදාවත් බ්ලොක් වෙන්නේ නෑ)
+        // 1. EXTRA_ADMINS ලිස්ට් එක පරීක්ෂා කිරීම
         if (EXTRA_ADMINS.includes(pureNumber)) return true;
 
         // 2. WhatsApp ගෲප් participants හරහා පරීක්ෂා කිරීම
@@ -618,7 +617,7 @@ client.on("message_create", async (message) => {
         // 🔥 මෙතනින් Admin ද කියලා මුලින්ම හොයාගන්නවා
         const isAdmin = await checkIsAdmin(message, senderId);
 
-        // 🖨️️ ටර්මිනල් එකේ හරියටම ලොග් එක ප්‍රින්ට් වෙන තැන
+        // 🖨 ටර්මිනල් එකේ හරියටම ලොග් එක ප්‍රින්ට් වෙන තැන
         console.log("\n----------------------------------------");
         console.log(`📩 Group ID : ${groupId}`);
         console.log(`👤 Name     : ${info.name} (${info.actualNumber})`);
@@ -633,7 +632,7 @@ client.on("message_create", async (message) => {
                 blacklistedUsers[senderId] = Date.now() + BAN_DURATION_MS;
                 if (info.actualId) blacklistedUsers[info.actualId] = Date.now() + BAN_DURATION_MS;
                 saveBlacklist();
-                await client.sendMessage(groupId, `🌍 @${senderId.split('@')[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group.`, { mentions: [senderId] });
+                await client.sendMessage(groupId, `🌍 @${senderId.split('@')[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group. You will be removed.`, { mentions: [senderId] });
             }
             return;
         }
@@ -676,7 +675,7 @@ client.on("message_create", async (message) => {
                     linkWarningTracker.set(senderId, warnings);
 
                    if (warnings === 1) {
-                    const warningMsg = `⚠️️ @${senderId.split('@')[0]} (*${info.name}*)\n` +
+                    const warningMsg = `⚠️ @${senderId.split('@')[0]} (*${info.name}*)\n` +
                                        `මෙම කණ්ඩායම තුළ වෙනත් WhatsApp Group ලින්ක්, ටෙලිග්‍රෑම් ලින්ක් හෝ ව්‍යාපාරික දේවල් Share කිරීම තහනම්! ඔයාට group link share කරගන්න අවශ්‍යනම් group admin කෙනෙක් හරහා යොමු කරන්න 🤠.\n\n` +
                                        `මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ කරුණාකර link එක group එකෙන් ඉවත් කරගන්න. 🚫\n\n` +
                                        `ඔබට මෙම සමූහය සඳහා අවසර ඇති links වනුයේ පහත සඳහන් links පමණී:\n` +
@@ -710,6 +709,7 @@ client.on("message_create", async (message) => {
 
         const containsBadWord = BAD_WORDS.some(word => textLower.includes(word.toLowerCase()));
         if (containsBadWord) {
+            // 🔥 කලින් හොයාගත්ත isAdmin එක මෙතන පාවිච්චි වෙනවා
             if (!isAdmin) {
                 try { await message.delete(true); } catch(e) {} 
                 let warnings = badWordWarningTracker.get(senderId) || 0;
@@ -741,6 +741,7 @@ client.on("message_create", async (message) => {
                                 textLower.includes("තත්වයක් තුළ මෙම සමූහය");
 
         if (isStatusMention) {
+            // 🔥 කලින් හොයාගත්ත isAdmin එක මෙතන පාවිච්චි වෙනවා
             if (!isAdmin) {
                 try { await message.delete(true); } catch(e) {} 
                 
