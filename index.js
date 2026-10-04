@@ -56,7 +56,7 @@ const ifslsAnswers = {
                 "• වසර 4 ක උපාධියක් සඳහා උපරිම රු. 300,000/= ක් ද, වසර 3 ක උපාධියක් සඳහා රු. 225,000/= ක් ද ලබාගත හැක\n" +
                 "• මුදල් ලබාගැනීමට අදාළ බැංකුවෙන් නිකුත් කරන වවුචරයක් අත්සන් කළ යුතුය.",
 
-    "/conditions": "⚠️ *උපාධිය හදාරන කාලය තුළ අනිවාර්ය නීති රීති:*\n\n" +
+    "/conditions": "⚠️️ *උපාධිය හදාරන කාලය තුළ අනිවාර්ය නීති රීති:*\n\n" +
                    "1️⃣ *පැමිණීම සහ ප්‍රතිඵල:* සෑම අනිවාර්ය අධ්‍යයන විෂයයක් සඳහාම අවම වශයෙන් 'C' (සම්මාන) සාමාර්ථයක් ලබාගත යුතු අතර, 80% ක පැමිණීමක් අනිවාර්ය වේ.\n" +
                    "2️⃣ *විභාග අසමත් වීම:* යම් විෂයයක් අසමත් වුවහොත්, නැවත විභාග ගාස්තු ගෙවා ඊළඟ වාරයේදී එය සමත් විය යුතුය.\n" +
                    "3️⃣ *පාඨමාලාව අතහැරීම:* පෞද්ගලික හේතුවක් මත පාඨමාලාව අතහැරියහොත්, බැංකුව ගෙවූ සම්පූර්ණ මුදල සහ පොලිය එකවර ගෙවිය යුතුය.\n" +
@@ -231,7 +231,7 @@ const campusAnswers = {
             "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
             "• Bachelor of Laws (Honours) - LLB\n" +
             "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'C' 2ක් සහ 'S' 1ක්.\n" +
-            "  ✔️ *සා/පෙළ:* මව් භාෂාව සහ ඉංග්‍රීසි සඳහා 'C' සාමාර්ථයක්.\n\n" +
+            "  ✔️️ *සා/පෙළ:* මව් භාෂාව සහ ඉංග්‍රීසි සඳහා 'C' සාමාර්ථයක්.\n\n" +
             "📊 *Faculty of Management*\n" +
             "• Bachelor of Management Honours (HR / Marketing / Business Analytics / Accounting)\n" +
             "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
@@ -270,7 +270,7 @@ const campusAnswers = {
              "• BSc Engineering Honours (Electronics & Telecom / Electrical Power / ICT / Civil)\n" +
              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා අංශයෙන් (සංයුක්ත ගණිතය, භෞතික විද්‍යාව, රසායන විද්‍යාව) අවම 'C' 2ක් සහ 'S' 1ක්.\n\n" +
              "• Bachelor of Technology Honours (Electronics / Agricultural Tech) / BSc Honours in Biosystems Engineering\n" +
-             "  ✔️ *උ/පෙළ:* භෞතික, ජීව විද්‍යා හෝ තාක්ෂණ අංශයෙන් 'S' 3ක්.\n\n" +
+             "  ✔️️ *උ/පෙළ:* භෞතික, ජීව විද්‍යා හෝ තාක්ෂණ අංශයෙන් 'S' 3ක්.\n\n" +
              "💻 *Faculty of Computing*\n" +
              "• BSc Honours in Data Science / Software Engineering / Cyber Security / Cloud Computing\n" +
              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
@@ -286,7 +286,7 @@ const campusAnswers = {
                "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
                "💻 *Faculty of Computing*\n" +
                "• BSc in Information Technology / BSc Honours in IT / Software Engineering / Computer Science\n" +
-               "  ✔️️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
+               "  ✔ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
                "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් සමත් විය යුතුය).*",
 
     "/icbt": "🎓 *ICBT Campus*\n\n" +
@@ -309,7 +309,7 @@ const campusAnswers = {
             "📊 *Faculty of Business*\n" +
             "• Bachelor of Business Management Honours\n" +
             "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
-            "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
+            "  ✔️️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
             "💻 *Faculty of Computing*\n" +
             "• BSc Honours in Information Technology / Software Engineering\n" +
             "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
@@ -336,7 +336,7 @@ const campusAnswers = {
     "/siba": "🎓 *SIBA Campus*\n\n" +
              "📊 *Faculty of Business*\n" +
              "• Bachelor of Business Management Honours\n" +
-             "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
+             "  ✔️️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
              "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
              "💻 *Faculty of Computing*\n" +
              "• BSc in Information Technology\n" +
@@ -547,7 +547,6 @@ client.on("group_join", async (notification) => {
                 continue;
             }
 
-            // 💡 වෙනස්කම: Unknown user ප්‍රශ්නය විසඳීම (නම වෙනුවට Number එක Mention කිරීම)
             const welcomeMsg = `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓\n\n👋 Hello / ආයුබෝවන් @${info.actualNumber},\n\nPlease follow these group guidelines to maintain a good learning environment.\nකරුණාකර සමූහයේ යහපැවැත්ම උදෙසා පහත නීති මාලාව පිළිපදින්න.\n\n*GROUP RULES / නීති මාලාව:*\n1️⃣ Be respectful to everyone.\n(සියලුම සාමාජිකයින්ට ගෞරවයෙන් සලකන්න.)\n\n2️⃣ 🚫 No Spamming or flooding messages.\n(අනවශ්‍ය පණිවිඩ යැවීමෙන් වළකින්න.)\n\n3️⃣ 🚫 No unauthorized links (Other WhatsApp groups, Telegram, Scam/Business links). Only educational links are allowed.\n(වෙනත් WhatsApp Group, Telegram හෝ ව්‍යාපාරික ලින්ක් දැමීම සපුරා තහනම්. අධ්‍යාපනික ලින්ක් සඳහා පමණක් අවසර ඇත.)\n\n4️⃣ 🎓 For further questions regarding student loans, please contact the group admins. Please watch the YouTube playlist below for more information.\n(ශිෂ්‍ය ණය පිළිබඳ වැඩිදුර ප්‍රශ්න සඳහා සමූහයේ Admin වරුන් සම්බන්ධ කරගන්න. ණය පිළිබඳ සියලුම තොරතුරු දැනගැනීමට පහත YouTube Playlist එක අනිවාර්යයෙන්ම නරඹන්න.)\n📺 *YouTube Playlist:* https://youtube.com/playlist?list=PL-ZbzAh0pKykpa-odcUrDEg94PBbTQp9M&si=F9L3Spy-pLZJq31n\n\n⚠️ *Note:* Breaking these rules will result in an automatic permanent ban by the system.\n(මෙම නීති කඩකරන අයව පද්ධතිය මගින් ස්වයංක්‍රීයව සමූහයෙන් ඉවත් කරනු ලැබේ.)\n\nThank you! / ස්තූතියි!\n🤖 _System Generated Message. Please do not reply._`;
 
             await client.sendMessage(userId, welcomeMsg, { mentions: [userId] });
@@ -613,21 +612,22 @@ client.on("message_create", async (message) => {
             return;
         }
 
+        // 🔥🔥🔥 100% වැඩ කරන අලුත්ම Admin චෙක් කිරීම (මෙය එක වරක් පමණක් ධාවනය වේ - Bot දැන් ගොඩක් Fast!) 🔥🔥🔥
+        let isAdmin = false;
+        try {
+            const chat = await message.getChat();
+            if (chat && chat.participants) {
+                // Device ID සහ අනෙකුත් සියලුම දේවල් අයින් කර පිරිසිදු නම්බර් එක පමණක් ගනී (උදා: 94703401676)
+                const pureNumber = senderId.split('@')[0].split(':')[0]; 
+                const participant = chat.participants.find(p => p.id.user === pureNumber || p.id._serialized.includes(pureNumber));
+                isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
+            }
+        } catch (err) {}
+
         const isNativeGroupInvite = message.type === 'group_invite';
         const hasLinkIndicator = isNativeGroupInvite || textLower.includes("http://") || textLower.includes("https://") || textLower.includes("www.") || textLower.includes(".com") || textLower.includes(".net") || textLower.includes(".org") || textLower.includes(".me") || textLower.includes(".co") || textLower.includes("t.me") || textLower.includes("chat.whatsapp.com");
 
         if (hasLinkIndicator) {
-            let isAdmin = false;
-            try {
-                const chat = await message.getChat();
-                if (chat && chat.participants) {
-                    // 💡 වෙනස්කම 1: Link දාද්දි Admin ව හරියටම අඳුරගැනීම
-                    const cleanSenderId = senderId.replace(/:\d+/, "");
-                    const participant = chat.participants.find(p => p.id._serialized === cleanSenderId);
-                    isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
-                }
-            } catch (err) { }
-
             if (!isAdmin) {
                 const isTelegramLink = textLower.includes("t.me/") || textLower.includes("telegram.me/");
                 const isWhatsAppGroupLink = isNativeGroupInvite || textLower.includes("chat.whatsapp.com"); 
@@ -695,17 +695,6 @@ client.on("message_create", async (message) => {
 
         const containsBadWord = BAD_WORDS.some(word => textLower.includes(word.toLowerCase()));
         if (containsBadWord) {
-            let isAdmin = false;
-            try {
-                const chat = await message.getChat();
-                if (chat && chat.participants) {
-                    // 💡 වෙනස්කම 2: Bad Word දාද්දි Admin ව අඳුරගැනීම
-                    const cleanSenderId = senderId.replace(/:\d+/, "");
-                    const participant = chat.participants.find(p => p.id._serialized === cleanSenderId);
-                    isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
-                }
-            } catch (err) { }
-
             if (!isAdmin) {
                 try { await message.delete(true); } catch(e) {} 
                 let warnings = badWordWarningTracker.get(senderId) || 0;
@@ -737,17 +726,6 @@ client.on("message_create", async (message) => {
                                 textLower.includes("තත්වයක් තුළ මෙම සමූහය");
 
         if (isStatusMention) {
-            let isAdmin = false;
-            try {
-                const chat = await message.getChat();
-                if (chat && chat.participants) {
-                    // 💡 වෙනස්කම 3: Status Mention එකේදී Admin ව අඳුරගැනීම
-                    const cleanSenderId = senderId.replace(/:\d+/, "");
-                    const participant = chat.participants.find(p => p.id._serialized === cleanSenderId);
-                    isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
-                }
-            } catch (err) { }
-
             if (!isAdmin) {
                 try { await message.delete(true); } catch(e) {} 
                 
@@ -826,7 +804,7 @@ client.on("message_create", async (message) => {
         // ⏳ DEADLINE COUNTDOWN FEATURE
         // ==========================================
         else if (msgCommand === "/deadline") {
-            // 💡 මෙතන තියෙන දිනය (2026-10-15) ඔයාගේ නියම deadline එකට වෙනස් කරගන්න
+            // 💡 මෙතන තියෙන දිනය (2026-09-27) ඔයාගේ නියම deadline එකට වෙනස් කරගන්න
             const deadlineDate = new Date("2026-09-27T23:59:59").getTime(); 
             const now = new Date().getTime();
             const timeLeft = deadlineDate - now;
