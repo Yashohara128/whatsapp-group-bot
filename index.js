@@ -1006,27 +1006,34 @@ async function checkSpam(message, senderId, name, groupId) {
     }
 }
 
-// 📢 ADMIN BROADCAST COMMAND
+// =========================================================
+// 📢 DIRECT ADMIN BROADCAST HANDLER
+// =========================================================
 client.on("message_create", async (message) => {
     try {
-        const sender = message.author || message.from;
         const msgText = message.body ? message.body.trim() : "";
 
+        // Check if it's a broadcast command
         if (msgText.startsWith("/broadcast")) {
-            // Number එකේ තියෙන අකුරු/සංකේත ඔක්කොම අයින් කරලා ඉලක්කම් විතරක් වෙන් කරගන්නවා
-            const cleanSender = sender.replace(/\D/g, ""); 
-            const isAdmin = EXTRA_ADMINS.some(admin => admin.replace(/\D/g, "") === cleanSender);
+            // Get sender's pure phone number digits
+            const rawSender = message.author || message.from;
+            const senderDigits = rawSender.replace(/\D/g, "");
 
-            console.log(`Checking Admin: ${cleanSender} -> Is Admin? ${isAdmin}`);
+            console.log(`[BROADCAST ATTEMPT] Sender: ${rawSender} -> Digits: ${senderDigits}`);
+
+            // Check against EXTRA_ADMINS array
+            const isAdmin = EXTRA_ADMINS.some(admin => admin.replace(/\D/g, "") === senderDigits);
 
             if (!isAdmin) {
-                console.log("❌ Not authorized for broadcast.");
+                console.log(`❌ [BROADCAST DENIED] ${senderDigits} is not in EXTRA_ADMINS.`);
                 return;
             }
 
+            console.log(`✅ [BROADCAST AUTHORIZED] Sending update to groups...`);
+
             const textToSend = "📢 *IFSLS SMART BOT UPDATE!* 🤖✨\n\n" +
                                "ළමයි, ඔයාලගේ IFSLS Assistant Bot එකට අලුත් Commands එකතු කරලා Update කළා! 🎉\n\n" +
-                               "🆓 අලුතින් එකතු වූ Features බලන්න පහත කමාන්ඩ්ස් ගෲප් එකට Send කරලා බලන්න:\n" +
+                               "🆓 අලුත් Features බලන්න පහත කමාන්ඩ්ස් ගෲප් එකට Send කරලා බලන්න:\n" +
                                "📌 */onlinecertificate* - Certificate Online ගෙන්න ගන්නා හැටි (Video සමඟ)\n" +
                                "📌 */coursechange* - Course Change Letter Format\n" +
                                "📌 */ugccancel* - UGC Registration Cancel කරන හැටි\n" +
@@ -1049,7 +1056,7 @@ client.on("message_create", async (message) => {
             return;
         }
 
-        // 2️⃣ සාමාන්‍ය Commands වලට උත්තර දෙන කොටස
+        // Standard command handling
         const msgCommand = msgText.toLowerCase();
 
         if (ifslsAnswers[msgCommand]) {
@@ -1063,7 +1070,8 @@ client.on("message_create", async (message) => {
         }
 
     } catch (error) {
-        console.error("Broadcast Error:", error);
+        console.error("Broadcast Execution Error:", error);
     }
 });
+
 client.initialize();
