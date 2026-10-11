@@ -661,7 +661,7 @@ client.on("group_join", async (notification) => {
                 continue;
             }
 
-            const welcomeMsg = `🎓 *Welcome to IFSLS 11th ഇNTAKE MAIN GROUP* 🎓\n\n👋 Hello / ආයුබෝවන් @${info.actualNumber},\n\nPlease follow these group guidelines to maintain a good learning environment.\nකරුණාකර සමූහයේ යහපැවැත්ම උදෙසා පහත නීති මාලාව පිළිපදින්න.\n\n*GROUP RULES / නීති මාලාව:*\n1️⃣ Be respectful to everyone.\n(සියලුම සාමාජිකයින්ට ගෞරවයෙන් සලකන්න.)\n\n2️⃣ 🚫 No Spamming or flooding messages.\n(අනවශ්‍ය පණිවිඩ යැවීමෙන් වළකින්න.)\n\n3️⃣ 🚫 No unauthorized links (Other WhatsApp groups, Telegram, Scam/Business links). Only educational links are allowed.\n(වෙනත් WhatsApp Group, Telegram හෝ ව්‍යාපාරික ලින්ක් දැමීම සපුරා තහනම්. අධ්‍යාපනික ලින්ක් සඳහා පමණක් අවසර ඇත.)\n\n4️⃣ 🎓 For further questions regarding student loans, please contact the group admins. Please watch the YouTube playlist below for more information.\n(ශිෂ්‍ය ණය පිළිබඳ වැඩිදුර ප්‍රශ්න සඳහා සමූහයේ Admin වරුන් සම්බන්ධ කරගන්න. ණය පිළිබඳ සියලුම තොරතුරු දැනගැනීමට පහත YouTube Playlist එක අනිවාර්යයෙන්ම නරඹන්න.)\n📺 *YouTube Playlist:* https://youtube.com/playlist?list=PL-ZbzAh0pKykpa-odcUrDEg94PBbTQp9M&si=F9L3Spy-pLZJq31n\n\n⚠️ *Note:* Breaking these rules will result in an automatic permanent ban by the system.\n(මෙම නීති කඩකරන අයව පද්ධතිය මගින් ස්වයංක්‍රීයව සමූහයෙන් ඉවත් කරනු ලැබේ.)\n\nThank you! / ස්තූතියි!\n🤖 _System Generated Message. Please do not reply._`;
+            const welcomeMsg = `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓\n\n👋 Hello / ආයුබෝවන් @${info.actualNumber},\n\nPlease follow these group guidelines to maintain a good learning environment.\nකරුණාකර සමූහයේ යහපැවැත්ම උදෙසා පහත නීති මාලාව පිළිපදින්න.\n\n*GROUP RULES / නීති මාලාව:*\n1️⃣ Be respectful to everyone.\n(සියලුම සාමාජිකයින්ට ගෞරවයෙන් සලකන්න.)\n\n2️⃣ 🚫 No Spamming or flooding messages.\n(අනවශ්‍ය පණිවිඩ යැවීමෙන් වළකින්න.)\n\n3️⃣ 🚫 No unauthorized links (Other WhatsApp groups, Telegram, Scam/Business links). Only educational links are allowed.\n(වෙනත් WhatsApp Group, Telegram හෝ ව්‍යාපාරික ලින්ක් දැමීම සපුරා තහනම්. අධ්‍යාපනික ලින්ක් සඳහා පමණක් අවසර ඇත.)\n\n4️⃣ 🎓 For further questions regarding student loans, please contact the group admins. Please watch the YouTube playlist below for more information.\n(ශිෂ්‍ය ණය පිළිබඳ වැඩිදුර ප්‍රශ්න සඳහා සමූහයේ Admin වරුන් සම්බන්ධ කරගන්න. ණය පිළිබඳ සියලුම තොරතුරු දැනගැනීමට පහත YouTube Playlist එක අනිවාර්යයෙන්ම නරඹන්න.)\n📺 *YouTube Playlist:* https://youtube.com/playlist?list=PL-ZbzAh0pKykpa-odcUrDEg94PBbTQp9M&si=F9L3Spy-pLZJq31n\n\n⚠️ *Note:* Breaking these rules will result in an automatic permanent ban by the system.\n(මෙම නීති කඩකරන අයව පද්ධතිය මගින් ස්වයංක්‍රීයව සමූහයෙන් ඉවත් කරනු ලැබේ.)\n\nThank you! / ස්තූතියි!\n🤖 _System Generated Message. Please do not reply._`;
 
             await client.sendMessage(userId, welcomeMsg, { mentions: [userId] });
             console.log(`✅ First Welcome successfully sent to: ${info.name}`);
@@ -679,6 +679,12 @@ client.on("group_join", async (notification) => {
                                      `📌 */applysteps* - අයදුම් කිරීමේ පියවර.\n` +
                                      `📌 */afterapplysteps* - අයදුම් කිරීමෙන් පසු.\n` +
                                      `📌 */ministrycontact* - Ministry Department එක contact කරන විදිහ\n\n` +
+                                     `📌 */onlinecertificate* - O/L & A/L Exam Certificates Online ගෙන්න ගන්නා හැටි\n` +
+                                     `📌 */coursechange* - Course Change Letter Format\n` +
+                                     `📌 */ugccancel* - UGC Registration Cancel කරන හැටි\n` +
+                                     `📌 */jobs* - Internships සහ Jobs විස්තර\n` +
+                                     `📌 */boarding* - බෝඩිම් / Accommodation Web & Video\n`+
+                
                                      `📄 *Guide Books (භාෂා 3න්ම):*\n` +
                                      `🇱🇰 */guidepdf-si* (සිංහල මාර්ගෝපදේශකය)\n` +
                                      `🌍 */guidepdf-ta* (දෙමළ මාර්ගෝපදේශකය)\n` +
@@ -909,6 +915,12 @@ client.on("message_create", async (message) => {
                             `📌 */specialnotes* - interview සදහා වැදගත් වන විස්තර\n` +
                             `⏰ */deadline* - අවසන් දිනය\n` +
                             `✅ */ministrycontact* - Ministry Department එක contact කරන විදිහ\n\n` +
+                            `📌 */onlinecertificate* - O/L & A/L Exam Certificates Online ගෙන්න ගන්නා හැටි\n` +
+                            `📌 */coursechange* - Course Change Letter Format\n` +
+                            `📌 */ugccancel* - UGC Registration Cancel කරන හැටි\n` +
+                            `📌 */jobs* - Internships සහ Jobs විස්තර \n` +
+                            `📌 */boarding* - බෝඩිම් / Accommodation Web & Video\n`+
+
                             `*📄 මාර්ගෝපදේශක PDF (භාෂා 3න්ම):*\n` +
                             `🇱🇰 */guidepdf-si* - සිංහල මාර්ගෝපදේශකය\n` +
                             `🌍 */guidepdf-ta* - දෙමළ මාර්ගෝපදේශකය\n` +
