@@ -1013,15 +1013,20 @@ client.on("message_create", async (message) => {
         const msgText = message.body ? message.body.trim() : "";
 
         if (msgText.startsWith("/broadcast")) {
-            // @c.us සහ @s.whatsapp.net අයින් කරලා Phone number එක විතරක් ගන්නවා
-            const cleanSender = sender.replace("@c.us", "").replace("@s.whatsapp.net", "");
-            const isAdmin = EXTRA_ADMINS.includes(cleanSender);
+            // Number එකේ තියෙන අකුරු/සංකේත ඔක්කොම අයින් කරලා ඉලක්කම් විතරක් වෙන් කරගන්නවා
+            const cleanSender = sender.replace(/\D/g, ""); 
+            const isAdmin = EXTRA_ADMINS.some(admin => admin.replace(/\D/g, "") === cleanSender);
 
-            if (!isAdmin) return; // Admin නැත්නම් මුකුත් කරන්නේ නෑ
+            console.log(`Checking Admin: ${cleanSender} -> Is Admin? ${isAdmin}`);
+
+            if (!isAdmin) {
+                console.log("❌ Not authorized for broadcast.");
+                return;
+            }
 
             const textToSend = "📢 *IFSLS SMART BOT UPDATE!* 🤖✨\n\n" +
-                               "ළමයි, ඔයාලගේ IFSLS Assistant Bot එකට අලුත් අංග සහ Commands එකතු කරලා Update කළා! 🎉\n\n" +
-                               "🆓 අලුතින් එකතු වූ පහසුකම් බලන්න පහත කමාන්ඩ්ස් ගෲප් එකට Send කරලා බලන්න:\n" +
+                               "ළමයි, ඔයාලගේ IFSLS Assistant Bot එකට අලුත් Commands එකතු කරලා Update කළා! 🎉\n\n" +
+                               "🆓 අලුතින් එකතු වූ Features බලන්න පහත කමාන්ඩ්ස් ගෲප් එකට Send කරලා බලන්න:\n" +
                                "📌 */onlinecertificate* - Certificate Online ගෙන්න ගන්නා හැටි (Video සමඟ)\n" +
                                "📌 */coursechange* - Course Change Letter Format\n" +
                                "📌 */ugccancel* - UGC Registration Cancel කරන හැටි\n" +
@@ -1044,7 +1049,7 @@ client.on("message_create", async (message) => {
             return;
         }
 
-        // 2️⃣ සාමාන්‍ය Bot Commands (Answers)
+        // 2️⃣ සාමාන්‍ය Commands වලට උත්තර දෙන කොටස
         const msgCommand = msgText.toLowerCase();
 
         if (ifslsAnswers[msgCommand]) {
@@ -1052,7 +1057,7 @@ client.on("message_create", async (message) => {
             return;
         }
 
-        if (campusAnswers[msgCommand]) {
+        if (typeof campusAnswers !== 'undefined' && campusAnswers[msgCommand]) {
             await message.reply(campusAnswers[msgCommand]);
             return;
         }
