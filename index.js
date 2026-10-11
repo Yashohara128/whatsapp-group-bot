@@ -160,12 +160,12 @@ const ifslsAnswers = {
 
     "/coursechange": "📝 *Course Change Letter Structure:*\n\n" +
                      "ඔබට Course එකක් හෝ Campus එකක් වෙනස් කරගැනීමට අවශ්‍ය නම් අමාත්‍යාංශයට යොමු කළ යුතු Letter එකේ Format එක මෙන්න:\n\n" +
-                     "🔗 [ඔයාගේ_Drive_Link_එක]",
+                     "🔗 [Link will be updated soon]",
 
     "/ugccancel": "🚫 *UGC (රජයේ කැම්පස්) ලියාපදිංචිය අවලංගු කර පාසල් අස්වීමේ සහතිකය ලබාගැනීම:*\n\n" +
                   "ඔබ රජයේ විශ්වවිද්‍යාලයකට (UGC) තේරීපත්වී, පසුව IFSLS ණය යෝජනා ක්‍රමය යටතේ වෙනත් කැම්පස් එකකට යාමට අපේක්ෂා කරන්නේ නම්, UGC ලියාපදිංචිය නිල වශයෙන් අවලංගු කර (Cancel කර) පාසල් අස්වීමේ සහතිකය (School Leaving Certificate) ලබාගත යුතුය.\n\n" +
                   "📁 *අදාළ Official Document Form එක මෙතනින් ඩවුන්ලෝඩ් කරගන්න:*\n" +
-                  "🔗 [ඔයාගේ_Drive_Link_එක]",
+                  "🔗 [https://drive.google.com/file/d/113EmLqJJeRiPHdwp4XNJKZhlBIxsb1uR/view?usp=sharing]",
 
     "/laptopguide": "💻 *Undergraduate Laptop Buying Guide 2026*\n\n" +
                     "හැමෝම මේ දවස් වල campus apply කරන ගමන් නේ. ඉතින් ගොඩක් අයට එන ප්‍රශ්නයක් තමා කොහොමද අපි අපේ ඉස්සරහට degree එකට ගැලපෙන laptop model එකක් එහෙම නැත්නම් PC එකක් select කරගන්නේ කියල. \n\n" +
@@ -1005,5 +1005,46 @@ async function checkSpam(message, senderId, name, groupId) {
         }
     }
 }
+
+// 📢 ADMIN BROADCAST COMMAND
+client.on("message_create", async (message) => {
+    try {
+        const sender = message.author || message.from;
+        const msgText = message.body ? message.body.trim() : "";
+
+        // /broadcast කියලා විතරක් එව්වාම මේ Message එක යනවා
+        if (msgText.startsWith("/broadcast")) {
+            const isAdmin = EXTRA_ADMINS.includes(sender);
+            if (!isAdmin) return;
+
+            // 📝 මෙන්න මෙතනට තමා BROADCAST වෙන MESSAGE එක දාලා තියෙන්නේ:
+            const textToSend = "📢 *IFSLS SMART BOT UPDATE!* 🤖✨\n\n" +
+                               "ළමයි, ඔයාලගේ IFSLS Assistant Bot අලුත් Commands ටිකක් Add කරලා Update කළා! 🎉\n\n" +
+                               "🆓 අලුතින් එකතු වූ පහසුකම් බලන්න පහත කමාන්ඩ්ස් ගෲප් එකට Send කරලා බලන්න:\n" +
+                               "📌 */onlinecertificate* - Certificate Online ගෙන්න ගන්නා හැටි (Video සමඟ)\n" +
+                               "📌 */coursechange* - Course Change Letter Format\n" +
+                               "📌 */ugccancel* - UGC Registration Cancel කරන හැටි\n" +
+                               "📌 */jobs* - Internships & Job Opportunities\n" +
+                               "📌 */boarding* - බෝඩිම් / Accommodation Web & Video\n" +
+                               "📌 */laptopguide* - Degree එකට හරියන Laptop Buying Guide\n\n" +
+                               "💡 *සියලුම Commands බලාගැනීමට /menu ලෙස Type කරන්න.*";
+
+            let count = 0;
+            for (const groupId of TARGET_GROUP_IDS) {
+                try {
+                    await client.sendMessage(groupId, textToSend);
+                    count++;
+                } catch (err) {
+                    console.error(`Failed to send to ${groupId}:`, err);
+                }
+            }
+
+            await message.reply(`✅ *Broadcast Complete!* Message sent to ${count} groups.`);
+            return;
+        }
+    } catch (error) {
+        console.error("Broadcast Error:", error);
+    }
+});
 
 client.initialize();
