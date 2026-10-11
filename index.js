@@ -150,106 +150,101 @@ const ifslsAnswers = {
                      "GOOD LUCK & ALL THE BEST! 🍀🎓❤️\n\n" +
                      "IFSLS STUDENT COMMUNITY",
 
-
-           "/onlinecertificate": "📜 *Online A/L & O/L Exam Certificates ගෙදරටම ගෙන්වා ගන්නා ආකාරය:*\n\n" +
+"/onlinecertificate": "📜 *Online A/L & O/L Exam Certificates ගෙදරටම ගෙන්වා ගන්නා ආකාරය:*\n\n" +
                           "සහතිකය Online මඟින් අයදුම් කර ගෙදරටම ගෙන්වා ගැනීමට පහත පියවර අනුගමනය කරන්න:\n" +
                           "1️⃣ Department of Examinations නිල වෙබ් අඩවියට පිවිසෙන්න: https://doenets.lk\n" +
                           "2️⃣ එහි ඇති 'Online Certificate Application' හරහා Apply කරන්න.\n" +
-                          "3️⃣ ගාස්තුව Online හෝ තැපැල් කාර්යාලය හරහා ගෙවා  දින කිහිපයකින් Post එකෙන් සහතිකය ගෙදරටම ගෙන්වා ගන්න.\n\n" +
+                          "3️⃣ ගාස්තුව Online හෝ තැපැල් කාර්යාලය හරහා ගෙවා දින කිහිපයකින් Post එකෙන් සහතිකය ගෙදරටම ගෙන්වා ගන්න.\n\n" +
                           "🎥 *වීඩියෝ මාර්ගෝපදේශය (Video Guide):*\n" +
                           "🔗 https://www.facebook.com/share/v/1JxcGvZMoQ/",
 
-            "/coursechange": "📝 *Course Change Letter Structure:*\n\n" +
-             "ඔබට Course එකක් හෝ Campus එකක් වෙනස් කරගැනීමට අවශ්‍ය නම් අමාත්‍යාංශයට යොමු කළ යුතු Letter එකේ Format එක මෙන්න:\n\n" +
-             "🔗 []",
+    "/coursechange": "📝 *Course Change Letter Structure:*\n\n" +
+                     "ඔබට Course එකක් හෝ Campus එකක් වෙනස් කරගැනීමට අවශ්‍ය නම් අමාත්‍යාංශයට යොමු කළ යුතු Letter එකේ Format එක මෙන්න:\n\n" +
+                     "🔗 [ඔයාගේ_Drive_Link_එක]",
 
-
-             "/ugccancel": "🚫 *UGC (රජයේ කැම්පස්) ලියාපදිංචිය අවලංගු කර පාසල් අස්වීමේ සහතිකය ලබාගැනීම:*\n\n" +
+    "/ugccancel": "🚫 *UGC (රජයේ කැම්පස්) ලියාපදිංචිය අවලංගු කර පාසල් අස්වීමේ සහතිකය ලබාගැනීම:*\n\n" +
                   "ඔබ රජයේ විශ්වවිද්‍යාලයකට (UGC) තේරීපත්වී, පසුව IFSLS ණය යෝජනා ක්‍රමය යටතේ වෙනත් කැම්පස් එකකට යාමට අපේක්ෂා කරන්නේ නම්, UGC ලියාපදිංචිය නිල වශයෙන් අවලංගු කර (Cancel කර) පාසල් අස්වීමේ සහතිකය (School Leaving Certificate) ලබාගත යුතුය.\n\n" +
                   "📁 *අදාළ Official Document Form එක මෙතනින් ඩවුන්ලෝඩ් කරගන්න:*\n" +
-                  "🔗 []",
+                  "🔗 [ඔයාගේ_Drive_Link_එක]",
 
+    "/laptopguide": "💻 *Undergraduate Laptop Buying Guide 2026*\n\n" +
+                    "හැමෝම මේ දවස් වල campus apply කරන ගමන් නේ. ඉතින් ගොඩක් අයට එන ප්‍රශ්නයක් තමා කොහොමද අපි අපේ ඉස්සරහට degree එකට ගැලපෙන laptop model එකක් එහෙම නැත්නම් PC එකක් select කරගන්නේ කියල. \n\n" +
+                    "ඉතින් undergraduate level එකේ ඉන්න ඔයාලට ඉස්සෙල්ලම කියන්න ඕන studio එකක් කරන ගානට යන performance ඕන devices මේ කාලෙට අවශ්‍ය නැ කියන එක. මොකද ඔයාලා invest කරල buy කරන්නෙ නෑ නේද තාම? හැමෝටම ආර්ථික පැත්තෙන් අඩුපාඩුකම් තියනවා නේ. ඉතින් normally day to day campus වැඩ ටික කරගන්න model එකක් select කරගන්න විදිහ අපි බලමු. මමත් undergraduate level එකේ ඉන්න නිසා මගේ personal experience එක, knowledge එක මම share කරගන්නවා ඔයාලත් එක්ක 😊💗\n\n" +
+                    "📌 *Question 01*\n" +
+                    "මම යන්න ඕන Brand new ද used condition laptop එකකටද?\n\n" +
+                    "✅ *Answer:*\n" +
+                    "ඒක සම්පූර්ණයෙන්ම තීරණය වෙන්නේ ඔයාගේ budget එක මත. හිතන්න ඔයාගේ අතේ මේ වෙලාවේ තියෙන්නේ රුපියල් 80,000ක් වගේ. ඉතින් එතනින් එහාට ඔයාට සල්ලි නැහැ. හැමෝම දන්නවා 80කට brand new එකකට යන්න අමාරුයි කියලා. ඉතින් 80ට ගැලපෙන හොඳම conditions තියෙන used model එකකට ඔයාට යන්න වෙනවා.\n\n" +
+                    "📌 *Question 02*\n" +
+                    "Used model එකක් purchase කරනකොට බලන්න ඕන දේවල් මොනවද?\n\n" +
+                    "✅ *Answer:*\n" +
+                    "මේක හොඳ ප්‍රශ්නයක්! ඉහේ කෙස් ගානට laptop sell කරන shops තියෙනවා දැන් ලංකාවේ. ඒ අස්සේ බාල කුණු ගොඩවල් විකුණන shops තියෙනවා customer ගොනාට විකුණලා. ඉතින් ඔයාලා purchase කරන second hand device එක ගන්න කලින් එතනින් අහලා දැනගන්න ඒ device එක Refurbished laptop එකක් ද කියලා. කොයි වෙලාවකවත් refurbished model එකකට යන්න එපා! මොකද hardware parts ගොඩක් දුරට original parts නෙවේ. ඉතින් ඔයාලා long term 4 Year + use කරන්න බලාපොරොත්තු වෙන නිසා 'A+ Grade' කියල models තියෙනවා, ඒ model එකකට යන්න.\n\n" +
+                    "📌 *Question 03*\n" +
+                    "හරි A+ grade එකක් තෝරගත්තා, කොහොමද අපි ඒක check කරගන්නේ හරියට shop එකේදි?\n\n" +
+                    "✅ *Answer:*\n" +
+                    "ඔයා කලින් Model එක select කරගෙන යනවනං shop එකෙන් ඒ model එක ඔයාට පෙන්නයි. මේ වැඩේට පැයක් 2ක් වගේ යයි. මතක ඇතුව ඔයා යනකොට pen එකකට හොඳ high quality video clip එකක් download කරගෙන දාලා අරගෙන යන්න.\n\n" +
+                    "1️⃣ **Physical Condition:** laptop එක අතට දුන්නහම physical conditions check කරන්න. කොන් තැලිලා සිරිලා තියෙනවනම් purchase කරන්න එපා 👋\n" +
+                    "2️⃣ **Ports Check:** pen drive එක USB ports වලට plug කර කර බලන්න. issue එකක් නැතුව pen එක වැඩනම් USB OK ✅ අනිත් ports ටිකත් check කරගන්න.\n" +
+                    "3️⃣ **Display, Sound & Battery:** pen drive එකේ video එක play කරන්න. brightness full වැඩි කරලා, charge එකේ තියෙනවනං unplug කරන්න. speakers volume එක 75%ක් දාලා sounds check කරන්න. display එකේ burn marks එහෙම තියෙනවද බලාගන්න. විනාඩි 10ක් විතර video එක play කරන්න.\n" +
+                    "4️⃣ **WiFi Connection:** shop එකෙන් wifi connect කරලා connections stable ද බලන්න.\n\n" +
+                    "📌 *Question 04*\n" +
+                    "Warranty Period එක කොහොමද Decide කරන්නෙ?\n\n" +
+                    "✅ *Answer:*\n" +
+                    "Usually warranty period එක used වලට මාස 3 - 6ක් ලැබෙනවා. සති ගණන් වල Checking warranty විතරක් කියන තැන් වලින් laptop ගන්න එපා ❌\n\n" +
+                    "📌 *Question 05*\n" +
+                    "ඔය ඔක්කොම හරි කියමු, performance කොහොමද select කරගන්න ඕන?\n\n" +
+                    "✅ *Answer:*\n" +
+                    "දැන් තමා හොඳම ප්‍රශ්නේ! Degree එක එක්ක බලමු අඩුම තියෙන්න ඕන specs ටික:\n\n" +
+                    "📝 **IT Degree එකකට (Minimum Specs):**\n" +
+                    "• **CPU:** Core i5 8th gen UP (eg: 8600U / 8300H - H නම් high performance, U නම් battery life එකට හොඳයි)\n" +
+                    "• **RAM:** 16GB Must or Upper\n" +
+                    "• **Storage:** 512GB - 2TB SSD (M.2 හෝ NVMe support වෙන්න ඕන)\n" +
+                    "• **OS:** Windows 11 64-bit\n" +
+                    "• **GRAPHIC CARD:** INTEL UHD ඇති සාමාන්‍ය IT Degree එකකටනම් Multimedia වගේ Special Degree එකක්නම් Minimum RTX 2050 වගේ card එකකට යන්න (Equal to GTX 1060) \n\n" +
+                    "📝 **Engineering / Management / Art (IT නොවන ඕනම Degree එකකට):**\n" +
+                    "• **CPU:** Core i5 8th gen UP\n" +
+                    "• **RAM:** 8GB\n" +
+                    "• **Storage:** 256GB - 1TB SSD (M.2 NVMe)\n\n" +
+                    "📌 *Question 06*\n" +
+                    "මට brand new laptop එකකට යන්න ඕන, budget එක 2Lakh වගේ තියෙනවා. මම මොකද කරන්නේ?\n\n" +
+                    "✅ *Answer:*\n" +
+                    "ප්‍රශ්නයක් නැහැ! ඔයා මොන degree එක කරත් brand new ඒ ගානට යනවනං minimum i5 12th gen / 13th gen වගේ performance තියෙන laptop එකකට යන්න 😊👋\n\n" +
+                    "📌 *Question 07*\n" +
+                    "ඔය ඔක්කොම කිව්වේ intel වලටනෙ, AMD Ryzen යනවනං කොහොමද?\n\n" +
+                    "✅ *Answer:*\n" +
+                    "Ryzen වගේ යනවනං Ryzen 5 5000 series එකක් වගේ බලන්න minimum brand new ගන්නකොට.\n\n" +
+                    "📌 *Question 08*\n" +
+                    "එතකොට MacBook එකකට යන්න එපාද?\n\n" +
+                    "✅ *Answer:*\n" +
+                    "සල්ලි තියෙනවනම් අවුලක් නැහැ 😂 යන්න අනේ! හැබැයි issues තියෙනවා. ඔයා IT කරන කෙනෙක් නම් ගොඩක් virtual machines වගේ run කරන්න වෙනවා. එතකොට පොඩි පොඩි issues එනවා, dual booting කරන්න අමාරුයි. තව ගොඩක් අය crack software use කරන්නේ (ලංකාවේ කවුද genuine software පාවිච්චි කරන්නේ 😂🤭). Apple වල security එකත් එක්ක crack software වල ප්‍රශ්න ඇති වෙනවා ☹️. හොඳම දේ undergraduate වශයෙන් risk එකක් නොගෙන Windows වලට යන්න 😊✅\n\n" +
+                    "📌 *Question 09*\n" +
+                    "අපිට used and brand new යනවනං හොඳ laptop models මොනවද?\n\n" +
+                    "✅ *Answer:*\n" +
+                    "Brand එක මත depend වෙන්න එපා කොයි වෙලාවකවත්. හැම brand එකකම මොක්ක හරි issue එකක් තියෙනවා.\n\n" +
+                    "🔴 **Recommended Used Models :**\n" +
+                    "• Dell Vostro / Latitude\n" +
+                    "• Acer Aspire\n" +
+                    "• HP EliteBook\n" +
+                    "• Lenovo ThinkPad T Series & Yoga Series \n\n" +
+                    "🔴 **Brand New Budget Friendly:**\n" +
+                    "• Asus ExpertBook / VivoBook\n" +
+                    "• HP Pavilion / Notebooks\n" +
+                    "• Acer Aspire 5 or upper\n" +
+                    "• Lenovo ThinkBook / IdeaPad\n\n" +
+                    "🔴 **Gaming Series:**\n" +
+                    "• HP Victus\n" +
+                    "• Asus TUF\n" +
+                    "• MSI Cyber\n" +
+                    "• Lenovo Legion\n" +
+                    "• Lenovo LOQ",
 
-"/laptopguide": "💻 *Undergraduate Laptop Buying Guide 2026*\n\n" +
-                   "හැමෝම මේ දවස් වල campus apply කරන ගමන් නේ. ඉතින් ගොඩක් අයට එන ප්‍රශ්නයක් තමා කොහොමද අපි අපේ ඉස්සරහට degree එකට ගැලපෙන laptop model එකක් එහෙම නැත්නම් PC එකක් select කරගන්නේ කියල. \n\n" +
-                   "ඉතින් undergraduate level එකේ ඉන්න ඔයාලට ඉස්සෙල්ලම කියන්න ඕන studio එකක් කරන ගානට යන performance ඕන devices මේ කාලෙට අවශ්‍ය නැ කියන එක. මොකද ඔයාලා invest කරල buy කරන්නෙ නෑ නේද තාම? හැමෝටම ආර්ථික පැත්තෙන් අඩුපාඩුකම් තියනවා නේ. ඉතින් normally day to day campus වැඩ ටික කරගන්න model එකක් select කරගන්න විදිහ අපි බලමු. මමත් undergraduate level එකේ ඉන්න නිසා මගේ personal experience එක, knowledge එක මම share කරගන්නවා ඔයාලත් එක්ක 😊💗\n\n" +
-                   "📌 *Question 01*\n" +
-                   "මම යන්න ඕන Brand new ද used condition laptop එකකටද?\n\n" +
-                   "✅ *Answer:*\n" +
-                   "ඒක සම්පූර්ණයෙන්ම තීරණය වෙන්නේ ඔයාගේ budget එක මත. හිතන්න ඔයාගේ අතේ මේ වෙලාවේ තියෙන්නේ රුපියල් 80,000ක් වගේ. ඉතින් එතනින් එහාට ඔයාට සල්ලි නැහැ. හැමෝම දන්නවා 80කට brand new එකකට යන්න අමාරුයි කියලා. ඉතින් 80ට ගැලපෙන හොඳම conditions තියෙන used model එකකට ඔයාට යන්න වෙනවා.\n\n" +
-                   "📌 *Question 02*\n" +
-                   "Used model එකක් purchase කරනකොට බලන්න ඕන දේවල් මොනවද?\n\n" +
-                   "✅ *Answer:*\n" +
-                   "මේක හොඳ ප්‍රශ්නයක්! ඉහේ කෙස් ගානට laptop sell කරන shops තියෙනවා දැන් ලංකාවේ. ඒ අස්සේ බාල කුණු ගොඩවල් විකුණන shops තියෙනවා customer ගොනාට විකුණලා. ඉතින් ඔයාලා purchase කරන second hand device එක ගන්න කලින් එතනින් අහලා දැනගන්න ඒ device එක Refurbished laptop එකක් ද කියලා. කොයි වෙලාවකවත් refurbished model එකකට යන්න එපා! මොකද hardware parts ගොඩක් දුරට original parts නෙවේ. ඉතින් ඔයාලා long term 4 Year + use කරන්න බලාපොරොත්තු වෙන නිසා 'A+ Grade' කියල models තියෙනවා, ඒ model එකකට යන්න.\n\n" +
-                   "📌 *Question 03*\n" +
-                   "හරි A+ grade එකක් තෝරගත්තා, කොහොමද අපි ඒක check කරගන්නේ හරියට shop එකේදි?\n\n" +
-                   "✅ *Answer:*\n" +
-                   "ඔයා කලින් Model එක select කරගෙන යනවනං shop එකෙන් ඒ model එක ඔයාට පෙන්නයි. මේ වැඩේට පැයක් 2ක් වගේ යයි. මතක ඇතුව ඔයා යනකොට pen එකකට හොඳ high quality video clip එකක් download කරගෙන දාලා අරගෙන යන්න.\n\n" +
-                   "1️⃣ **Physical Condition:** laptop එක අතට දුන්නහම physical conditions check කරන්න. කොන් තැලිලා සිරිලා තියෙනවනම් purchase කරන්න එපා 👋\n" +
-                   "2️⃣ **Ports Check:** pen drive එක USB ports වලට plug කර කර බලන්න. issue එකක් නැතුව pen එක වැඩනම් USB OK ✅ අනිත් ports ටිකත් check කරගන්න.\n" +
-                   "3️⃣ **Display, Sound & Battery:** pen drive එකේ video එක play කරන්න. brightness full වැඩි කරලා, charge එකේ තියෙනවනං unplug කරන්න. speakers volume එක 75%ක් දාලා sounds check කරන්න. display එකේ burn marks එහෙම තියෙනවද බලාගන්න. විනාඩි 10ක් විතර video එක play කරන්න.\n" +
-                   "4️⃣ **WiFi Connection:** shop එකෙන් wifi connect කරලා connections stable ද බලන්න.\n\n" +
-                   "📌 *Question 04*\n" +
-                   "Warranty Period එක කොහොමද Decide කරන්නෙ?\n\n" +
-                   "✅ *Answer:*\n" +
-                   "Usually warranty period එක used වලට මාස 3 - 6ක් ලැබෙනවා. සති ගණන් වල Checking warranty විතරක් කියන තැන් වලින් laptop ගන්න එපා ❌\n\n" +
-                   "📌 *Question 05*\n" +
-                   "ඔය ඔක්කොම හරි කියමු, performance කොහොමද select කරගන්න ඕන?\n\n" +
-                   "✅ *Answer:*\n" +
-                   "දැන් තමා හොඳම ප්‍රශ්නේ! Degree එක එක්ක බලමු අඩුම තියෙන්න ඕන specs ටික:\n\n" +
-                   "📝 **IT Degree එකකට (Minimum Specs):**\n" +
-                   "• **CPU:** Core i5 8th gen UP (eg: 8600U / 8300H - H නම් high performance, U නම් battery life එකට හොඳයි)\n" +
-                   "• **RAM:** 16GB Must or Upper\n" +
-                   "• **Storage:** 512GB - 2TB SSD (M.2 හෝ NVMe support වෙන්න ඕන)\n" +
-                   "• **OS:** Windows 11 64-bit\n\n" +
-                   "• **GRAPHIC CARD:** INTEL UHD ඇති සාමාන්‍ය IT Degree එකකටනම් Multimedia වගේ Special Degree එකක්නම් Minimum RTX 2050 වගේ card එකකට යන්න (Equal to GTX 1060) \n\n" +
-                   "📝 **Engineering / Management / Art (IT නොවන ඕනම Degree එකකට):**\n" +
-                   "• **CPU:** Core i5 8th gen UP\n" +
-                   "• **RAM:** 8GB\n" +
-                   "• **Storage:** 256GB - 1TB SSD (M.2 NVMe)\n\n" +
-                   "📌 *Question 06*\n" +
-                   "මට brand new laptop එකකට යන්න ඕන, budget එක 2Lakh වගේ තියෙනවා. මම මොකද කරන්නේ?\n\n" +
-                   "✅ *Answer:*\n" +
-                   "ප්‍රශ්නයක් නැහැ! ඔයා මොන degree එක කරත් brand new ඒ ගානට යනවනං minimum i5 12th gen / 13th gen වගේ performance තියෙන laptop එකකට යන්න 😊👋\n\n" +
-                   "📌 *Question 07*\n" +
-                   "ඔය ඔක්කොම කිව්වේ intel වලටනෙ, AMD Ryzen යනවනං කොහොමද?\n\n" +
-                   "✅ *Answer:*\n" +
-                   "Ryzen වගේ යනවනං Ryzen 5 5000 series එකක් වගේ බලන්න minimum brand new ගන්නකොට.\n\n" +
-                   "📌 *Question 08*\n" +
-                   "එතකොට MacBook එකකට යන්න එපාද?\n\n" +
-                   "✅ *Answer:*\n" +
-                   "සල්ලි තියෙනවනම් අවුලක් නැහැ 😂 යන්න අනේ! හැබැයි issues තියෙනවා. ඔයා IT කරන කෙනෙක් නම් ගොඩක් virtual machines වගේ run කරන්න වෙනවා. එතකොට පොඩි පොඩි issues එනවා, dual booting කරන්න අමාරුයි. තව ගොඩක් අය crack software use කරන්නේ (ලංකාවේ කවුද genuine software පාවිච්චි කරන්නේ 😂🤭). Apple වල security එකත් එක්ක crack software වල ප්‍රශ්න ඇති වෙනවා ☹️. හොඳම දේ undergraduate වශයෙන් risk එකක් නොගෙන Windows වලට යන්න 😊✅\n\n" +
-                   "📌 *Question 09*\n" +
-                   "අපිට used and brand new යනවනං හොඳ laptop models මොනවද?\n\n" +
-                   "✅ *Answer:*\n" +
-                   "Brand එක මත depend වෙන්න එපා කොයි වෙලාවකවත්. හැම brand එකකම මොක්ක හරි issue එකක් තියෙනවා.\n\n" +
-                   "🔴 **Recommended Used Models :**\n" +
-                   "• Dell Vostro / Latitude\n" +
-                   "• Acer Aspire\n" +
-                   "• HP EliteBook\n" +
-                   "• Lenovo ThinkPad T Series & Yoga Series \n\n" +
-                   "🔴 **Brand New Budget Friendly:**\n" +
-                   "• Asus ExpertBook / VivoBook\n" +
-                   "• HP Pavilion / Notebooks\n" +
-                   "• Acer Aspire 5 or upper\n" +
-                   "• Lenovo ThinkBook / IdeaPad\n\n" +
-                   "🔴 **Gaming Series:**\n" +
-                   "• HP Victus\n" +
-                   "• Asus TUF\n" +
-                   "• MSI Cyber\n" +
-                   "• Lenovo Legion\n" +
-                   "• Lenovo LOQ",
-   
-"/boarding": "🏠 *Boarding Places & Accommodation (නවාතැන් පහසුකම් හොයාගන්නා හැටි):*\n\n" +
+    "/boarding": "🏠 *Boarding Places & Accommodation (නවාතැන් පහසුකම් හොයාගන්නා හැටි):*\n\n" +
                  "ඔබගේ කැම්පස් එක අසලින් බෝඩිමක් / ඇනෙක්ස් එකක් හොයාගැනීමට පහත වෙබ් අඩවි සහ Video  භාවිතා කරන්න:\n\n" +
                  "🎥 *බෝඩිම් සෙවීමේ උපදෙස් වීඩියෝව (Video Guide):*\n" +
                  "🔗 https://www.facebook.com/share/v/18ZG8KkSgf/\n\n" +
-    
                  "🌐 *හොඳම Boarding Web Platforms:*\n" +
                  "• *Ikman.lk (Property Section):* https://lk.ikman.lk/en/ads/property/rooms-annexes\n" +
-                 "• *Lankapropertyweb:* https://www.lankapropertyweb.com\n\n" +
-                 
-                 
+                 "• *Lankapropertyweb:* https://www.lankapropertyweb.com",
+
     "/jobs": "💼 *Internships & Job Opportunities (අධ්‍යාපනය අතරතුර රැකියා තොරතුරු):*\n\n" +
              "Degree එක කරන අතරතුර හෝ අවසානයේ Internships / Jobs හොයාගන්න පුළුවන් Groups පහතින් ලබාගත හැක:\n\n" +
              "🌐 *Top Job Portals:*\n" +
@@ -257,12 +252,10 @@ const ifslsAnswers = {
              "• TopJobs (https://topjobs.lk)\n" +
              "• Ikman Jobs (https://ikman.lk/jobs)\n\n" +
              "👥 *Community Groups:*\n" +
-             "• *Jobs & Internships Group 01:* [https://whatsapp.com/channel/0029Vb615LUHVvTdCZmE4B1A]\n" +
-             "• *Jobs & Internships Group 02:* [https://whatsapp.com/channel/0029Va9Xpxx8PgsOtsAbFn45]\n\n" +
-             "💡 *Tip:* CV එකක් නිවැරදිව හදාගෙන LinkedIn Profile එක Update තබාගැනීමෙන් පහසුවෙන් Opportunities ලබාගත හැක.",
-
-
-    
+             "• *Jobs & Internships Group 01:* https://whatsapp.com/channel/0029Vb615LUHVvTdCZmE4B1A\n" +
+             "• *Jobs & Internships Group 02:* https://whatsapp.com/channel/0029Va9Xpxx8PgsOtsAbFn45\n\n" +
+             "💡 *Tip:* CV එකක් නිවැරදිව හදාගෙන LinkedIn Profile එක Update තබාගැනීමෙන් පහසුවෙන් Opportunities ලබාගත හැක."
+  
 };
 
 // ==========================================
