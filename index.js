@@ -297,7 +297,7 @@ const campusAnswers = {
              "📊 *Faculty of Business*\n" +
              "• BSc in Business Management (Project Management) (Special)\n" +
              "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
-             "  ✔️️ *සා/පෙළ:* ඉංග්‍රීසි 'C' සහ ගණිතය 'S' සාමාර්ථයක්.\n" +
+             "  ✔ *සා/පෙළ:* ඉංග්‍රීසි 'C' සහ ගණිතය 'S' සාමාර්ථයක්.\n" +
              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය ඈඳුනු පාඨමාලාවක් සමත් විය යුතුය).*\n\n" +
              "⚙️ *Faculty of Engineering & Science*\n" +
              "• Bachelor of Interior Design\n" +
@@ -306,7 +306,7 @@ const campusAnswers = {
              "💻 *Faculty of Computing*\n" +
              "• BSc Honours in Computer Networks\n" +
              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක් සහ ඉංග්‍රීසි සඳහා 'S' 1ක්.\n" +
-             "  ✔️️ *සා/පෙළ:* ඉංග්‍රීසි 'C' සාමාර්ථයක්.\n" +
+             "  ✔ *සා/පෙළ:* ඉංග්‍රීසි 'C' සාමාර්ථයක්.\n" +
              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*\n\n" +
              "• BSc in Multimedia\n" +
              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් සහ ඉංග්‍රීසි සඳහා 'S' 1ක්.\n" +
@@ -316,7 +316,7 @@ const campusAnswers = {
               "📘 *Faculty of Humanities & Education*\n" +
               "• Bachelor of Education Honours in Information Technology / Early Childhood Education / Physical Education & Sports\n" +
               "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'S' 3ක්.\n" +
-              "  ✔️️ *සා/පෙළ:* සිංහල/දෙමළ, ගණිතය සහ ඉංග්‍රීසි ඇතුළුව අවම 'S' 3ක්.\n\n" +
+              "  ✔ *සා/පෙළ:* සිංහල/දෙමළ, ගණිතය සහ ඉංග්‍රීසි ඇතුළුව අවම 'S' 3ක්.\n\n" +
               "• Bachelor of Arts Honours in English / BA in English\n" +
               "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් (ගෞරව උපාධිය සඳහා ඉංග්‍රීසි ප්‍රධාන විෂය විය යුතුයි).\n" +
               "  ✔️ *සා/පෙළ:* BA in English සඳහා ඉංග්‍රීසි 'C' සාමාර්ථයක්.\n\n" +
@@ -348,7 +348,7 @@ const campusAnswers = {
             "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
             "• Bachelor of Laws (Honours) - LLB\n" +
             "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'C' 2ක් සහ 'S' 1ක්.\n" +
-            "  ✔️️ *සා/පෙළ:* මව් භාෂාව සහ ඉංග්‍රීසි සඳහා 'C' සාමාර්ථයක්.\n\n" +
+            "  ✔ *සා/පෙළ:* මව් භාෂාව සහ ඉංග්‍රීසි සඳහා 'C' සාමාර්ථයක්.\n\n" +
             "📊 *Faculty of Management*\n" +
             "• Bachelor of Management Honours (HR / Marketing / Business Analytics / Accounting)\n" +
             "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
@@ -413,7 +413,7 @@ const campusAnswers = {
              "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
              "💻 *Faculty of Computing*\n" +
              "• BSc Honours in Software Engineering / IT (Cyber Security / Data Science / AI)\n" +
-             "  ✔️️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
+             "  ✔ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
 
     "/bci": "🎓 *BCI Campus*\n\n" +
@@ -734,21 +734,74 @@ async function checkIsAdmin(message, senderId, actualNumber) {
 
 client.on("message_create", async (message) => {
     try {
+        const msgText = message.body ? message.body.trim() : "";
+        const textLower = msgText.toLowerCase();
+
+        // =========================================================
+        // 📢 1. DIRECT ADMIN BROADCAST HANDLER (LID & NUMBER SUPPORT)
+        // =========================================================
+        if (textLower.startsWith("/broadcast") || textLower.startsWith("/boradcast")) {
+            const rawSender = message.author || message.from;
+            const senderDigits = rawSender.replace(/\D/g, ""); 
+
+            let contactDigits = "";
+            try {
+                const contact = await message.getContact();
+                contactDigits = (contact.number || contact.id.user || "").replace(/\D/g, "");
+            } catch (err) {}
+
+            console.log(`[BROADCAST ATTEMPT] SenderDigits: ${senderDigits} | ContactDigits: ${contactDigits}`);
+
+            const isAdmin = EXTRA_ADMINS.some(admin => {
+                const adminClean = admin.replace(/\D/g, "");
+                return adminClean === senderDigits || adminClean === contactDigits;
+            });
+
+            if (!isAdmin) {
+                console.log(`❌ [BROADCAST DENIED] Not authorized.`);
+                return;
+            }
+
+            console.log(`✅ [BROADCAST AUTHORIZED] Sending update to groups...`);
+
+            const textToSend = "📢 *IFSLS SMART BOT UPDATE!* 🤖✨\n\n" +
+                               "ළමයි, ඔයාලගේ IFSLS Assistant Bot එකට අලුත් Commands එකතු කරලා Update කළා! 🎉\n\n" +
+                               "🆓 අලුත් Features බලන්න පහත කමාන්ඩ්ස් ගෲප් එකට Send කරලා බලන්න:\n" +
+                               "📌 */onlinecertificate* - Certificate Online ගෙන්න ගන්නා හැටි (Video සමඟ)\n" +
+                               "📌 */coursechange* - Course Change Letter Format\n" +
+                               "📌 */ugccancel* - UGC Registration Cancel කරන හැටි\n" +
+                               "📌 */jobs* - Internships & Job Opportunities\n" +
+                               "📌 */boarding* - බෝඩිම් / Accommodation Web & Video\n" +
+                               "📌 */laptopguide* - Degree එකට හරියන Laptop Buying Guide\n\n" +
+                               "💡 *සියලුම Commands බලාගැනීමට /menu ලෙස Type කරන්න.*";
+
+            let count = 0;
+            for (const groupId of TARGET_GROUP_IDS) {
+                try {
+                    await client.sendMessage(groupId, textToSend);
+                    count++;
+                } catch (err) {
+                    console.error(`Failed to send to ${groupId}:`, err);
+                }
+            }
+
+            await message.reply(`✅ *Broadcast Complete!* Message sent to ${count} groups.`);
+            return;
+        }
+
         const groupId = message.fromMe ? message.to : message.from;
         if (!groupId || !groupId.endsWith("@g.us")) return;
         if (!TARGET_GROUP_IDS.includes(groupId)) return;
-        
-        const textLower = (message.body || "").toLowerCase();
         if (message.fromMe) return; 
 
         const senderId = message.author || message.from;
         const info = await getContactInfo(senderId);
         if (!info) return;
 
-        // 🔥 මෙතනින් Admin ද කියලා මුලින්ම හොයාගන්නවා (Actual Number එකද සලකයි)
+        // 🔥 Admin ද කියලා බලනවා
         const isAdmin = await checkIsAdmin(message, senderId, info.actualNumber);
 
-        // 🖨 ටර්මිනල් එකේ හරියටම ලොග් එක ප්‍රින්ට් වෙන තැන
+        // 🖨 ටර්මිනල් එකේ ලොග් එක ප්‍රින්ට් වීම
         console.log("\n----------------------------------------");
         console.log(`📩 Group ID : ${groupId}`);
         console.log(`👤 Name     : ${info.name} (${info.actualNumber})`);
@@ -772,7 +825,6 @@ client.on("message_create", async (message) => {
         const hasLinkIndicator = isNativeGroupInvite || textLower.includes("http://") || textLower.includes("https://") || textLower.includes("www.") || textLower.includes(".com") || textLower.includes(".net") || textLower.includes(".org") || textLower.includes(".me") || textLower.includes(".co") || textLower.includes("t.me") || textLower.includes("chat.whatsapp.com");
 
         if (hasLinkIndicator) {
-            // 🔥 කලින් හොයාගත්ත isAdmin එක මෙතන පාවිච්චි වෙනවා
             if (!isAdmin) {
                 const isTelegramLink = textLower.includes("t.me/") || textLower.includes("telegram.me/");
                 const isWhatsAppGroupLink = isNativeGroupInvite || textLower.includes("chat.whatsapp.com"); 
@@ -840,7 +892,6 @@ client.on("message_create", async (message) => {
 
         const containsBadWord = BAD_WORDS.some(word => textLower.includes(word.toLowerCase()));
         if (containsBadWord) {
-            // 🔥 කලින් හොයාගත්ත isAdmin එක මෙතන පාවිච්චි වෙනවා
             if (!isAdmin) {
                 try { await message.delete(true); } catch(e) {} 
                 let warnings = badWordWarningTracker.get(senderId) || 0;
@@ -872,7 +923,6 @@ client.on("message_create", async (message) => {
                                 textLower.includes("තත්වයක් තුළ මෙම සමූහය");
 
         if (isStatusMention) {
-            // 🔥 කලින් හොයාගත්ත isAdmin එක මෙතන පාවිච්චි වෙනවා
             if (!isAdmin) {
                 try { await message.delete(true); } catch(e) {} 
                 
@@ -941,22 +991,15 @@ client.on("message_create", async (message) => {
         else if (campusAnswers[msgCommand]) {
             await message.reply(campusAnswers[msgCommand]);
         }
-        // 📄 සිංහල Guide PDF (Google Drive Link)
         else if (msgCommand === "/guidepdf-si") {
             await client.sendMessage(groupId, "🇱🇰 *IFSLS 2026/27 සිංහල මාර්ගෝපදේශක PDF එක පහත ලින්ක් එකෙන් ඩවුන්ලෝඩ් කරගන්න:*\n\nhttps://drive.google.com/file/d/122Q6dk3Q8mlM0yWTlzLVDqKyIH4KjSFG/view?usp=sharing");
         }
-        // 📄 දෙමළ Guide PDF (Google Drive Link)
         else if (msgCommand === "/guidepdf-ta") {
             await client.sendMessage(groupId, "🌍 *IFSLS 2026/27 தமிழ் வழிகாட்டி PDF ஐ கீழே உள்ள இணைப்பில் பதிவிறக்கம் செய்யவும்:*\n\nhttps://drive.google.com/file/d/1-AMByxSgGDfOwKE3mxTZgxvSSpBbtjOz/view?usp=sharing");
         }
-        // 📄 ඉංග්‍රීසි Guide PDF (Google Drive Link)
         else if (msgCommand === "/guidepdf-en") {
             await client.sendMessage(groupId, "🇬🇧 *Download the IFSLS 2026/27 English Guide PDF from the link below:*\n\nhttps://drive.google.com/file/d/15eUJyKdYOcgeczEtkKXtwDucswSnJAUs/view?usp=sharing");
         }
-
-        // ==========================================
-        // ⏳ DEADLINE COUNTDOWN FEATURE
-        // ==========================================
         else if (msgCommand === "/deadline") {
             const deadlineDate = new Date("2026-09-27T23:59:59").getTime(); 
             const now = new Date().getTime();
@@ -1006,82 +1049,5 @@ async function checkSpam(message, senderId, name, groupId) {
         }
     }
 }
-
-// =========================================================
-// 📢 DIRECT ADMIN BROADCAST HANDLER (LID & NUMBER SUPPORT)
-// =========================================================
-client.on("message_create", async (message) => {
-    try {
-        const msgText = message.body ? message.body.trim() : "";
-
-        if (msgText.startsWith("/broadcast") || msgText.startsWith("/boradcast")) {
-            const rawSender = message.author || message.from;
-            const senderDigits = rawSender.replace(/\D/g, ""); // Raw ID digits (e.g. LID digits)
-
-            let contactDigits = "";
-            try {
-                const contact = await message.getContact();
-                contactDigits = (contact.number || contact.id.user || "").replace(/\D/g, "");
-            } catch (err) {
-                // Ignore contact fetch error if any
-            }
-
-            console.log(`[BROADCAST ATTEMPT] SenderDigits: ${senderDigits} | ContactDigits: ${contactDigits}`);
-
-            // EXTRA_ADMINS එකේ තියෙන ඕනෑම එකක් සමඟ Match වෙනවද බලනවා (Phone number හෝ LID)
-            const isAdmin = EXTRA_ADMINS.some(admin => {
-                const adminClean = admin.replace(/\D/g, "");
-                return adminClean === senderDigits || adminClean === contactDigits;
-            });
-
-            if (!isAdmin) {
-                console.log(`❌ [BROADCAST DENIED] Not authorized.`);
-                return;
-            }
-
-            console.log(`✅ [BROADCAST AUTHORIZED] Sending update to groups...`);
-
-            const textToSend = "📢 *IFSLS SMART BOT UPDATE!* 🤖✨\n\n" +
-                               "ළමයි, ඔයාලගේ IFSLS Assistant Bot එකට අලුත් Commands එකතු කරලා Update කළා! 🎉\n\n" +
-                               "🆓 අලුත් Features බලන්න පහත කමාන්ඩ්ස් ගෲප් එකට Send කරලා බලන්න:\n" +
-                               "📌 */onlinecertificate* - Certificate Online ගෙන්න ගන්නා හැටි (Video සමඟ)\n" +
-                               "📌 */coursechange* - Course Change Letter Format\n" +
-                               "📌 */ugccancel* - UGC Registration Cancel කරන හැටි\n" +
-                               "📌 */jobs* - Internships & Job Opportunities\n" +
-                               "📌 */boarding* - බෝඩිම් / Accommodation Web & Video\n" +
-                               "📌 */laptopguide* - Degree එකට හරියන Laptop Buying Guide\n\n" +
-                               "💡 *සියලුම Commands බලාගැනීමට /menu ලෙස Type කරන්න.*";
-
-            let count = 0;
-            for (const groupId of TARGET_GROUP_IDS) {
-                try {
-                    await client.sendMessage(groupId, textToSend);
-                    count++;
-                } catch (err) {
-                    console.error(`Failed to send to ${groupId}:`, err);
-                }
-            }
-
-            await message.reply(`✅ *Broadcast Complete!* Message sent to ${count} groups.`);
-            return;
-        }
-
-        // Standard command handling
-        const msgCommand = msgText.toLowerCase();
-
-        if (ifslsAnswers[msgCommand]) {
-            await message.reply(ifslsAnswers[msgCommand]);
-            return;
-        }
-
-        if (typeof campusAnswers !== 'undefined' && campusAnswers[msgCommand]) {
-            await message.reply(campusAnswers[msgCommand]);
-            return;
-        }
-
-    } catch (error) {
-        console.error("Broadcast Execution Error:", error);
-    }
-});
 
 client.initialize();
