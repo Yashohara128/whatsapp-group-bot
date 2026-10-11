@@ -1007,21 +1007,20 @@ async function checkSpam(message, senderId, name, groupId) {
 }
 
 // =========================================================
-// 📢 DIRECT ADMIN BROADCAST HANDLER
+// 📢 DIRECT ADMIN BROADCAST HANDLER (WITH LID FIX)
 // =========================================================
 client.on("message_create", async (message) => {
     try {
         const msgText = message.body ? message.body.trim() : "";
 
-        // Check if it's a broadcast command
         if (msgText.startsWith("/broadcast")) {
-            // Get sender's pure phone number digits
-            const rawSender = message.author || message.from;
-            const senderDigits = rawSender.replace(/\D/g, "");
+            // WhatsApp @lid ප්‍රශ්නය විසඳීමට getContact() භාවිතයෙන් Phone Number එක ගැනීම
+            const contact = await message.getContact();
+            const senderDigits = (contact.number || contact.id.user || "").replace(/\D/g, "");
 
-            console.log(`[BROADCAST ATTEMPT] Sender: ${rawSender} -> Digits: ${senderDigits}`);
+            console.log(`[BROADCAST ATTEMPT] Sender Number: ${senderDigits}`);
 
-            // Check against EXTRA_ADMINS array
+            // EXTRA_ADMINS ලිස්ට් එක සමඟ පරීක්ෂා කිරීම
             const isAdmin = EXTRA_ADMINS.some(admin => admin.replace(/\D/g, "") === senderDigits);
 
             if (!isAdmin) {
@@ -1031,6 +1030,7 @@ client.on("message_create", async (message) => {
 
             console.log(`✅ [BROADCAST AUTHORIZED] Sending update to groups...`);
 
+            // 📝 ඔයාගේ අලුත් Broadcast Message එක
             const textToSend = "📢 *IFSLS SMART BOT UPDATE!* 🤖✨\n\n" +
                                "ළමයි, ඔයාලගේ IFSLS Assistant Bot එකට අලුත් Commands එකතු කරලා Update කළා! 🎉\n\n" +
                                "🆓 අලුත් Features බලන්න පහත කමාන්ඩ්ස් ගෲප් එකට Send කරලා බලන්න:\n" +
@@ -1056,7 +1056,7 @@ client.on("message_create", async (message) => {
             return;
         }
 
-        // Standard command handling
+        // Standard command handling (සාමාන්‍ය Bot Answers)
         const msgCommand = msgText.toLowerCase();
 
         if (ifslsAnswers[msgCommand]) {
@@ -1073,5 +1073,4 @@ client.on("message_create", async (message) => {
         console.error("Broadcast Execution Error:", error);
     }
 });
-
 client.initialize();
