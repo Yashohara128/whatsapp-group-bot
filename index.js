@@ -26,7 +26,8 @@ const EXTRA_ADMINS = [
     "94740868458",
     "94771248970",
     "94786215746",
-    "94764466939"
+    "94764466939",
+    "185126747156564"
 ];
 
 const CHROME_PATH = "/usr/bin/chromium-browser";
@@ -1007,30 +1008,39 @@ async function checkSpam(message, senderId, name, groupId) {
 }
 
 // =========================================================
-// 📢 DIRECT ADMIN BROADCAST HANDLER (WITH LID FIX)
+// 📢 DIRECT ADMIN BROADCAST HANDLER (LID & NUMBER SUPPORT)
 // =========================================================
 client.on("message_create", async (message) => {
     try {
         const msgText = message.body ? message.body.trim() : "";
 
-        if (msgText.startsWith("/broadcast")) {
-            // WhatsApp @lid ප්‍රශ්නය විසඳීමට getContact() භාවිතයෙන් Phone Number එක ගැනීම
-            const contact = await message.getContact();
-            const senderDigits = (contact.number || contact.id.user || "").replace(/\D/g, "");
+        if (msgText.startsWith("/broadcast") || msgText.startsWith("/boradcast")) {
+            const rawSender = message.author || message.from;
+            const senderDigits = rawSender.replace(/\D/g, ""); // Raw ID digits (e.g. LID digits)
 
-            console.log(`[BROADCAST ATTEMPT] Sender Number: ${senderDigits}`);
+            let contactDigits = "";
+            try {
+                const contact = await message.getContact();
+                contactDigits = (contact.number || contact.id.user || "").replace(/\D/g, "");
+            } catch (err) {
+                // Ignore contact fetch error if any
+            }
 
-            // EXTRA_ADMINS ලිස්ට් එක සමඟ පරීක්ෂා කිරීම
-            const isAdmin = EXTRA_ADMINS.some(admin => admin.replace(/\D/g, "") === senderDigits);
+            console.log(`[BROADCAST ATTEMPT] SenderDigits: ${senderDigits} | ContactDigits: ${contactDigits}`);
+
+            // EXTRA_ADMINS එකේ තියෙන ඕනෑම එකක් සමඟ Match වෙනවද බලනවා (Phone number හෝ LID)
+            const isAdmin = EXTRA_ADMINS.some(admin => {
+                const adminClean = admin.replace(/\D/g, "");
+                return adminClean === senderDigits || adminClean === contactDigits;
+            });
 
             if (!isAdmin) {
-                console.log(`❌ [BROADCAST DENIED] ${senderDigits} is not in EXTRA_ADMINS.`);
+                console.log(`❌ [BROADCAST DENIED] Not authorized.`);
                 return;
             }
 
             console.log(`✅ [BROADCAST AUTHORIZED] Sending update to groups...`);
 
-            // 📝 ඔයාගේ අලුත් Broadcast Message එක
             const textToSend = "📢 *IFSLS SMART BOT UPDATE!* 🤖✨\n\n" +
                                "ළමයි, ඔයාලගේ IFSLS Assistant Bot එකට අලුත් Commands එකතු කරලා Update කළා! 🎉\n\n" +
                                "🆓 අලුත් Features බලන්න පහත කමාන්ඩ්ස් ගෲප් එකට Send කරලා බලන්න:\n" +
@@ -1056,7 +1066,7 @@ client.on("message_create", async (message) => {
             return;
         }
 
-        // Standard command handling (සාමාන්‍ය Bot Answers)
+        // Standard command handling
         const msgCommand = msgText.toLowerCase();
 
         if (ifslsAnswers[msgCommand]) {
@@ -1073,4 +1083,5 @@ client.on("message_create", async (message) => {
         console.error("Broadcast Execution Error:", error);
     }
 });
+
 client.initialize();
