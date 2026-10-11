@@ -1012,14 +1012,15 @@ client.on("message_create", async (message) => {
         const sender = message.author || message.from;
         const msgText = message.body ? message.body.trim() : "";
 
-        // /broadcast කියලා විතරක් එව්වාම මේ Message එක යනවා
         if (msgText.startsWith("/broadcast")) {
-            const isAdmin = EXTRA_ADMINS.includes(sender);
-            if (!isAdmin) return;
+            // @c.us සහ @s.whatsapp.net අයින් කරලා Phone number එක විතරක් ගන්නවා
+            const cleanSender = sender.replace("@c.us", "").replace("@s.whatsapp.net", "");
+            const isAdmin = EXTRA_ADMINS.includes(cleanSender);
 
-            // 📝 මෙන්න මෙතනට තමා BROADCAST වෙන MESSAGE එක දාලා තියෙන්නේ:
+            if (!isAdmin) return; // Admin නැත්නම් මුකුත් කරන්නේ නෑ
+
             const textToSend = "📢 *IFSLS SMART BOT UPDATE!* 🤖✨\n\n" +
-                               "ළමයි, ඔයාලගේ IFSLS Assistant Bot අලුත් Commands ටිකක් Add කරලා Update කළා! 🎉\n\n" +
+                               "ළමයි, ඔයාලගේ IFSLS Assistant Bot එකට අලුත් අංග සහ Commands එකතු කරලා Update කළා! 🎉\n\n" +
                                "🆓 අලුතින් එකතු වූ පහසුකම් බලන්න පහත කමාන්ඩ්ස් ගෲප් එකට Send කරලා බලන්න:\n" +
                                "📌 */onlinecertificate* - Certificate Online ගෙන්න ගන්නා හැටි (Video සමඟ)\n" +
                                "📌 */coursechange* - Course Change Letter Format\n" +
@@ -1042,9 +1043,22 @@ client.on("message_create", async (message) => {
             await message.reply(`✅ *Broadcast Complete!* Message sent to ${count} groups.`);
             return;
         }
+
+        // 2️⃣ සාමාන්‍ය Bot Commands (Answers)
+        const msgCommand = msgText.toLowerCase();
+
+        if (ifslsAnswers[msgCommand]) {
+            await message.reply(ifslsAnswers[msgCommand]);
+            return;
+        }
+
+        if (campusAnswers[msgCommand]) {
+            await message.reply(campusAnswers[msgCommand]);
+            return;
+        }
+
     } catch (error) {
         console.error("Broadcast Error:", error);
     }
 });
-
 client.initialize();
