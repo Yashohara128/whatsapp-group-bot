@@ -765,7 +765,7 @@ client.on("message_create", async (message) => {
             console.log(`✅ [BROADCAST AUTHORIZED] Sending update to groups...`);
 
             const textToSend = "📢 *IFSLS SMART BOT UPDATE!* 🤖✨\n\n" +
-                               "ළමයි, ඔයාලගේ IFSLS Assistant Bot එකට අලුත් Commands එකතු කරලා Update කළා! 🎉\n\n" +
+                               "ළමයි, ඔයාලගේ IFSLS Assistant Bot එකට අලුත් Commands එකතු කරලා Error Fix කරලා  Update කළා! 🎉\n\n" +
                                "🆓 අලුත් Features බලන්න පහත කමාන්ඩ්ස් ගෲප් එකට Send කරලා බලන්න:\n" +
                                "📌 */onlinecertificate* - Certificate Online ගෙන්න ගන්නා හැටි (Video සමඟ)\n" +
                                "📌 */coursechange* - Course Change Letter Format\n" +
