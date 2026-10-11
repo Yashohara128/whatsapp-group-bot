@@ -148,7 +148,7 @@ const ifslsAnswers = {
                      "🎓🌟 *ALL THE VERY BEST FOR YOUR IFSLS INTERVIEW!* 🌟🎓\n\n" +
                      "ඔබ සියලු දෙනාටම සාර්ථක Interview එකක් සහ සුභ අනාගතයක් ප්‍රාර්ථනා කරනවා! ❤️✨\n\n" +
                      "GOOD LUCK & ALL THE BEST! 🍀🎓❤️\n\n" +
-                     "IFSLS STUDENT COMMUNITY"
+                     "IFSLS STUDENT COMMUNITY",
 
 
            "/onlinecertificate": "📜 *Online A/L & O/L Exam Certificates ගෙදරටම ගෙන්වා ගන්නා ආකාරය:*\n\n" +
@@ -238,7 +238,7 @@ const ifslsAnswers = {
                    "• Asus TUF\n" +
                    "• MSI Cyber\n" +
                    "• Lenovo Legion\n" +
-                   "• Lenovo LOQ"
+                   "• Lenovo LOQ",
    
 "/boarding": "🏠 *Boarding Places & Accommodation (නවාතැන් පහසුකම් හොයාගන්නා හැටි):*\n\n" +
                  "ඔබගේ කැම්පස් එක අසලින් බෝඩිමක් / ඇනෙක්ස් එකක් හොයාගැනීමට පහත වෙබ් අඩවි සහ Video  භාවිතා කරන්න:\n\n" +
