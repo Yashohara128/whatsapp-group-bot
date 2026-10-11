@@ -161,8 +161,8 @@ const ifslsAnswers = {
 
     "/coursechange": "📝 *Course Change Letter Structure:*\n\n" +
                      "ඔබට Course එකක් හෝ Campus එකක් වෙනස් කරගැනීමට අවශ්‍ය නම් අමාත්‍යාංශයට යොමු කළ යුතු Letter එකේ Format එක මෙන්න:\n\n" +
-                     "🔗 English Letter Format [https://docs.google.com/document/d/10vvIaWHQY_JpzJu80Uc0UjOT0uGaeWy1/edit?usp=sharing&ouid=113936433707512643329&rtpof=true&sd=true]"
-                     "🔗 Sinhala Letter Format [https://docs.google.com/document/d/1qRNlfFBMn-ICdXM4Vsv2dISdkyYYjal3/edit?usp=sharing&ouid=113936433707512643329&rtpof=true&sd=true]",
+                     "🔗 English Letter Format: https://docs.google.com/document/d/10vvIaWHQY_JpzJu80Uc0UjOT0uGaeWy1/edit?usp=sharing&ouid=113936433707512643329&rtpof=true&sd=true\n\n" +
+                     "🔗 Sinhala Letter Format: https://docs.google.com/document/d/1qRNlfFBMn-ICdXM4Vsv2dISdkyYYjal3/edit?usp=sharing&ouid=113936433707512643329&rtpof=true&sd=true",
 
     "/ugccancel": "🚫 *UGC (රජයේ කැම්පස්) ලියාපදිංචිය අවලංගු කර පාසල් අස්වීමේ සහතිකය ලබාගැනීම:*\n\n" +
                   "ඔබ රජයේ විශ්වවිද්‍යාලයකට (UGC) තේරීපත්වී, පසුව IFSLS ණය යෝජනා ක්‍රමය යටතේ වෙනත් කැම්පස් එකකට යාමට අපේක්ෂා කරන්නේ නම්, UGC ලියාපදිංචිය නිල වශයෙන් අවලංගු කර (Cancel කර) පාසල් අස්වීමේ සහතිකය (School Leaving Certificate) ලබාගත යුතුය.\n\n" +
