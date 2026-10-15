@@ -556,27 +556,6 @@ client.on("ready", async () => {
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
 
-    cron.schedule("00 23 * * *", async () => {
-        for (const groupId of TARGET_GROUP_IDS) {
-            try {
-                const chat = await client.getChatById(groupId);
-                await chat.setMessagesAdminsOnly(true); 
-                await chat.sendMessage("🌙 *රාත්‍රී 11:00 Group Admin Mode Active වී ඇත.* නැවත උදේ 6:00 ට open වේ. Good Night All!😴 Bot generated message.don't reply");
-            } catch (e) { }
-        }
-    }, { scheduled: true, timezone: "Asia/Colombo" });
-
-    cron.schedule("0 6 * * *", async () => {
-        for (const groupId of TARGET_GROUP_IDS) {
-            try {
-                const chat = await client.getChatById(groupId);
-                await chat.setMessagesAdminsOnly(false); 
-                await chat.sendMessage("☀️ *Good Morning All!* ගෲප් එක Open.😊Bot generated message.don't reply");
-            } catch (e) { }
-        }
-    }, { scheduled: true, timezone: "Asia/Colombo" });
-});
-
 async function getContactInfo(id) {
     try {
         if (!id) return null;
