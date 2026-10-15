@@ -555,6 +555,8 @@ client.on("ready", async () => {
     console.log("🤖 BOT READY - AUTO-EXPIRE BAN SYSTEM");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
+    
+});
 
 async function getContactInfo(id) {
     try {
