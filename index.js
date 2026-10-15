@@ -643,6 +643,9 @@ client.on("group_join", async (notification) => {
                 await directRemoveParticipant(groupId, userId);
                 continue;
             }
+// 🛑 Member ගෲප් එකට join වුණු ගමන් වහාම මැසේජ් යවන්නේ නැතුව තත්පර 30ක් ඉඳීම (30000 ms)
+            await new Promise(resolve => setTimeout(resolve, 30000));
+            
 
             const welcomeMsg = `🎓 *Welcome to IFSLS 11th INTAKE MAIN GROUP* 🎓\n\n👋 Hello / ආයුබෝවන් @${info.actualNumber},\n\nPlease follow these group guidelines to maintain a good learning environment.\nකරුණාකර සමූහයේ යහපැවැත්ම උදෙසා පහත නීති මාලාව පිළිපදින්න.\n\n*GROUP RULES / නීති මාලාව:*\n1️⃣ Be respectful to everyone.\n(සියලුම සාමාජිකයින්ට ගෞරවයෙන් සලකන්න.)\n\n2️⃣ 🚫 No Spamming or flooding messages.\n(අනවශ්‍ය පණිවිඩ යැවීමෙන් වළකින්න.)\n\n3️⃣ 🚫 No unauthorized links (Other WhatsApp groups, Telegram, Scam/Business links). Only educational links are allowed.\n(වෙනත් WhatsApp Group, Telegram හෝ ව්‍යාපාරික ලින්ක් දැමීම සපුරා තහනම්. අධ්‍යාපනික ලින්ක් සඳහා පමණක් අවසර ඇත.)\n\n4️⃣ 🎓 For further questions regarding student loans, please contact the group admins. Please watch the YouTube playlist below for more information.\n(ශිෂ්‍ය ණය පිළිබඳ වැඩිදුර ප්‍රශ්න සඳහා සමූහයේ Admin වරුන් සම්බන්ධ කරගන්න. ණය පිළිබඳ සියලුම තොරතුරු දැනගැනීමට පහත YouTube Playlist එක අනිවාර්යයෙන්ම නරඹන්න.)\n📺 *YouTube Playlist:* https://youtube.com/playlist?list=PL-ZbzAh0pKykpa-odcUrDEg94PBbTQp9M&si=F9L3Spy-pLZJq31n\n\n⚠️ *Note:* Breaking these rules will result in an automatic permanent ban by the system.\n(මෙම නීති කඩකරන අයව පද්ධතිය මගින් ස්වයංක්‍රීයව සමූහයෙන් ඉවත් කරනු ලැබේ.)\n\nThank you! / ස්තූතියි!\n🤖 _System Generated Message. Please do not reply._`;
 
@@ -651,7 +654,7 @@ client.on("group_join", async (notification) => {
 
             await new Promise(resolve => setTimeout(resolve, 3000));
 
-            const secondWelcomeMsg = `🤖 *Smart Bot Commands (ස්වයංක්‍රීය සහය)* 🤖\n\n` +
+            const secondWelcomeMsg = `🤖 *Smart Bot Commands IFSLS Group Only Don't Send Direct Message to this Number (ස්වයංක්‍රීය සහය)* 🤖\n\n` +
                                      `ළමයි ඔයාලට ශිෂ්‍ය ණය ගැන අවශ්‍ය මූලික තොරතුරු ක්ෂණිකව Bot හරහා දැන් ලබාගන්න පුළුවන්. ඒ සඳහා *Group එක ඇතුළට ගොස්* / type කරලා පහත Commands ටයිප් කරලා send කරන්න.\n\n` +
                                      `📌 */menu* - සියලුම විස්තර සහ Commands බලාගැනීමට.\n` +
                                      `📌 */about* - IFSLS ගැන විස්තර.\n` +
@@ -679,6 +682,9 @@ client.on("group_join", async (notification) => {
 
             await client.sendMessage(userId, secondWelcomeMsg);
             console.log(`✅ Second Welcome (Commands Info) sent to: ${info.name}`);
+
+            // 🛑 ඊළඟ Member ට යැවීමට පෙර විනාඩි 1ක (තත්පර 60ක) ආරක්ෂිත Delay එක
+             await new Promise(resolve => setTimeout(resolve, 60000));
         }
     } catch (error) {
         console.log("⚠️ Error in group_join event:", error);
