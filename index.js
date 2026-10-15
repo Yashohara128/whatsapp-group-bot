@@ -665,6 +665,7 @@ client.on("group_join", async (notification) => {
                                      `📌 */onlinecertificate* - O/L & A/L Exam Certificates Online ගෙන්න ගන්නා හැටි\n` +
                                      `📌 */coursechange* - Course Change Letter Format\n` +
                                      `📌 */ugccancel* - UGC Registration Cancel කරන හැටි\n` +
+                                     `📌 */laptopguide* - Degree එකට හරියන Laptop Buying Guide\n` +
                                      `📌 */jobs* - Internships සහ Jobs විස්තර\n` +
                                      `📌 */boarding* - බෝඩිම් / Accommodation Web & Video\n`+
                 
@@ -762,7 +763,9 @@ client.on("message_create", async (message) => {
                 try {
                     await client.sendMessage(groupId, textToSend);
                     count++;
-                } catch (err) {
+             await new Promise(resolve => setTimeout(resolve, 5000));
+                    
+               } catch (err) {
                     console.error(`Failed to send to ${groupId}:`, err);
                 }
             }
