@@ -559,7 +559,7 @@ client.on("ready", async () => {
     
 });
 
-// Stickers සහ GIFs පාලනය කිරීම (Ultra-Safe Version)
+// Stickers සහ GIFs පාලනය කිරීම (Warning & Kick Only - No Deletion)
 client.on('message', async (message) => {
     try {
         // 1. Group එකක්ද සහ Target Group එකක්දැයි පරීක්ෂා කිරීම
@@ -573,58 +573,61 @@ client.on('message', async (message) => {
         if (!isSticker && !isGif) return;
 
         const groupId = message.from;
-        const senderId = message.author || message.from;
+        const rawSenderId = message.author || message.from;
 
-        // 3. Safe Admin Check (ක්‍රෑෂ් නොවීමට වෙනම Try-Catch කර ඇත)
+        // 3. Participant සොයා ගැනීම සහ @lid එක @c.us බවට හරවා ගැනීම (Remove වීමට අත්‍යවශ්‍යයි)
         let isAdmin = false;
+        let targetParticipantId = rawSenderId;
+
         try {
             const chat = await message.getChat();
             if (chat && chat.participants && Array.isArray(chat.participants)) {
                 const participant = chat.participants.find(p => {
                     if (!p || !p.id) return false;
                     const pId = typeof p.id === 'object' ? p.id._serialized : String(p.id);
-                    return pId === senderId;
+                    const pLid = p.lid ? (typeof p.lid === 'object' ? p.lid._serialized : String(p.lid)) : null;
+                    return pId === rawSenderId || pLid === rawSenderId;
                 });
-                if (participant && (participant.isAdmin || participant.isSuperAdmin)) {
-                    isAdmin = true;
+
+                if (participant) {
+                    if (participant.isAdmin || participant.isSuperAdmin) {
+                        isAdmin = true;
+                    }
+                    if (participant.id) {
+                        targetParticipantId = typeof participant.id === 'object' ? participant.id._serialized : String(participant.id);
+                    }
                 }
             }
-        } catch (adminErr) {
-            console.log("⚠️ Admin check skipped due to internal error:", adminErr.message || adminErr);
+        } catch (err) {
+            console.log("⚠️ Chat lookup error:", err.message);
         }
 
-        // Admin කෙනෙක් නම් ස්ටිකර්/GIF දැමීමට අවසර ඇත
+        // Admin නම් ඉවත් නොවේ
         if (isAdmin) {
-            console.log(`👑 Admin (${senderId}) sent a Sticker/GIF. Allowed.`);
+            console.log(`👑 Admin sent a Sticker/GIF. Allowed.`);
             return;
         }
 
-        const warningKey = `${groupId}_${senderId}`;
+        const warningKey = `${groupId}_${targetParticipantId}`;
 
-        // 4. Safe Message Deletion (Fail වුණත් කෝඩ් එක නතර නොවේ)
-        try {
-            await message.delete(true);
-        } catch (delErr) {
-            console.log("⚠️ Message delete skipped:", delErr.message || delErr);
-        }
-
-        // 5. Warning / Kick Logic
+        // 4. Warning / Kick Logic (Delete කිරීමක් සිදු නොවේ)
         if (!stickerWarnings[warningKey]) {
             stickerWarnings[warningKey] = 1;
             
-            const warningMsg = `⚠️ @${senderId.split('@')[0]}, මෙම සමූහය තුළ සාමාජිකයන් සදහා කරදරකාරී වන Stickers හෝ GIFs භාවිතය සිමා කර ඇත!\n\n` +
-                               `📌 මෙය ඔබගේ **පළමු සහ අවසන් අනතුරු ඇඟවීමයි**. නැවත වතාවක් යොමු කලහොත් ඔබව සමූහයෙන් Automatically ඉවත් කරනු ලැබේ.`;
+            const warningMsg = `⚠️ @${targetParticipantId.split('@')[0]}, මෙම සමූහය තුළ සාමාජිකයන් සදහා කරදරකාරී වන Stickers හෝ GIFs භාවිතය සිමා කර ඇත!\n\n` +
+                               `📌 මෙය ඔබගේ **පළමු සහ අවසන් අනතුරු ඇඟවීමයි**. නැවත වතාවක් යොමු කලහොත් ඔබව සමූහයෙන් Automatically ඉවත් වෙනු ලැබේ.`;
             
-            await client.sendMessage(groupId, warningMsg, { mentions: [senderId] });
-            console.log(`⚠️ First sticker/gif warning sent to: ${senderId}`);
+            await client.sendMessage(groupId, warningMsg, { mentions: [targetParticipantId] });
+            console.log(`⚠️ First sticker/gif warning sent to: ${targetParticipantId}`);
 
         } else {
-            const removeMsg = `🚫 @${senderId.split('@')[0]} අනතුරු ඇඟවීම නොතකා නැවත Stickers/GIFs දැමූ නිසා සමූහයෙන් ඉවත් කරන ලදී.`;
-            await client.sendMessage(groupId, removeMsg, { mentions: [senderId] });
+            const removeMsg = `🚫 @${targetParticipantId.split('@')[0]} අනතුරු ඇඟවීම නොතකා නැවත Stickers/GIFs දැමූ නිසා සමූහයෙන් ඉවත් කරන ලදී.`;
+            await client.sendMessage(groupId, removeMsg, { mentions: [targetParticipantId] });
 
-            await directRemoveParticipant(groupId, senderId);
+            // නිවැරදි ID එක පාවිච්චි කරමින් සමූහයෙන් ඉවත් කිරීම
+            await directRemoveParticipant(groupId, targetParticipantId);
             delete stickerWarnings[warningKey];
-            console.log(`🚫 User removed for repeated sticker/gif: ${senderId}`);
+            console.log(`🚫 User removed for repeated sticker/gif: ${targetParticipantId}`);
         }
 
     } catch (error) {
