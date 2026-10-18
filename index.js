@@ -3,6 +3,7 @@ const qrcode = require("qrcode-terminal");
 const cron = require("node-cron"); 
 const fs = require("fs"); 
 const path = require("path");
+const stickerWarnings = {};
 
 const TARGET_GROUP_IDS = [
     "120363427144307038@g.us",
@@ -556,6 +557,55 @@ client.on("ready", async () => {
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
     
+});
+
+// Stickers සහ GIFs පාලනය කිරීම
+client.on('message', async (message) => {
+    try {
+        const chat = await message.getChat();
+        if (!chat.isGroup || !TARGET_GROUP_IDS.includes(chat.id._serialized)) return;
+
+        const senderId = message.author || message.from;
+        const participant = chat.participants.find(p => p.id._serialized === senderId);
+        const isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
+
+        // Admins ලට ස්ටිකර් දැමිය හැක
+        if (isAdmin) return;
+
+        const isSticker = message.type === 'sticker';
+        const isGif = message.isGif || (message.type === 'video' && message._data.isGif);
+
+        if (isSticker || isGif) {
+            const groupId = chat.id._serialized;
+            const warningKey = `${groupId}_${senderId}`;
+
+            // 1. Message එක Delete කිරීම
+            await message.delete(true);
+
+            // 2. Warning එකක් ලබා දී ඇද්දැයි බලයි
+            if (!stickerWarnings[warningKey]) {
+                stickerWarnings[warningKey] = 1;
+                
+                const warningMsg = `⚠️ @${senderId.split('@')[0]}, මෙම සමූහය තුළ සාමාජිකයන් සදහා කරදරකාරී වන Stickers හෝ GIFs භාවිතය සිමා කර ඇත!\n\n` +
+                                   `📌 මෙය ඔබගේ **පළමු සහ අවසන් අනතුරු ඇඟවීමයි**. නැවත වතාවක් යොමු කලහොත් ඔබව සමූහයෙන් Automatically ඉවත් වෙනු ලැබේ.`;
+                
+                await chat.sendMessage(warningMsg, { mentions: [senderId] });
+                console.log(`⚠️ First sticker/gif warning sent to: ${senderId}`);
+
+            } else {
+                // 3. දෙවන වතාවේදී Remove කිරීම
+                const removeMsg = `🚫 @${senderId.split('@')[0]} අනතුරු ඇඟවීම නොතකා නැවත Stickers/GIFs දැමූ නිසා සමූහයෙන් ඉවත් කරන ලදී.`;
+                await chat.sendMessage(removeMsg, { mentions: [senderId] });
+
+                await directRemoveParticipant(groupId, senderId);
+                delete stickerWarnings[warningKey];
+                console.log(`🚫 User removed for repeated sticker/gif: ${senderId}`);
+            }
+        }
+
+    } catch (error) {
+        console.error("Error handling sticker/gif moderation:", error);
+    }
 });
 
 async function getContactInfo(id) {
