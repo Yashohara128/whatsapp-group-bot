@@ -559,36 +559,38 @@ client.on("ready", async () => {
     
 });
 
-// Stickers සහ GIFs පාලනය කිරීම
+// Stickers සහ GIFs පාලනය කිරීම (Ultra-Safe Version)
 client.on('message', async (message) => {
     try {
-        // 1. Sticker එකක් හෝ GIF එකක්දැයි මුලින්ම පරීක්ෂා කිරීම (නැත්නම් මෙතැනින්ම Return වේ)
+        // 1. Group එකක්ද සහ Target Group එකක්දැයි පරීක්ෂා කිරීම
+        if (!message.from || !message.from.endsWith('@g.us')) return;
+        if (!TARGET_GROUP_IDS.includes(message.from)) return;
+
+        // 2. Sticker එකක් හෝ GIF එකක්දැයි බැලීම
         const isSticker = message.type === 'sticker';
         const isGif = message.isGif || (message.type === 'video' && message._data && message._data.isGif);
 
         if (!isSticker && !isGif) return;
 
-        // Group Message එකක්දැයි පරීක්ෂා කිරීම
-        const senderId = message.author || message.from;
         const groupId = message.from;
+        const senderId = message.author || message.from;
 
-        if (!groupId.endsWith('@g.us') || !TARGET_GROUP_IDS.includes(groupId)) return;
-
-        // 2. Chat object එක එකපාරක් ලබා ගැනීම
-        const chat = await message.getChat();
-        if (!chat) return;
-
-        // Admin කෙනෙක්දැයි පරීක්ෂා කිරීම
+        // 3. Safe Admin Check (ක්‍රෑෂ් නොවීමට වෙනම Try-Catch කර ඇත)
         let isAdmin = false;
-        if (chat.participants && Array.isArray(chat.participants)) {
-            const participant = chat.participants.find(p => {
-                if (!p || !p.id) return false;
-                const pId = typeof p.id === 'object' ? p.id._serialized : String(p.id);
-                return pId === senderId;
-            });
-            if (participant && (participant.isAdmin || participant.isSuperAdmin)) {
-                isAdmin = true;
+        try {
+            const chat = await message.getChat();
+            if (chat && chat.participants && Array.isArray(chat.participants)) {
+                const participant = chat.participants.find(p => {
+                    if (!p || !p.id) return false;
+                    const pId = typeof p.id === 'object' ? p.id._serialized : String(p.id);
+                    return pId === senderId;
+                });
+                if (participant && (participant.isAdmin || participant.isSuperAdmin)) {
+                    isAdmin = true;
+                }
             }
+        } catch (adminErr) {
+            console.log("⚠️ Admin check skipped due to internal error:", adminErr.message || adminErr);
         }
 
         // Admin කෙනෙක් නම් ස්ටිකර්/GIF දැමීමට අවසර ඇත
@@ -599,19 +601,19 @@ client.on('message', async (message) => {
 
         const warningKey = `${groupId}_${senderId}`;
 
-        // 3. Message එක Delete කිරීමට උත්සාහ කිරීම
+        // 4. Safe Message Deletion (Fail වුණත් කෝඩ් එක නතර නොවේ)
         try {
             await message.delete(true);
         } catch (delErr) {
-            console.log("⚠️ Delete failed (Ignore if non-admin or timeout):", delErr.message || delErr);
+            console.log("⚠️ Message delete skipped:", delErr.message || delErr);
         }
 
-        // 4. Warning / Ban Logic
+        // 5. Warning / Kick Logic
         if (!stickerWarnings[warningKey]) {
             stickerWarnings[warningKey] = 1;
             
             const warningMsg = `⚠️ @${senderId.split('@')[0]}, මෙම සමූහය තුළ සාමාජිකයන් සදහා කරදරකාරී වන Stickers හෝ GIFs භාවිතය සිමා කර ඇත!\n\n` +
-                               `📌 මෙය ඔබගේ **පළමු සහ අවසන් අනතුරු ඇඟවීමයි**. නැවත වතාවක් යොමු කලහොත් ඔබව සමූහයෙන් Automatically ඉවත් වෙනු ලැබේ.`;
+                               `📌 මෙය ඔබගේ **පළමු සහ අවසන් අනතුරු ඇඟවීමයි**. නැවත වතාවක් යොමු කලහොත් ඔබව සමූහයෙන් Automatically ඉවත් කරනු ලැබේ.`;
             
             await client.sendMessage(groupId, warningMsg, { mentions: [senderId] });
             console.log(`⚠️ First sticker/gif warning sent to: ${senderId}`);
@@ -626,7 +628,7 @@ client.on('message', async (message) => {
         }
 
     } catch (error) {
-        console.error("⚠️ Error in sticker moderation logic:", error.message || error);
+        console.error("⚠️ Critical error in sticker moderation:", error.message || error);
     }
 });
 
