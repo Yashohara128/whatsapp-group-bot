@@ -566,14 +566,20 @@ client.on('message', async (message) => {
         if (!chat.isGroup || !TARGET_GROUP_IDS.includes(chat.id._serialized)) return;
 
         const senderId = message.author || message.from;
-        const participant = chat.participants.find(p => p.id._serialized === senderId);
+        
+        // Error එක නොඑන විදිහට safe විදිහට participant හොයාගැනීම
+        const participant = chat.participants.find(p => {
+            const pId = typeof p.id === 'object' ? p.id._serialized : p.id;
+            return pId === senderId;
+        });
+        
         const isAdmin = participant && (participant.isAdmin || participant.isSuperAdmin);
 
         // Admins ලට ස්ටිකර් දැමිය හැක
         if (isAdmin) return;
 
         const isSticker = message.type === 'sticker';
-        const isGif = message.isGif || (message.type === 'video' && message._data.isGif);
+        const isGif = message.isGif || (message.type === 'video' && message._data && message._data.isGif);
 
         if (isSticker || isGif) {
             const groupId = chat.id._serialized;
