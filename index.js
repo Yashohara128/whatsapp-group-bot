@@ -562,21 +562,23 @@ client.on("ready", async () => {
 // Stickers සහ GIFs පාලනය කිරීම
 client.on('message', async (message) => {
     try {
-        // Message එක Group එකකින් නෙවේ නම් Return වෙන්න
-        if (!message.from || !message.from.endsWith('@g.us')) return;
-
+        // 1. Sticker එකක් හෝ GIF එකක්දැයි මුලින්ම පරීක්ෂා කිරීම (නැත්නම් මෙතැනින්ම Return වේ)
         const isSticker = message.type === 'sticker';
         const isGif = message.isGif || (message.type === 'video' && message._data && message._data.isGif);
 
-        // Sticker හෝ GIF එකක් නෙවේ නම් මෙතැනින් ඉවත් වේ
         if (!isSticker && !isGif) return;
 
-        const chat = await message.getChat();
-        if (!TARGET_GROUP_IDS.includes(chat.id._serialized)) return;
-
+        // Group Message එකක්දැයි පරීක්ෂා කිරීම
         const senderId = message.author || message.from;
+        const groupId = message.from;
 
-        // Admin කෙනෙක්දැයි පරීක්ෂා කිරීම (Crash නොවෙන සරල ක්‍රමය)
+        if (!groupId.endsWith('@g.us') || !TARGET_GROUP_IDS.includes(groupId)) return;
+
+        // 2. Chat object එක එකපාරක් ලබා ගැනීම
+        const chat = await message.getChat();
+        if (!chat) return;
+
+        // Admin කෙනෙක්දැයි පරීක්ෂා කිරීම
         let isAdmin = false;
         if (chat.participants && Array.isArray(chat.participants)) {
             const participant = chat.participants.find(p => {
@@ -589,36 +591,34 @@ client.on('message', async (message) => {
             }
         }
 
-        // Admin නම් ස්ටිකර්/GIF දැමිය හැක
+        // Admin කෙනෙක් නම් ස්ටිකර්/GIF දැමීමට අවසර ඇත
         if (isAdmin) {
             console.log(`👑 Admin (${senderId}) sent a Sticker/GIF. Allowed.`);
             return;
         }
 
-        const groupId = chat.id._serialized;
         const warningKey = `${groupId}_${senderId}`;
 
-        // 1. Message එක Delete කිරීමට උත්සාහ කිරීම (Fail වුණත් Crash නොවේ)
+        // 3. Message එක Delete කිරීමට උත්සාහ කිරීම
         try {
             await message.delete(true);
-        } catch (delError) {
-            console.log("⚠️ Could not delete message (Bot might need Admin rights or timeout):", delError.message || delError);
+        } catch (delErr) {
+            console.log("⚠️ Delete failed (Ignore if non-admin or timeout):", delErr.message || delErr);
         }
 
-        // 2. Warning එකක් ලබා දී ඇද්දැයි බලයි
+        // 4. Warning / Ban Logic
         if (!stickerWarnings[warningKey]) {
             stickerWarnings[warningKey] = 1;
             
             const warningMsg = `⚠️ @${senderId.split('@')[0]}, මෙම සමූහය තුළ සාමාජිකයන් සදහා කරදරකාරී වන Stickers හෝ GIFs භාවිතය සිමා කර ඇත!\n\n` +
                                `📌 මෙය ඔබගේ **පළමු සහ අවසන් අනතුරු ඇඟවීමයි**. නැවත වතාවක් යොමු කලහොත් ඔබව සමූහයෙන් Automatically ඉවත් වෙනු ලැබේ.`;
             
-            await chat.sendMessage(warningMsg, { mentions: [senderId] });
+            await client.sendMessage(groupId, warningMsg, { mentions: [senderId] });
             console.log(`⚠️ First sticker/gif warning sent to: ${senderId}`);
 
         } else {
-            // 3. දෙවන වතාවේදී Remove කිරීම
             const removeMsg = `🚫 @${senderId.split('@')[0]} අනතුරු ඇඟවීම නොතකා නැවත Stickers/GIFs දැමූ නිසා සමූහයෙන් ඉවත් කරන ලදී.`;
-            await chat.sendMessage(removeMsg, { mentions: [senderId] });
+            await client.sendMessage(groupId, removeMsg, { mentions: [senderId] });
 
             await directRemoveParticipant(groupId, senderId);
             delete stickerWarnings[warningKey];
@@ -626,7 +626,7 @@ client.on('message', async (message) => {
         }
 
     } catch (error) {
-        console.error("⚠️ General error in sticker moderation:", error.message || error);
+        console.error("⚠️ Error in sticker moderation logic:", error.message || error);
     }
 });
 
