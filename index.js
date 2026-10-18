@@ -878,6 +878,38 @@ client.on("message_create", async (message) => {
         console.log(`💬 Message  : ${message.body || "[Media / Sticker / Invite]"}`);
         console.log("----------------------------------------");
 
+// Stickers සහ GIFs පාලනය කිරීම
+        const isSticker = message.type === 'sticker';
+        const isGif = message.isGif || (message.type === 'video' && message._data && message._data.isGif);
+
+        if (isSticker || isGif) {
+            if (isAdmin) {
+                console.log(`👑 Admin sent a Sticker/GIF. Allowed.`);
+            } else {
+                const warningKey = `${groupId}_${senderId}`;
+
+                if (!stickerWarnings[warningKey]) {
+                    // පළමු වතාව - Warning එක ලබා දීම
+                    stickerWarnings[warningKey] = 1;
+                    
+                    const warningMsg = `⚠️ @${senderId.split('@')[0]}, මෙම සමූහය තුළ සාමාජිකයන් සදහා කරදරකාරී වන Stickers හෝ GIFs භාවිතය සිමා කර ඇත!\n\n` +
+                                       `📌 මෙය ඔබගේ **පළමු සහ අවසන් අනතුරු ඇඟවීමයි**. නැවත වතාවක් යොමු කලහොත් ඔබව සමූහයෙන් Automatically ඉවත් වෙනු ලැබේ.`;
+                    
+                    await client.sendMessage(groupId, warningMsg, { mentions: [senderId] });
+                    console.log(`⚠️ First sticker/gif warning sent to: ${senderId}`);
+
+                } else {
+                    // දෙවන වතාව - සමූහයෙන් ඉවත් කිරීම (Remove)
+                    const removeMsg = `🚫 @${senderId.split('@')[0]} අනතුරු ඇඟවීම නොතකා නැවත Stickers/GIFs දැමූ නිසා සමූහයෙන් ඉවත් කරන ලදී.`;
+                    await client.sendMessage(groupId, removeMsg, { mentions: [senderId] });
+
+                    await directRemoveParticipant(groupId, senderId);
+                    delete stickerWarnings[warningKey];
+                    console.log(`🚫 User removed for repeated sticker/gif: ${senderId}`);
+                }
+            }
+        } 
+
         if (info.actualNumber && !isSriLankan(info.actualNumber)) {
             const removed = await directRemoveParticipant(groupId, senderId);
             if (removed) {
