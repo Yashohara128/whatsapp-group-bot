@@ -802,37 +802,45 @@ client.on("message_create", async (message) => {
         console.log(`💬 Message  : ${message.body || "[Media / Sticker / Invite]"}`);
         console.log("----------------------------------------");
 
-// Stickers සහ GIFs පාලනය කිරීම
+// Stickers සහ GIFs පාලනය කිරීම (Warning & 24 Hours Ban)
         const isSticker = message.type === 'sticker';
         const isGif = message.isGif || (message.type === 'video' && message._data && message._data.isGif);
 
         if (isSticker || isGif) {
             if (isAdmin) {
                 console.log(`👑 Admin sent a Sticker/GIF. Allowed.`);
-            } else {
-                const warningKey = `${groupId}_${senderId}`;
-
-                if (!stickerWarnings[warningKey]) {
-                    // පළමු වතාව - Warning එක ලබා දීම
-                    stickerWarnings[warningKey] = 1;
-                    
-                    const warningMsg = `⚠️ @${senderId.split('@')[0]}, මෙම සමූහය තුළ සාමාජිකයන් සදහා කරදරකාරී වන Stickers හෝ GIFs භාවිතය සිමා කර ඇත!\n\n` +
-                                       `📌 මෙය ඔබගේ **පළමු සහ අවසන් අනතුරු ඇඟවීමයි**. නැවත වතාවක් යොමු කලහොත් ඔබව සමූහයෙන් Automatically ඉවත් වෙනු ලැබේ.`;
-                    
-                    await client.sendMessage(groupId, warningMsg, { mentions: [senderId] });
-                    console.log(`⚠️ First sticker/gif warning sent to: ${senderId}`);
-
-                } else {
-                    // දෙවන වතාව - සමූහයෙන් ඉවත් කිරීම (Remove)
-                    const removeMsg = `🚫 @${senderId.split('@')[0]} අනතුරු ඇඟවීම නොතකා නැවත Stickers/GIFs දැමූ නිසා සමූහයෙන් ඉවත් කරන ලදී.`;
-                    await client.sendMessage(groupId, removeMsg, { mentions: [senderId] });
-
-                    await directRemoveParticipant(groupId, senderId);
-                    delete stickerWarnings[warningKey];
-                    console.log(`🚫 User removed for repeated sticker/gif: ${senderId}`);
-                }
+                return; // Admin නම් මෙතැනින් කෝඩ් එක නතර වේ
             }
-        } 
+
+            const warningKey = `${groupId}_${senderId}`;
+
+            if (!stickerWarnings[warningKey]) {
+                // පළමු වතාව - Warning එක ලබා දීම
+                stickerWarnings[warningKey] = 1;
+                
+                const warningMsg = `⚠️ @${senderId.split('@')[0]}, මෙම සමූහය තුළ සාමාජිකයන් සදහා කරදරකාරී වන Stickers හෝ GIFs භාවිතය සිමා කර ඇත!\n\n` +
+                                   `📌 මෙය ඔබගේ **පළමු සහ අවසන් අනතුරු ඇඟවීමයි**. නැවත වතාවක් යොමු කලහොත් ඔබව සමූහයෙන් Automatically ඉවත් වෙනු ලැබේ.`;
+                
+                await client.sendMessage(groupId, warningMsg, { mentions: [senderId] });
+                console.log(`⚠️ First sticker/gif warning sent to: ${senderId}`);
+
+            } else {
+                // දෙවන වතාව - ගෲප් එකෙන් Remove කර පැය 24 කට Ban කිරීම
+                const removeMsg = `🚫 @${senderId.split('@')[0]} අනතුරු ඇඟවීම නොතකා නැවත Stickers/GIFs දැමූ නිසා සමූහයෙන් ඉවත් කර පැය 24 කට තහනම් කරන ලදී.`;
+                await client.sendMessage(groupId, removeMsg, { mentions: [senderId] });
+
+                // 1. Group එකෙන් Kick කිරීම
+                await directRemoveParticipant(groupId, senderId);
+
+                // 2. පැය 24ක කාලයක් සඳහා Blacklist කිරීම
+                const BAN_DURATION_24H = 24 * 60 * 60 * 1000;
+                blacklistedUsers[senderId] = Date.now() + BAN_DURATION_24H;
+                if (typeof saveBlacklist === 'function') saveBlacklist();
+
+                delete stickerWarnings[warningKey];
+                console.log(`🚫 User banned for 24 hours due to repeated sticker/gif: ${senderId}`);
+            }
+        }
 
         if (info.actualNumber && !isSriLankan(info.actualNumber)) {
             const removed = await directRemoveParticipant(groupId, senderId);
