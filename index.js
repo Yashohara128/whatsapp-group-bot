@@ -781,12 +781,12 @@ client.on("message_create", async (message) => {
         const msgText = message.body ? message.body.trim() : "";
         const textLower = msgText.toLowerCase();
 
-        // =========================================================
+// =========================================================
         // 📢 1. DIRECT ADMIN BROADCAST HANDLER (LID & NUMBER SUPPORT)
         // =========================================================
         if (textLower.startsWith("/broadcast") || textLower.startsWith("/boradcast")) {
             const rawSender = message.author || message.from;
-            const senderDigits = rawSender.replace(/\D/g, ""); 
+            const senderDigits = rawSender.replace(/\D/g, "");  
 
             let contactDigits = "";
             try {
@@ -796,10 +796,15 @@ client.on("message_create", async (message) => {
 
             console.log(`[BROADCAST ATTEMPT] SenderDigits: ${senderDigits} | ContactDigits: ${contactDigits}`);
 
-            const isAdmin = EXTRA_ADMINS.some(admin => {
-                const adminClean = admin.replace(/\D/g, "");
-                return adminClean === senderDigits || adminClean === contactDigits;
-            });
+            // 🌟 මෙන්න මෙතැනට ඔයාගේ LID එකත් (168182413316185) අමතරව ඇතුළත් කරන්න!
+            const HARDCODED_ADMIN_LIDS = ['168182413316185']; 
+
+            const isAdmin = HARDCODED_ADMIN_LIDS.includes(senderDigits) || 
+                            HARDCODED_ADMIN_LIDS.includes(contactDigits) || 
+                            EXTRA_ADMINS.some(admin => {
+                                const adminClean = admin.replace(/\D/g, "");
+                                return adminClean === senderDigits || adminClean === contactDigits;
+                            });
 
             if (!isAdmin) {
                 console.log(`❌ [BROADCAST DENIED] Not authorized.`);
@@ -808,7 +813,7 @@ client.on("message_create", async (message) => {
 
           console.log(`✅ [BROADCAST AUTHORIZED] Sending update to groups...`);
 
-            const textToSend = `📢 *IFSLS SMART BOT UPDATE!* 🤖✨
+          const textToSend = `📢 *IFSLS SMART BOT UPDATE!* 🤖✨
 
 💡 *New Feature & Policy Updates*
 
@@ -825,7 +830,7 @@ The \`/specialnotes\` command content has been updated with the latest Interview
                 try {
                     await client.sendMessage(groupId, textToSend);
                     count++;
-             await new Promise(resolve => setTimeout(resolve, 5000));
+                   await new Promise(resolve => setTimeout(resolve, 5000));
                     
                } catch (err) {
                     console.error(`Failed to send to ${groupId}:`, err);
