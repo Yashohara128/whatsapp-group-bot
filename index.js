@@ -105,90 +105,106 @@ const ifslsAnswers = {
                         "3️⃣ *පාඨමාලාවට තේරී පත්වීම:* Interview එකෙන් පසු තේරී පත් වූ උපාධිය සහ කැම්පස් එක වෙබ් අඩවියේ පළ කරන අතර, කැම්පස් Physical ලියාපදිංචි විය යුතු දිනයන් Email  මගින් දැනුම් දෙනු ඇත.\n\n" +
                         "4️⃣ *අභියාචනා යොමු කිරීම (Appeals):* තේරීම් ප්‍රතිඵල පැමිණිමෙන් වෙනසක් කරගැනිමට (Course/Campus මාරු කරගන්න අවශ්‍යය)නම්, ප්‍රතිඵල පැමිණ මසක් තුල වෙබ් අඩවිය හරහා (https://studentloans.mohe.gov.lk) අභියාචනයක් අයදුම් කල හැක (අභියාචනා කළ නොහැකි අය: තෝරාගත් උපාධි පිරිනමන ආයතනවල දැනටමත් ලියාපදිංචි වී සිටින අයට අභියාචනා ඉදිරිපත් කළ නොහැක.   තෝරාගැනීමේ පදනම: අභියාචනා සලකා බලන්නේ පවතින පුරප්පාඩු මත වන අතර, පුරප්පාඩු වලට වඩා අභියාචනා සංඛ්‍යාව වැඩි වුවහොත් අයදුම්කරුවන්ගේ Z-අගය (Z-scores) සැලකිල්ලට ගනී.   ප්‍රතික්ෂේප වීම් හා අවසන් තීරණය: නියමිත කාලසීමාවෙන් පසු යොමු කරන අභියාචනා භාර නොගන්නා අතර, අභියාචනා සම්බන්ධයෙන් අමාත්‍යාංශ ලේකම්වරයා ගන්නා තීරණය අවසාන තීරණය ලෙස සැලකේ.)",
     
-    "/specialnotes": "📢🎓 *IFSLS 11th INTAKE – INTERVIEW IMPORTANT NOTICE 01* 🎓📢\n\n" +
-                     "IFSLS 11th Intake සඳහා අයදුම් කර ඇති සියලුම සිසුන්ගේ අවධානයටයි.\n" +
-                     "Interview එක සම්බන්ධයෙන් පහත පියවර පිළිවෙලට මතක තබාගන්න. 👇✨\n\n" +
-                     "━━━━━━━━━━━━━━━━━━\n\n" +
-                     "📩 *FIRST – CONFIRMATION EMAIL*\n\n" +
-                     "මුලින්ම Ministry එකෙන් Interview Confirmation Email එකක් ලැබෙනවා. 📬\n\n" +
-                     "👉 Email එක හොඳින් කියවන්න.\n" +
-                     "👉 ලබා දී ඇති instructions අනිවාර්යයෙන් follow කරන්න. ✅\n" +
-                     "👉 Online / Physical Interview සඳහා option එකක් ලබා දී තිබේ නම්, තමන්ට අවශ්‍ය option එක select කර confirm කරන්න.\n" +
-                     "👉 ⏰ Email එකේ සඳහන් DEADLINE එකට පෙර confirmation එක අනිවාර්යයෙන් complete කරන්න.\n\n" +
-                     "🚨 ⚠️ DEADLINE එක miss කරන්න එපා! ⚠️\n" +
-                     "📌 Confirmation එක complete කළ බව නැවතත් check කරගන්න. ✅\n\n" +
-                     "━━━━━━━━━━━━━━━━━━\n\n" +
-                     "📩 *SECOND – DATE & TIME EMAIL*\n\n" +
-                     "Confirmation එක complete කළාට පසුව, Interview එකට අදාළ Date, Time සහ අනෙකුත් instructions ඇතුළත් දෙවන Email එක ලැබෙනවා. 📅⏰\n\n" +
-                     "💻 Online Interview නම්:\n" +
-                     "🔗 Email එකේ ලබා දී ඇති platform / link එක හරහා interview එකට join වෙන්න.\n\n" +
-                     "🏢 Physical Interview නම්:\n" +
-                     "📍 Email එකේ ලබා දී ඇති Ministry location, Date සහ Time අනුව physically attend වෙන්න.\n\n" +
-                     "📌 Date, Time සහ Online Link / Physical Location එක save කරගන්න. 💾\n\n" +
-                     "━━━━━━━━━━━━━━━━━━\n\n" +
-                     "📑 *DOCUMENTS – කලින්ම සූදානම් කරගන්න*\n\n" +
-                     "📋 පහත documents කලින්ම සූදානම් කරගෙන සිටීම වැදගත්:\n\n" +
-                     "🪪 NIC / Passport\n" +
-                     "📜 Original Birth Certificate\n" +
-                     "📜 Original G.C.E. A/L Certificate\n" +
-                     "📜 Original G.C.E. O/L Certificate\n" +
-                     "🏫 School Leaving Certificate\n" +
-                     "📄 Grama Niladhari (GN) Certificate\n" +
-                     "📝 Printed Application Copy + Principal’s Certificate\n" +
-                     "📊 Bridging Course Result – applicable නම්\n" +
-                     "📄 Course Changing Letter – applicable නම්\n\n" +
-                     "💻 Online Interview නම්:\n" +
-                     "Required documents වල scanned copies, Ministry එකෙන් ලබා දෙන official instructions අනුව සඳහන් කර ඇති email address එකට submit කරන්න. 📧\n\n" +
-                     "🏢 Physical Interview නම්:\n" +
-                     "Email එකේ සඳහන් කර ඇති required original documents සමඟ interview එකට සහභාගී වන්න. 📑\n\n" +
-                     "━━━━━━━━━━━━━━━━━━\n\n" +
-                     "⚠️📌 *IMPORTANT REMINDER*\n\n" +
-                     "📩 Ministry එකෙන් ලැබෙන emails නිතර check කරන්න.\n" +
-                     "📂 Inbox + Spam/Junk folders ද පරීක්ෂා කරන්න.\n" +
-                     "⏰ Confirmation Deadline එක අනිවාර්යයෙන් මතක තබාගන්න.\n" +
-                     "📌 Ministry එකෙන් ලබා දෙන latest official instructions පමණක් follow කරන්න. ✅\n\n" +
-                     "━━━━━━━━━━━━━━━━━━\n\n" +
-                     "🎓🌟 *ALL THE VERY BEST FOR YOUR IFSLS INTERVIEW!* 🌟🎓\n\n" +
-                     "GOOD LUCK & ALL THE BEST! 🍀🎓❤️\n\n" +
-                     "IFSLS STUDENT ADMIN COMMUNITY",
-    
-  "📢 *IFSLS 11th Intake - INTERVIEW IMPORTANT NOTICE 02* 📢\n\n" +
-    "IFSLS 11th Intake සඳහා අයදුම් කර ඇති සිසුන්ගේ අවධානයටයි.\n" +
-    "Interview එක සම්බන්ධයෙන් යන පියවර පිළිවෙළට මතක තබාගන්න. 👇\n\n" +
-    "-------------------------\n\n" +
-    "📧 *FIRST - CONFIRMATION EMAIL*\n" +
-    "මුලින්ම Ministry එකෙන් Interview Confirmation Email එකක් ලැබෙනවා. 📧\n" +
-    "👉 Email එක හොඳින් කියවන්න.\n" +
-    "👉 ලබා දී ඇති instructions අනිවාර්යයෙන් follow කරන්න.\n" +
-    "👉 Online / Physical Interview සඳහා option එකක් ලබා දී තිබේ නම්, ඔබට අවශ්‍ය option එක select කර confirm කරන්න.\n" +
-    "👉 Email එකේ සඳහන් DEADLINE එකට පෙර confirmation එක අනිවාර්යයෙන් complete කරන්න.\n" +
-    "⚠️ DEADLINE එක miss කරන්න එපා! ⚠️\n" +
-    "📌 Confirmation එක complete කළ බව නැවතත් check කරන්න. ✅\n\n" +
-    "-------------------------\n\n" +
-    "📅 *SECOND - DATE & TIME EMAIL*\n" +
-    "Confirmation එක complete කළාට පස්ව, Interview එකට අදාළ Date, Time සහ අනෙකුත් instructions ඇතුළත් වෙන Email එක ලැබෙනවා. 📧\n\n" +
-    "-------------------------\n\n" +
-    "📋 *INTERVIEW INSTRUCTIONS & GUIDELINES*\n\n" +
-    "📌 *01. අවශ්‍ය ලේඛන සූදානම් කරගැනීම*\n" +
-    "සම්මුඛ පරීක්ෂණයට අදාළ සියලුම ලේඛන කල්වේලා ඇතිව සූදානම් කරගත යුතුය.\n\n" +
-    "📧 *02. ලේඛන විද්‍යුත් තැපෑල මඟින් යොමු කිරීම*\n" +
-    "සම්මුඛ පරීක්ෂණය පැවැත්වීමට අවම වශයෙන් පැයකට පෙර, ලබා දී ඇති විද්‍යුත් තැපැල් ලිපිනය වෙත අදාළ සියලුම ලේඛන යොමු කළ යුතුය.\n\n" +
-    "✅ *03. විද්‍යුත් තැපෑල ලැබී ඇති බව තහවුරු කරගැනීම*\n" +
-    "යොමු කරන ලද විද්‍යුත් තැපෑල සාර්ථකව යවා ඇති බවත්, අදාළ පාර්ශ්වය වෙත ලැබී ඇති බවත් තහවුරු කරගත යුතුය.\n\n" +
-    "📱 *04. තාක්ෂණික පහසුකම් පරීක්ෂා කිරීම*\n" +
-    "සම්මුඛ පරීක්ෂණයට සහභාගී වන උපකරණයේ අන්තර්ජාල සම්බන්ධතාව, කැමරාව සහ බැටරි ආරෝපණය නිසි පරිදි පවතින බව කල්තියා තහවුරු කරගත යුතුය.\n\n" +
-    "📂 *05. මුල් ලේඛන සූදානම් කරගැනීම*\n" +
-    "විද්‍යුත් තැපෑල මඟින් යොමු කරන ලද සියලුම ලේඛනවල මුල් පිටපත් (Original Documents) සම්මුඛ පරීක්ෂණයට සහභාගී වන අවස්ථාවේදී ළඟ තබාගත යුතුය.\n\n" +
-    "⏰ *06. නියමිත වේලාවට පෙර සම්බන්ධ වීම*\n" +
-    "ලබා දී ඇති වේලාවට අවම වශයෙන් විනාඩි 20කට පෙර සම්මුඛ පරීක්ෂණය සඳහා සම්බන්ධ විය යුතුය.\n\n" +
-    "🖥️ *07. Waiting Room තුළ අවධානයෙන් සිටීම*\n" +
-    "තම වාරය පැමිණෙන තෙක් Waiting Room තුළ රැඳී සිටීමට සිදුවිය හැකි බැවින්, එම කාලය තුළ අවධානයෙන් හා සූදානමින් සිටිය යුතුය.\n\n" +
-    "⚠️ *විශේෂ දැනුම්දීම*\n" +
-    "ඉහත උපදෙස් පිළිපදිමින්, සම්මුඛ පරීක්ෂණය සඳහා අවශ්‍ය සියලු කටයුතු කල්වේලා ඇතිව සූදානම් කරගන්නා ලෙස සියලුම සිසුන්ට කාරුණිකව දැනුම් දෙනු ලැබේ.\n\n" +
-    "🌟 *ALL THE VERY BEST & GOOD LUCK!* 🍀✨\n" +
-    "━━━━━━━━━━━━━━━━━━\n" +
-    "🎓 *IFSLS STUDENTS ADMIN COMMUNITY*",
+"/specialnotes": `📢🎓 *IFSLS 11th INTAKE – INTERVIEW IMPORTANT NOTICE 01* 🎓📢
 
+IFSLS 11th Intake සඳහා අයදුම් කර ඇති සියලුම සිසුන්ගේ අවධානයටයි.
+Interview එක සම්බන්ධයෙන් පහත පියවර පිළිවෙලට මතක තබාගන්න. 👇✨
+
+━━━━━━━━━━━━━━━━━━
+
+📩 *FIRST – CONFIRMATION EMAIL*
+
+මුලින්ම Ministry එකෙන් Interview Confirmation Email එකක් ලැබෙනවා. 📬
+
+👉 Email එක හොඳින් කියවන්න.
+👉 ලබා දී ඇති instructions අනිවාර්යයෙන් follow කරන්න. ✅
+👉 Online / Physical Interview සඳහා option එකක් ලබා දී තිබේ නම්, තමන්ට අවශ්‍ය option එක select කර confirm කරන්න.
+👉 ⏰ Email එකේ සඳහන් DEADLINE එකට පෙර confirmation එක අනිවාර්යයෙන් complete කරන්න.
+
+🚨 ⚠️ DEADLINE එක miss කරන්න එපා! ⚠️
+📌 Confirmation එක complete කළ බව නැවතත් check කරගන්න. ✅
+
+━━━━━━━━━━━━━━━━━━
+
+📩 *SECOND – DATE & TIME EMAIL*
+
+Confirmation එක complete කළාට පසුව, Interview එකට අදාළ Date, Time සහ අනෙකුත් instructions ඇතුළත් දෙවන Email එක ලැබෙනවා. 📅⏰
+
+💻 Online Interview නම්:
+🔗 Email එකේ ලබා දී ඇති platform / link එක හරහා interview එකට join වෙන්න.
+
+🏢 Physical Interview නම්:
+📍 Email එකේ ලබා දී ඇති Ministry location, Date සහ Time අනුව physically attend වෙන්න.
+
+📌 Date, Time සහ Online Link / Physical Location එක save කරගන්න. 💾
+
+━━━━━━━━━━━━━━━━━━
+
+📑 *DOCUMENTS – කලින්ම සූදානම් කරගන්න*
+
+📋 පහත documents කලින්ම සූදානම් කරගෙන සිටීම වැදගත්:
+
+🪪 NIC / Passport
+📜 Original Birth Certificate
+📜 Original G.C.E. A/L Certificate
+📜 Original G.C.E. O/L Certificate
+🏫 School Leaving Certificate
+📄 Grama Niladhari (GN) Certificate
+📝 Printed Application Copy + Principal’s Certificate
+📊 Bridging Course Result – applicable නම්
+📄 Course Changing Letter – applicable නම්
+
+💻 Online Interview නම්:
+Required documents වල scanned copies, Ministry එකෙන් ලබා දෙන official instructions අනුව සඳහන් කර ඇති email address එකට submit කරන්න. 📧
+
+🏢 Physical Interview නම්:
+Email එකේ සඳහන් කර ඇති required original documents සමඟ interview එකට සහභාගී වන්න. 📑
+
+━━━━━━━━━━━━━━━━━━
+
+⚠️📌 *IMPORTANT REMINDER*
+
+📩 Ministry එකෙන් ලැබෙන emails නිතර check කරන්න.
+📂 Inbox + Spam/Junk folders ද පරීක්ෂා කරන්න.
+⏰ Confirmation Deadline එක අනිවාර්යයෙන් මතක තබාගන්න.
+📌 Ministry එකෙන් ලබා දෙන latest official instructions පමණක් follow කරන්න. ✅
+
+━━━━━━━━━━━━━━━━━━
+
+📋 *INTERVIEW INSTRUCTIONS & GUIDELINES*
+
+📌 *01. අවශ්‍ය ලේඛන සූදානම් කරගැනීම*
+සම්මුඛ පරීක්ෂණයට අදාළ සියලුම ලේඛන කල්වේලා ඇතිව සූදානම් කරගත යුතුය.
+
+📧 *02. ලේඛන විද්‍යුත් තැපෑල මඟින් යොමු කිරීම*
+සම්මුඛ පරීක්ෂණය පැවැත්වීමට අවම වශයෙන් පැයකට පෙර, ලබා දී ඇති විද්‍යුත් තැපැල් ලිපිනය වෙත අදාළ සියලුම ලේඛන යොමු කළ යුතුය.
+
+✅ *03. විද්‍යුත් තැපෑල ලැබී ඇති බව තහවුරු කරගැනීම*
+යොමු කරන ලද විද්‍යුත් තැපෑල සාර්ථකව යවා ඇති බවත්, අදාළ පාර්ශ්වය වෙත ලැබී ඇති බවත් තහවුරු කරගත යුතුය.
+
+📱 *04. තාක්ෂණික පහසුකම් පරීක්ෂා කිරීම*
+සම්මුඛ පරීක්ෂණයට සහභාගී වන උපකරණයේ අන්තර්ජාල සම්බන්ධතාව, කැමරාව සහ බැටරි ආරෝපණය නිසි පරිදි පවතින බව කල්තියා තහවුරු කරගත යුතුය.
+
+📂 *05. මුල් ලේඛන සූදානම් කරගැනීම*
+විද්‍යුත් තැපෑල මඟින් යොමු කරන ලද සියලුම ලේඛනවල මුල් පිටපත් (Original Documents) සම්මුඛ පරීක්ෂණයට සහභාගී වන අවස්ථාවේදී ළඟ තබාගත යුතුය.
+
+⏰ *06. නියමිත වේලාවට පෙර සම්බන්ධ වීම*
+ලබා දී ඇති වේලාවට අවම වශයෙන් විනාඩි 20කට පෙර සම්මුඛ පරීක්ෂණය සඳහා සම්බන්ධ විය යුතුය.
+
+🖥️ *07. Waiting Room තුළ අවධානයෙන් සිටීම*
+තම වාරය පැමිණෙන තෙක් Waiting Room තුළ රැඳී සිටීමට සිදුවිය හැකි බැවින්, එම කාලය තුළ අවධානයෙන් හා සූදානමින් සිටිය යුතුය.
+
+⚠️ *විශේෂ දැනුම්දීම*
+ඉහත උපදෙස් පිළිපදිමින්, සම්මුඛ පරීක්ෂණය සඳහා අවශ්‍ය සියලු කටයුතු කල්වේලා ඇතිව සූදානම් කරගන්නා ලෙස සියලුම සිසුන්ට කාරුණිකව දැනුම් දෙනු ලැබේ.
+
+━━━━━━━━━━━━━━━━━━
+
+🎓🌟 *ALL THE VERY BEST FOR YOUR IFSLS INTERVIEW!* 🌟🎓
+
+GOOD LUCK & ALL THE BEST! 🍀🎓❤️
+
+🎓 *IFSLS STUDENT ADMIN COMMUNITY*`,
+    
 
 "/onlinecertificate": "📜 *Online A/L & O/L Exam Certificates ගෙදරටම ගෙන්වා ගන්නා ආකාරය:*\n\n" +
                           "සහතිකය Online මඟින් අයදුම් කර ගෙදරටම ගෙන්වා ගැනීමට පහත පියවර අනුගමනය කරන්න:\n" +
