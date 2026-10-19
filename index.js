@@ -806,18 +806,19 @@ client.on("message_create", async (message) => {
                 return;
             }
 
-            console.log(`✅ [BROADCAST AUTHORIZED] Sending update to groups...`);
+          console.log(`✅ [BROADCAST AUTHORIZED] Sending update to groups...`);
 
-            const textToSend = "📢 *IFSLS SMART BOT UPDATE!* 🤖✨\n\n" +
-                               "ළමයි, ඔයාලගේ IFSLS Assistant Bot එකට අලුත් Commands එකතු කරලා Error Fix කරලා  Update කළා! 🎉\n\n" +
-                               "🆓 අලුත් Features බලන්න පහත කමාන්ඩ්ස් ගෲප් එකට Send කරලා බලන්න:\n" +
-                               "📌 */onlinecertificate* - Certificate Online ගෙන්න ගන්නා හැටි (Video සමඟ)\n" +
-                               "📌 */coursechange* - Course Change Letter Format\n" +
-                               "📌 */ugccancel* - UGC Registration Cancel කරන හැටි\n" +
-                               "📌 */jobs* - Internships & Job Opportunities\n" +
-                               "📌 */boarding* - බෝඩිම් / Accommodation Web & Video\n" +
-                               "📌 */laptopguide* - Degree එකට හරියන Laptop Buying Guide\n\n" +
-                               "💡 *සියලුම Commands බලාගැනීමට /menu ලෙස Type කරන්න.*";
+            const textToSend = `📢 *IFSLS SMART BOT UPDATE!* 🤖✨
+
+💡 *New Feature & Policy Updates*
+
+🚫 *Sticker & GIF Restrictions / ස්ටිකර් සහ GIFs භාවිතය සීමා කිරීම:*
+Stickers and GIFs are now restricted in the group to avoid spam. Sending Stickers or GIFs will result in a warning first, and a **24-Hour Ban** for repeated violations! ⚠️
+*(සමූහයේ කරදරකාරී ලෙස Stickers සහ GIFs භාවිතය සීමා කර ඇත. පළමු වතාවේ අනතුරු ඇඟවීමක් ලැබෙන අතර, නැවත යොමු කළහොත් පැය 24 කට සමූහයෙන් ඉවත් කරනු ලැබේ!)*
+
+📝 *Updated /specialnotes Command / විශේෂ සටහන් යාවත්කාලීන කිරීම:*
+The \`/specialnotes\` command content has been updated with the latest Interview instructions and guidelines! Check it out now.
+*(අලුත්ම සම්මුඛ පරීක්ෂණ උපදෙස් සහ මාර්ගෝපදේශ ඇතුළත් කර \`/specialnotes\` කමාන්ඩ් එක යාවත්කාලීන කර ඇත!)*`;
 
             let count = 0;
             for (const groupId of TARGET_GROUP_IDS) {
