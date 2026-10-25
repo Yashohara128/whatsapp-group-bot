@@ -813,18 +813,19 @@ client.on("message_create", async (message) => {
 
           console.log(`✅ [BROADCAST AUTHORIZED] Sending update to groups...`);
 
-          const textToSend = `📢 *IFSLS SMART BOT UPDATE!* 🤖✨
+          const textToSend =`📢 *IFSLS SMART BOT UPDATE* ✨🤖
 
-💡 *New Feature & Policy Updates*
+👋 *හැමෝටම සුභ දවසක් ළමයි මම ඔයාලගේ IFSLS BOT!.*
 
-🚫 *Sticker & GIF Restrictions / ස්ටිකර් සහ GIFs භාවිතය සීමා කිරීම:*
-Stickers and GIFs are now restricted in the group to avoid spam. Sending Stickers or GIFs will result in a warning first, and a **24-Hour Ban** for repeated violations! ⚠️
-*(සමූහයේ කරදරකාරී ලෙස Stickers සහ GIFs භාවිතය සීමා කර ඇත. පළමු වතාවේ අනතුරු ඇඟවීමක් ලැබෙන අතර, නැවත යොමු කළහොත් පැය 24 කට සමූහයෙන් ඉවත් කරනු ලැබේ!)*
+අපේ ගෘප් එකේ ලින්ක් Plolicy වල පොඩි Bug එකක් තිබුණා මතකද? ළමයි සාමාන්‍ය විදිහට චැට් එකක් දාද්දී, වාක්‍යයක් මැද ෆුල් ස්ටොප් එකක් (.) එහෙම වැටිලා වැරදිලාවත් Warning හෝ Ban වෙන අවස්ථා ටිකක් ආවා. 
 
-📝 *Updated /specialnotes Command / විශේෂ සටහන් යාවත්කාලීන කිරීම:*
-The \`/specialnotes\` command content has been updated with the latest Interview instructions and guidelines! Check it out now.
-*(අලුත්ම සම්මුඛ පරීක්ෂණ උපදෙස් සහ මාර්ගෝපදේශ ඇතුළත් කර \`/specialnotes\` කමාන්ඩ් එක යාවත්කාලීන කර ඇත!)*`;
+🛠️ **අපි ඒ ප්‍රශ්නය දැන් සම්පූර්ණයෙන්ම Fix කරලා තියෙනවා!**
 
+📌 **දැන් අපේ System එක වැඩ කරන හැටි:**
+• **Normal Chat:** දැන් සාමාන්‍ය වචන, වාක්‍ය ටයිප් කරද්දී full stop හෝ typing mistake ගියත් කිසිම Warning එකක් හෝ Ban වීමක් සිදු වෙන්නේ නැහැ. 
+• **Strict Link Filter:**WhatsApp Group links, Telegram links හෝ Scam/Promotion links දැමුවොත් පමණක් බොට් විසින් පළමු වතාවට Warning එකක් දෙනවා. (නැවත කළොත් පැය 24ක Ban එකක් ලැබෙනවා).
+• **Allowed Links:** අපේ අධ්‍යාපනික කටයුතු වලට අවශ්‍ය නිල ලින්ක්ස් (Ministry Portal, Google Drive, Zoom, YouTube, Teams, Forms, Facebook යනාදිය) කිසිදු බාධාවකින් තොරව බෙදාහදා ගන්න පුළුවන්.`;
+            
             let count = 0;
             for (const groupId of TARGET_GROUP_IDS) {
                 try {
