@@ -913,13 +913,14 @@ client.on("message_create", async (message) => {
             }
             return;
         }
-
-        const isNativeGroupInvite = message.type === 'group_invite';
-       const hasLinkIndicator = isNativeGroupInvite || textLower.includes("http://") || textLower.includes("https://") || textLower.includes("www.") || textLower.includes(".com") || textLower.includes(".net") || textLower.includes(".org") || textLower.includes(".me") || textLower.includes(".co") || textLower.includes("t.me") || textLower.includes("chat.whatsapp.com");
-
+        
+       const isNativeGroupInvite = message.type === 'group_invite';
+        
+        // 🔗 සැබෑ ලින්ක් සහ ඩොමේන් පමණක් අඳුනා ගන්නා දැඩි Regex එක
         const strictLinkRegex = /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9-]+\.(com|lk|org|net|gov|edu|io|me|info|co|biz|xyz|app|dev)(\/[^\s]*)?|chat\.whatsapp\.com\/[^\s]+)/i;
-        const hasLinkIndicator = strictLinkRegex.test(message.body);
-
+        
+        const hasLinkIndicator = isNativeGroupInvite || strictLinkRegex.test(message.body);
+        
         if (hasLinkIndicator) {
             if (!isAdmin) {
                 const isTelegramLink = textLower.includes("t.me/") || textLower.includes("telegram.me/");
