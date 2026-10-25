@@ -914,7 +914,10 @@ The \`/specialnotes\` command content has been updated with the latest Interview
         }
 
         const isNativeGroupInvite = message.type === 'group_invite';
-        const hasLinkIndicator = isNativeGroupInvite || textLower.includes("http://") || textLower.includes("https://") || textLower.includes("www.") || textLower.includes(".com") || textLower.includes(".net") || textLower.includes(".org") || textLower.includes(".me") || textLower.includes(".co") || textLower.includes("t.me") || textLower.includes("chat.whatsapp.com");
+       const hasLinkIndicator = isNativeGroupInvite || textLower.includes("http://") || textLower.includes("https://") || textLower.includes("www.") || textLower.includes(".com") || textLower.includes(".net") || textLower.includes(".org") || textLower.includes(".me") || textLower.includes(".co") || textLower.includes("t.me") || textLower.includes("chat.whatsapp.com");
+
+        const strictLinkRegex = /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9-]+\.(com|lk|org|net|gov|edu|io|me|info|co|biz|xyz|app|dev)(\/[^\s]*)?|chat\.whatsapp\.com\/[^\s]+)/i;
+        const hasLinkIndicator = strictLinkRegex.test(message.body);
 
         if (hasLinkIndicator) {
             if (!isAdmin) {
