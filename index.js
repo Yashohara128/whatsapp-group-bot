@@ -218,6 +218,8 @@ GOOD LUCK & ALL THE BEST! 🍀🎓❤️
                      "🔗 English Letter Format: https://docs.google.com/document/d/10vvIaWHQY_JpzJu80Uc0UjOT0uGaeWy1/edit?usp=sharing&ouid=113936433707512643329&rtpof=true&sd=true\n\n" +
                      "🔗 Sinhala Letter Format: https://docs.google.com/document/d/1qRNlfFBMn-ICdXM4Vsv2dISdkyYYjal3/edit?usp=sharing&ouid=113936433707512643329&rtpof=true&sd=true",
 
+    "/affidavit": "📜 *AFFIDAVIT (දිවුරුම් ප්‍රකාශය) පිළිබඳ උපදෙස් සහ Document Link* 🏛️\n\n1️⃣ **දිවුරුම් ප්‍රකාශයක් (Affidavit) ලබා ගන්නේ කෙසේද?**\n• සාමදාන විනිශ්චයකාරවරයෙකු (JP - Justice of the Peace) හෝ දිවුරුම් කොමසාරිස්වරයෙකු (Commissioner for Oaths) ලවා සහතික කරගත යුතුය.\n• ඔබගේ නිවැරදි ජාතික හැඳුනුම්පත් (NIC) විස්තර සහ අදාළ කරුණු පැහැදිලිව ඇතුළත් කළ යුතුය.\n\n2️⃣ **අවශ්‍ය වන සාමාන්‍ය අවස්ථා:**\n• නම් වල වෙනස්කම් / අක්ෂර වින්‍යාසයේ දෝෂ (Name Correction)\n• ලිපිනයන් තහවුරු කිරීම (Address Verification)\n\n📁 *Download Affidavit Form / Sample (Google Drive):\n*https://drive.google.com/file/d/1MvbFANFnO8mYvgszPAJidsiVA0YEkQc4/view?usp=sharing\n\n✨ *වැඩි විස්තර සදහා Admin වරයෙක් සම්බන්ධ කරගන්න!*",
+
     "/ugccancel": "🚫 *UGC (රජයේ කැම්පස්) ලියාපදිංචිය අවලංගු කර පාසල් අස්වීමේ සහතිකය ලබාගැනීම:*\n\n" +
                   "ඔබ රජයේ විශ්වවිද්‍යාලයකට (UGC) තේරීපත්වී, පසුව IFSLS ණය යෝජනා ක්‍රමය යටතේ වෙනත් කැම්පස් එකකට යාමට අපේක්ෂා කරන්නේ නම්, UGC ලියාපදිංචිය නිල වශයෙන් අවලංගු කර (Cancel කර) පාසල් අස්වීමේ සහතිකය (School Leaving Certificate) ලබාගත යුතුය.\n\n" +
                   "📁 *අදාළ Official Document Form එක මෙතනින් ඩවුන්ලෝඩ් කරගන්න:*\n" +
@@ -717,13 +719,14 @@ client.on("group_join", async (notification) => {
                                      `📌 */conditions* - Degree හදාරන කාලය තුලදි පිලිපැදිය යුතු නීති.\n` +
                                      `📌 */applycenters* - Apply කීරිමේ මධ්‍යස්ථාන පිලිබඳ විස්තර.\n` +
                                      `📌 */applysteps* - අයදුම් කිරීමේ පියවර.\n` +
-                                     `📌 */afterapplysteps* - අයදුම් කිරීමෙන් පසු.\n` +
-                                     `📌 */ministrycontact* - Ministry Department එක contact කරන විදිහ\n\n` +
-                                     `📌 */onlinecertificate* - O/L & A/L Exam Certificates Online ගෙන්න ගන්නා හැටි\n` +
+                                     `📌 */afterapplysteps* - අයදුම් කිරීමෙන් පසු පියවර.\n` +
+                                     `📌 */ministrycontact* - Ministry Department එක contact කර ගැනීම සදහා\n\n` +
+                                     `📌 */onlinecertificate* - O/L & A/L Exam Certificates Online ගෙන්වා ගැනීම සදහා\n` +
                                      `📌 */coursechange* - Course Change Letter Format\n` +
-                                     `📌 */ugccancel* - UGC Registration Cancel කරන හැටි\n` +
+                                     `📌 */*Affidavit - දිවුරුම් ප්‍රකාශයක් ලබා ගැනීම සදහා\n` +
+                                     `📌 */ugccancel* - UGC Registration Cancel කිරීම සදහා\n` +
                                      `📌 */laptopguide* - Degree එකට හරියන Laptop Buying Guide\n` +
-                                     `📌 */jobs* - Internships සහ Jobs විස්තර\n` +
+                                     `📌 */jobs* - Internships සහ Jobs විස්තර\n`+
                                      `📌 */boarding* - බෝඩිම් / Accommodation Web & Video\n`+
                 
                                      `📄 *Guide Books (භාෂා 3න්ම):*\n` +
