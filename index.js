@@ -722,7 +722,7 @@ client.on("group_join", async (notification) => {
                                      `📌 */ministrycontact* - Ministry Department එක contact කර ගැනීම සදහා\n\n` +
                                      `📌 */onlinecertificate* - O/L & A/L Exam Certificates Online ගෙන්වා ගැනීම සදහා\n` +
                                      `📌 */coursechange* - Course Change Letter Format\n` +
-                                     `📌 */*Affidavit - දිවුරුම් ප්‍රකාශයක් ලබා ගැනීම සදහා\n` +
+                                     `📌 */Affidavit* - දිවුරුම් ප්‍රකාශයක් ලබා ගැනීම සදහා\n` +
                                      `📌 */ugccancel* - UGC Registration Cancel කිරීම සදහා\n` +
                                      `📌 */laptopguide* - Degree එකට හරියන Laptop Buying Guide\n` +
                                      `📌 */jobs* - Internships සහ Jobs විස්තර\n`+
@@ -1066,6 +1066,7 @@ client.on("message_create", async (message) => {
                             `✅ */ministrycontact* - Ministry Department එක contact කරන විදිහ\n\n` +
                             `📌 */onlinecertificate* - O/L & A/L Exam Certificates Online ගෙන්න ගන්නා හැටි\n` +
                             `📌 */coursechange* - Course Change Letter Format\n` +
+                            `📌 */Affidavit* - දිවුරුම් ප්‍රකාශයක් ලබා ගැනීම සදහා\n` +
                             `📌 */ugccancel* - UGC Registration Cancel කරන හැටි\n` +
                             `📌 */jobs* - Internships සහ Jobs විස්තර \n` +
                             `📌 */boarding* - බෝඩිම් / Accommodation Web & Video\n`+
