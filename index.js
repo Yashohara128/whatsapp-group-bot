@@ -818,14 +818,9 @@ client.on("message_create", async (message) => {
 
 👋 *හැමෝටම සුභ දවසක් ළමයි මම ඔයාලගේ IFSLS BOT!.*
 
-අපේ ගෘප් එකේ ලින්ක් Plolicy වල පොඩි Bug එකක් තිබුණා මතකද? ළමයි සාමාන්‍ය විදිහට චැට් එකක් දාද්දී, වාක්‍යයක් මැද ෆුල් ස්ටොප් එකක් (.) එහෙම වැටිලා වැරදිලාවත් Warning හෝ Ban වෙන අවස්ථා ටිකක් ආවා. 
-
-🛠️ **අපි ඒ ප්‍රශ්නය දැන් සම්පූර්ණයෙන්ම Fix කරලා තියෙනවා!**
-
-📌 **දැන් අපේ System එක වැඩ කරන හැටි:**
-• **Normal Chat:** දැන් සාමාන්‍ය වචන, වාක්‍ය ටයිප් කරද්දී full stop හෝ typing mistake ගියත් කිසිම Warning එකක් හෝ Ban වීමක් සිදු වෙන්නේ නැහැ. 
-• **Strict Link Filter:**WhatsApp Group links, Telegram links හෝ Scam/Promotion links දැමුවොත් පමණක් බොට් විසින් පළමු වතාවට Warning එකක් දෙනවා. (නැවත කළොත් පැය 24ක Ban එකක් ලැබෙනවා).
-• **Allowed Links:** අපේ අධ්‍යාපනික කටයුතු වලට අවශ්‍ය නිල ලින්ක්ස් (Ministry Portal, Google Drive, Zoom, YouTube, Teams, Forms, Facebook යනාදිය) කිසිදු බාධාවකින් තොරව බෙදාහදා ගන්න පුළුවන්.`;
+අපේ බොට් ට අලුත් විස්තර ටිකක් එකතු කළා! දැන් පහත commands group එකේ පාවිච්චි කරන්න පුළුවන්:
+• **/ministrycontact** - උසස් අධ්‍යාපන අමාත්‍යාංශයේ සියලුම නිල අංක සහ විස්තර ලබාගන්න පුලුවන්.\n\n
+• **/affidavit** - දිවුරුම් ප්‍රකාශ (Affidavit) ගැන දැනගන්න ඕන විස්තර සහ Google Drive Form Link එක ලබාගන්න පුලුවන්.`;
             
             let count = 0;
             for (const groupId of TARGET_GROUP_IDS) {
