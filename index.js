@@ -4,6 +4,7 @@ const cron = require("node-cron");
 const fs = require("fs"); 
 const path = require("path");
 const stickerWarnings = {};
+const welcomedUsers = new Set();
 
 const TARGET_GROUP_IDS = [
     "120363427144307038@g.us",
@@ -776,6 +777,28 @@ async function checkIsAdmin(message, senderId, actualNumber) {
         return false; 
     }
 }
+
+// ==========================================
+// PRIVATE INBOX REDIRECTION
+// ==========================================
+client.on('message', async (message) => {
+    if (message.fromMe) return;
+    if (message.from.endsWith('@g.us')) return; // Group messages ignore කරනවා
+
+    const senderId = message.from;
+
+    // කලින් Welcome ගිය කෙනෙක් නම්, ඊළඟ පාර එවන මැසේජ් වලට මේක යවනවා:
+    if (welcomedUsers.has(senderId)) {
+        await message.reply("👋 Hello, මම IFSLS group administrator bot! කරුණාකර වැඩි විස්තර සඳහා BOT official අංකයට Messages යොමු කරන්න: 📞 +94762068122");
+        return;
+    }
+
+    // Inbox එකට ආපු අලුත් කෙනෙක් නම්:
+    await message.reply("ආයුබෝවන්! අප හා සම්බන්ධ වීමට ස්තුතියි.කරුණාකර වැඩි විස්තර සඳහා BOT official අංකයට Messages යොමු කරන්න: 📞 +94762068122");
+    welcomedUsers.add(senderId);
+});
+
+
 
 client.on("message_create", async (message) => {
     try {
