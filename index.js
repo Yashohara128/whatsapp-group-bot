@@ -839,7 +839,7 @@ client.on('message', async (message) => {
         } catch (e) {}
     }
 
-    // 2. RAG AI Assistant (/ai හෝ Mention කළාම Guidebook පාවිච්චි කරමින් උත්තර දීම)
+   // 2. RAG AI Assistant (/ai හෝ Mention කළාම System Prompt එකේ ඇති Guide දත්ත පාවිච්චි කරමින් උත්තර දීම)
     const isMentioned = message.mentionedIds && client.info?.wid && message.mentionedIds.includes(client.info.wid._serialized);
     if (textLower.startsWith('/ai') || isMentioned) {
         let query = msgText.replace(/^\/ai\s*/i, '').replace(/@\d+/g, '').trim();
@@ -847,30 +847,53 @@ client.on('message', async (message) => {
         
         // යුසර් සිංහලෙන් අහලා තියෙනවද බැලීම
         const isSinhala = /[\u0D80-\u0DFF]/.test(query);
-        let selectedGuide = isSinhala ? sinhalaGuide.substring(0, 10000) : englishGuide.substring(0, 10000);
         let languageInstruction = isSinhala 
-            ? "Answer strictly in Sinhala based on the provided Sinhala guide context." 
-            : "Answer strictly in English based on the provided English guide context.";
+            ? "Answer strictly in natural, clear, and conversational Sinhala." 
+            : "Answer strictly in clear and professional English.";
 
         try {
-            const completion = await groq.chat.completions.create({
+            const dynamicGroq = getGroqClient(); // Multi-key rotation function එක
+
+            const completion = await dynamicGroq.chat.completions.create({
                 model: 'openai/gpt-oss-20b',
                 messages: [
                     { 
                         role: "system", 
-                        content: `You are the official AI assistant for the IFSLS (Interest Free Student Loan Scheme) government student loan program in Sri Lanka.
+                        content: `You are a friendly, supportive, and warm AI assistant (like an older student or helpful senior friend) for the IFSLS (Interest Free Student Loan Scheme) student community in Sri Lanka.
                         
-                        --- OFFICIAL PDF GUIDEBOOK CONTEXT ---
-                        ${selectedGuide}
+                        --- OFFICIAL IFSLS KNOWLEDGE BASE ---
+                        1. What is IFSLS: 100% interest-free government student loan scheme for non-state higher education degrees in Sri Lanka.
+                        2. Basic Eligibility: 
+                           - A/L years: 2023, 2024, or 2025.
+                           - Results: Pass all 3 subjects at one sitting (Minimum 3 'S' passes).
+                           - Z-Score / CGT marks: Minimum 30 marks.
+                           - English: Minimum 'S' pass for O/L or A/L English.
+                           - Age: Under 25 years old as of 27 September 2026.
+                        3. Maximum Loan Amounts: 
+                           - 4-year degrees: Human/Social Sciences (Rs. 800,000), Management/Commerce (Rs. 900,000), Physical Science (Rs. 1,000,000), Chem/Bio/Agri Science (Rs. 1,200,000), Engineering (Rs. 1,500,000), Bio/Engineering Tech (Rs. 1,000,000), IT Computing (Rs. 800,000 to 1,000,000).
+                           - Stipend (Living Allowance): Additional interest-free loan of Rs. 75,000 per year (Total Rs. 300,000 for 4 years / Rs. 225,000 for 3 years), paid quarterly (Rs. 18,750 per 3 months).
+                        4. Repayment: 1-year grace period after degree completion, then paid in equal installments over 7 to 8 years (Total 12 years).
+                        5. Conditions: Minimum 80% attendance and 'C' pass for compulsory modules. Quitting the course requires paying back the full loan with interest immediately; defaulters will be blacklisted in CRIB.
+                        6. Disqualified: Students already registered for UGC (State Universities), Colleges of Education, or Government Diplomas over 2 years.
+                        7. Appeal Guidelines (අභියාචනා ඉදිරිපත් කිරීම):
+                           - When to apply: Within 1 month from the release of selection results via the official website (https://studentloans.mohe.gov.lk).
+                           - Who cannot apply: Students who are already registered in the selected degree-offering institute cannot submit appeals for changes.
+                           - Selection Basis: Appeals are considered based on available vacancies. If appeals exceed vacancies, Z-scores are taken into consideration.
+                           - Final Decision: Late appeals are rejected, and the decision of the Ministry Secretary regarding appeals is final.
+
+                           - How to apply (Apply karanne kohomada): 
+                             1. Visit the official website: https://studentloans.mohe.gov.lk
+                             2. Log in using your NIC and password / application credentials.
+                             3. Go to the 'Appeals' (අභියාචනා) section on your dashboard.
+                             4. Select your preferred course or institute changes according to the instructions provided.
+                             5. Submit the appeal form online before the deadline.
                         --------------------------------------
                         
                         Rules:
                         1. ${languageInstruction}
-                        2. Tone & Style: Be extremely friendly, warm, and supportive (like a helpful senior friend talking to junior students). Use a welcoming and encouraging tone, and you can occasionally use appropriate friendly emojis (like 😊, 👍, 💙) to make students feel comfortable.
-                        3. If responding in Sinhala, use natural, clear, and conversational Sinhala text that students use daily.
-                        4. Reply in clean plain text. Do NOT include unnecessary markdown symbols, code blocks, or weird formatting characters.
-                        5. Be accurate and precise based on the guide. Do not hallucinate. If the answer is not in the guidelines, politely state that you cannot find it and suggest contacting a group admin.
-                        6. Keep responses engaging and easy to read.`
+                        2. Tone & Style: Be extremely friendly, warm, and supportive (like a helpful senior friend talking to junior students). Use appropriate friendly emojis (like 😊, 👍, 💙) to make students feel comfortable.
+                        3. Reply in clean plain text. Do NOT include unnecessary markdown symbols, code blocks, or weird formatting characters.
+                        4. Be accurate and precise based on the knowledge base above. Do not hallucinate. If the answer is not in the knowledge base, politely state that you cannot find it and suggest contacting a group admin.` 
                     },
                     { role: 'user', content: query }
                 ]
