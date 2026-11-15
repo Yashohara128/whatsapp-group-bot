@@ -926,13 +926,16 @@ client.on("message_create", async (message) => {
 
           console.log(`✅ [BROADCAST AUTHORIZED] Sending update to groups...`);
 
-          const textToSend = `📢 *IFSLS SMART BOT UPDATE* ✨🤖
+const textToSend = `📢 *විශේෂ දැනුම්දීමයි!* 📢
 
-👋 *හැමෝටම සුභ දවසක් ළමයි මම ඔයාලගේ IFSLS BOT!.*
+ළමයි අපේ බොට්ව දැන් සම්පූර්ණයෙන්ම Fully AI smart agent කෙනෙක් ලෙස upgrade කරල තියනවා ! 🎉
+ඔයාලට තියෙන ඕනෑම ප්‍රශ්නයක් බොට්ගෙන් අහන්න පුළුවන්.
 
-අපේ බොට් ට අලුත් විස්තර ටිකක් එකතු කළා! දැන් පහත commands group එකේ පාවිච්චි කරන්න පුළුවන්:
-• **/ministrycontact** - උසස් අධ්‍යාපන අමාත්‍යාංශයේ සියලුම නිල අංක සහ විස්තර ලබාගන්න පුලුවන්.\n\n
-• **/affidavit** - දිවුරුම් ප්‍රකාශ (Affidavit) ගැන දැනගන්න ඕන විස්තර සහ Google Drive Form Link එක ලබාගන්න පුළුවන්.`;
+හැබැයි මතක තියාගන්න ළමයි, මේක දැන්ම ටෙස්ට් මට්ටමේ limited edition එකක් දැනට (Testing phase) තමයි තියෙන්නේ එක දිගට messages යොමු කරන්න ඒපා අනවශ්‍ය ලෙස! ⚠️
+
+💬 *ප්‍රශ්න අහන්නේ කොහොමද?*
+- /ai කියලා ටයිප් කරලා හිස්තැනක් තියල ඊට පස්සේ ඔයාගේ ප්‍රශ්නේ type කරලා group send කරන්න.
+- නැත්නම් බොට්ව මෙන්ෂන් කරලා (@) ප්‍රශ්නේ අහන්න පුළුවන්. 😊💙`;
             
             let count = 0;
             for (const groupId of TARGET_GROUP_IDS) {
