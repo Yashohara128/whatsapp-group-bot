@@ -827,6 +827,7 @@ client.on('message', async (message) => {
         }
         return; 
     }
+    });
 
 client.on('message', async (message) => {
     if (message.fromMe) return;
