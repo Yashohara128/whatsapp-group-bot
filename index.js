@@ -4,7 +4,7 @@ const cron = require("node-cron");
 const fs = require("fs"); 
 const path = require("path");
 const Groq = require('groq-sdk');
-const groq = new Groq({'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'});
+const groq = new Groq({ apiKey: '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' });
 const welcomedUsers = new Set();
 const stickerWarnings = {};
 
