@@ -839,7 +839,7 @@ client.on('message', async (message) => {
         } catch (e) {}
     }
 
-   // 2. RAG AI Assistant (/ai හෝ Mention කළාම System Prompt එකේ ඇති Guide දත්ත පාවිච්චි කරමින් උත්තර දීම)
+    // 2. RAG AI Assistant (/ai හෝ Mention කළාම System Prompt එකේ ඇති Guide දත්ත පාවිච්චි කරමින් උත්තර දීම)
     const isMentioned = message.mentionedIds && client.info?.wid && message.mentionedIds.includes(client.info.wid._serialized);
     if (textLower.startsWith('/ai') || isMentioned) {
         let query = msgText.replace(/^\/ai\s*/i, '').replace(/@\d+/g, '').trim();
@@ -875,18 +875,16 @@ client.on('message', async (message) => {
                         4. Repayment: 1-year grace period after degree completion, then paid in equal installments over 7 to 8 years (Total 12 years).
                         5. Conditions: Minimum 80% attendance and 'C' pass for compulsory modules. Quitting the course requires paying back the full loan with interest immediately; defaulters will be blacklisted in CRIB.
                         6. Disqualified: Students already registered for UGC (State Universities), Colleges of Education, or Government Diplomas over 2 years.
-                        7. Appeal Guidelines (අභියාචනා ඉදිරිපත් කිරීම):
-                           - When to apply: Within 1 month from the release of selection results via the official website (https://studentloans.mohe.gov.lk).
-                           - Who cannot apply: Students who are already registered in the selected degree-offering institute cannot submit appeals for changes.
-                           - Selection Basis: Appeals are considered based on available vacancies. If appeals exceed vacancies, Z-scores are taken into consideration.
-                           - Final Decision: Late appeals are rejected, and the decision of the Ministry Secretary regarding appeals is final.
-
+                        7. Appeal Guidelines & How to Apply (අභියාචනා ඉදිරිපත් කිරීමේ ක්‍රමවේදය):
+                           - Timeline: Must apply within 1 month from the release of selection results.
                            - How to apply (Apply karanne kohomada): 
                              1. Visit the official website: https://studentloans.mohe.gov.lk
                              2. Log in using your NIC and password / application credentials.
                              3. Go to the 'Appeals' (අභියාචනා) section on your dashboard.
                              4. Select your preferred course or institute changes according to the instructions provided.
                              5. Submit the appeal form online before the deadline.
+                           - Who cannot apply: Students who are already registered in the selected degree-offering institute cannot submit appeals for changes.
+                           - Selection Basis: Appeals are considered based on available vacancies and Z-scores. The Ministry Secretary's decision is final.
                         --------------------------------------
                         
                         Rules:
