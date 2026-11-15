@@ -11,9 +11,6 @@ const stickerWarnings = {};
 // ==========================================
 // 📌 PDF GUIDE BOOKS LOAD CONFIGURATION
 // ==========================================
-const pdfParseLib = require('pdf-parse');
-// සමහර version වල pdfParseLib කියන්නේම function එකක්, නැත්නම් .default දාන්න වෙනවා
-const pdfParse = typeof pdfParseLib === 'function' ? pdfParseLib : pdfParseLib.default;
 
 // Global variables for PDF Guides text
 let englishGuide = "";
@@ -22,7 +19,7 @@ let sinhalaGuide = "";
 // PDF Guides කියවා Memory එකට ලෝඩ් කරගැනීම
 async function loadGuides() {
     try {
-        const enPath = path.join(__dirname, 'ifsls-guide-en.pdf');
+        const enPath = path.join(__dirname, 'ifsls-guide-en.txt');
         if (fs.existsSync(enPath)) {
             const enBuffer = fs.readFileSync(enPath);
             const enData = await pdfParse(enBuffer);
@@ -34,7 +31,7 @@ async function loadGuides() {
     }
 
     try {
-        const siPath = path.join(__dirname, 'ifsls-guide-si.pdf');
+        const siPath = path.join(__dirname, 'ifsls-guide-si.txt');
         if (fs.existsSync(siPath)) {
             const siBuffer = fs.readFileSync(siPath);
             const siData = await pdfParse(siBuffer);
@@ -829,7 +826,7 @@ client.on('message', async (message) => {
     if (isGroup && textLower.includes('http')) {
         try {
             const modRes = await groq.chat.completions.create({
-                model: 'openai/gpt-oss-20b',
+                model: 'llama-3.3-70b-versatile',
                 messages: [
                     { 
                         role: 'user', 
@@ -860,7 +857,7 @@ client.on('message', async (message) => {
 
         try {
             const completion = await groq.chat.completions.create({
-                model: 'openai/gpt-oss-20b',
+                model: 'llama-3.3-70b-versatile',
                 messages: [
                     { 
                         role: "system", 
