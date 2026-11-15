@@ -797,7 +797,7 @@ client.on('message', async (message) => {
     if (isGroup && textLower.includes('http')) {
         try {
             const modRes = await ai.models.generateContent({
-                model: 'gemini-2.5-flash',
+                model: 'gemini-3.8-flash',
                 contents: `Is this message spam or a scam link? Reply ONLY "YES" or "NO": "${msgText}"`
             });
             if (modRes.text && modRes.text.trim().toUpperCase().includes('YES')) {
@@ -815,7 +815,7 @@ client.on('message', async (message) => {
         
         try {
             const res = await ai.models.generateContent({
-                model: 'gemini-2.5-flash',
+                model: 'gemini-3.8-flash',
                 contents: query,
                 config: {
                     systemInstruction: "You are the AI assistant for the IFSLS government student loan group in Sri Lanka. Help students with clear answers about student loans and guidelines in Sinhala or English."
