@@ -8,6 +8,39 @@ const groq = new Groq({ apiKey: 'gsk_5ptCg0v66xYYQqnHtxWFWGdyb3FYdkAXfg10J4KXpGp
 const welcomedUsers = new Set();
 const stickerWarnings = {};
 
+const pdfParse = require('pdf-parse');
+
+// Global variables for PDF Guides text
+let englishGuide = "";
+let sinhalaGuide = "";
+
+// PDF Guides කියවා Memory එකට ලෝඩ් කරගැනීම
+async function loadGuides() {
+    try {
+        const enPath = path.join(__dirname, 'ifsls-guide-en.pdf');
+        if (fs.existsSync(enPath)) {
+            const enBuffer = fs.readFileSync(enPath);
+            const enData = await pdfParse(enBuffer);
+            englishGuide = enData.text;
+            console.log('✅ English Guide PDF Loaded Successfully!');
+        }
+    } catch (e) {
+        console.log('❌ Error loading English PDF:', e);
+    }
+
+    try {
+        const siPath = path.join(__dirname, 'ifsls-guide-si.pdf');
+        if (fs.existsSync(siPath)) {
+            const siBuffer = fs.readFileSync(siPath);
+            const siData = await pdfParse(siBuffer);
+            sinhalaGuide = siData.text;
+            console.log('✅ Sinhala Guide PDF Loaded Successfully!');
+        }
+    } catch (e) {
+        console.log('❌ Error loading Sinhala PDF:', e);
+    }
+}
+
 
 const TARGET_GROUP_IDS = [
     "120363427144307038@g.us",
