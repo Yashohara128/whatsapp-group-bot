@@ -4,9 +4,13 @@ const cron = require("node-cron");
 const fs = require("fs"); 
 const path = require("path");
 const { GoogleGenAI } = require('@google/genai');
-const ai = new GoogleGenAI({ apiKey: 'AIzaSyBjzE30NZXDZsT-DuC9cBrksOjg0UsQM34' }); // මෙතනට ඔයාගේ API key එක දාන්න
+const ai = new GoogleGenAI({ 
+    vertexai: true, 
+    apiKey: 'AQ.Ab8RN6IYi2YKj46TZComcdPS0FE506QLXKIS35eiLzq8u6BHvw' 
+});
 const welcomedUsers = new Set();
 const stickerWarnings = {};
+
 
 const TARGET_GROUP_IDS = [
     "120363427144307038@g.us",
