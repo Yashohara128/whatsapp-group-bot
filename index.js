@@ -781,9 +781,11 @@ async function checkIsAdmin(message, senderId, actualNumber) {
 }
 
 // ==========================================
-// PRIVATE INBOX REDIRECTION
+// PRIVATE INBOX REDIRECTION & AI FEATURES
 // ==========================================
-// 1. බොට්ගේම මැසේජ් Ignore කරන්න
+client.on('message', async (message) => {
+    
+    // 1. බොට්ගේම මැසේජ් Ignore කරන්න
     if (message.fromMe) return;
 
     const isGroup = message.from.endsWith('@g.us');
@@ -809,17 +811,19 @@ async function checkIsAdmin(message, senderId, actualNumber) {
     const isMentioned = message.mentionedIds && client.info?.wid && message.mentionedIds.includes(client.info.wid._serialized);
     if (textLower.startsWith('/ai') || isMentioned) {
         let query = msgText.replace(/^\/ai\s*/i, '').replace(/@\d+/g, '').trim();
+        if (!query) query = "Hello, can you help me with student loan details?";
+        
         try {
             const res = await ai.models.generateContent({
                 model: 'gemini-4-hydrogen',
                 contents: query,
                 config: {
-                    systemInstruction: "You are the AI assistant for the Government IFSLS student loan group in Sri Lanka. Help students with clear answers about student loans and guidelines in Sinhala & English."
+                    systemInstruction: "You are the AI assistant for the IFSLS government student loan group in Sri Lanka. Help students with clear answers about student loans and guidelines in Sinhala or English."
                 }
             });
             await message.reply(res.text);
         } catch (err) {
-            await message.reply("⚠️ සමාවන්න මට මේ මොහොතේ උත්තර ලබා දීමට නොහැකි විය.");
+            await message.reply("⚠️ මට මේ මොහොතේ උත්තර ලබා දීමට නොහැකි විය.");
         }
         return; 
     }
