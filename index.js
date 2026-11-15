@@ -3,8 +3,10 @@ const qrcode = require("qrcode-terminal");
 const cron = require("node-cron"); 
 const fs = require("fs"); 
 const path = require("path");
-const stickerWarnings = {};
+const { GoogleGenAI } = require('@google/genai');
+const ai = new GoogleGenAI({ apiKey: 'AQ.Ab8RN6IYi2Ykj46TZComcdPS0FE506QLXKIS35eiLzq8u6BHvw' }); // මෙතනට ඔයාගේ API key එක දාන්න
 const welcomedUsers = new Set();
+const stickerWarnings = {};
 
 const TARGET_GROUP_IDS = [
     "120363427144307038@g.us",
@@ -781,6 +783,47 @@ async function checkIsAdmin(message, senderId, actualNumber) {
 // ==========================================
 // PRIVATE INBOX REDIRECTION
 // ==========================================
+// 1. බොට්ගේම මැසේජ් Ignore කරන්න
+    if (message.fromMe) return;
+
+    const isGroup = message.from.endsWith('@g.us');
+    const msgText = message.body ? message.body.trim() : '';
+    const textLower = msgText.toLowerCase();
+    const senderId = message.from;
+
+    // 2. AI Auto-Moderation (ଗෲප් එකේ Spam links මකන්න)
+    if (isGroup && textLower.includes('http')) {
+        try {
+            const modRes = await ai.models.generateContent({
+                model: 'gemini-4-hydrogen',
+                contents: `Is this message spam or a scam link? Reply ONLY "YES" or "NO": "${msgText}"`
+            });
+            if (modRes.text && modRes.text.trim().toUpperCase().includes('YES')) {
+                await message.delete(true);
+                return;
+            }
+        } catch (e) {}
+    }
+
+    // 3. AI Assistant (/ai හෝ Mention කළාම)
+    const isMentioned = message.mentionedIds && client.info?.wid && message.mentionedIds.includes(client.info.wid._serialized);
+    if (textLower.startsWith('/ai') || isMentioned) {
+        let query = msgText.replace(/^\/ai\s*/i, '').replace(/@\d+/g, '').trim();
+        try {
+            const res = await ai.models.generateContent({
+                model: 'gemini-4-hydrogen',
+                contents: query,
+                config: {
+                    systemInstruction: "You are the AI assistant for the Government IFSLS student loan group in Sri Lanka. Help students with clear answers about student loans and guidelines in Sinhala & English."
+                }
+            });
+            await message.reply(res.text);
+        } catch (err) {
+            await message.reply("⚠️ සමාවන්න මට මේ මොහොතේ උත්තර ලබා දීමට නොහැකි විය.");
+        }
+        return; 
+    }
+
 client.on('message', async (message) => {
     if (message.fromMe) return;
     if (message.from.endsWith('@g.us')) return; // Group messages ignore කරනවා
