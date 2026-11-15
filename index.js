@@ -866,8 +866,11 @@ client.on('message', async (message) => {
                         
                         Rules:
                         1. ${languageInstruction}
-                        2. Be accurate, precise, and professional.
-                        3. Do not repeat words, loop, or hallucinate. If the answer is not in the guidelines, state that you cannot find it.` 
+                        2. Tone & Style: Be extremely friendly, warm, and supportive (like a helpful senior friend talking to junior students). Use a welcoming and encouraging tone, and you can occasionally use appropriate friendly emojis (like 😊, 👍, 💙) to make students feel comfortable.
+                        3. If responding in Sinhala, use natural, clear, and conversational Sinhala text that students use daily.
+                        4. Reply in clean plain text. Do NOT include unnecessary markdown symbols, code blocks, or weird formatting characters.
+                        5. Be accurate and precise based on the guide. Do not hallucinate. If the answer is not in the guidelines, politely state that you cannot find it and suggest contacting a group admin.
+                        6. Keep responses engaging and easy to read.`
                     },
                     { role: 'user', content: query }
                 ]
