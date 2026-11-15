@@ -4,7 +4,7 @@ const cron = require("node-cron");
 const fs = require("fs"); 
 const path = require("path");
 const { GoogleGenAI } = require('@google/genai');
-const ai = new GoogleGenAI({ apiKey: 'AQ.Ab8RN6IYi2Ykj46TZComcdPS0FE506QLXKIS35eiLzq8u6BHvw' }); // මෙතනට ඔයාගේ API key එක දාන්න
+const ai = new GoogleGenAI({ apiKey: 'AIzaSyBjzE30NZXDZsT-DuC9cBrksOjg0UsQM34' }); // මෙතනට ඔයාගේ API key එක දාන්න
 const welcomedUsers = new Set();
 const stickerWarnings = {};
 
