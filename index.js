@@ -8,6 +8,9 @@ const groq = new Groq({ apiKey: 'gsk_5ptCg0v66xYYQqnHtxWFWGdyb3FYdkAXfg10J4KXpGp
 const welcomedUsers = new Set();
 const stickerWarnings = {};
 
+// ==========================================
+// 📌 PDF GUIDE BOOKS LOAD CONFIGURATION
+// ==========================================
 const pdfParse = require('pdf-parse');
 
 // Global variables for PDF Guides text
@@ -263,7 +266,7 @@ GOOD LUCK & ALL THE BEST! 🍀🎓❤️
 
     "/laptopguide": "💻 *Undergraduate Laptop Buying Guide 2026*\n\n" +
                     "හැමෝම මේ දවස් වල campus apply කරන ගමන් නේ. ඉතින් ගොඩක් අයට එන ප්‍රශ්නයක් තමා කොහොමද අපි අපේ ඉස්සරහට degree එකට ගැලපෙන laptop model එකක් එහෙම නැත්නම් PC එකක් select කරගන්නේ කියල. \n\n" +
-                    "ඉතින් undergraduate level එකේ ඉන්න ඔයාලට ඉස්සෙල්ලම කියන්න ඕන studio එකක් කරන ගානට යන performance ඕන devices මේ කාලෙට අවශ්‍ය නැ කියන එක. මොකද ඔයාලා invest කරල buy කරන්නෙ නෑ නේද තාම? හැමෝටම ආර්ථික පැත්තෙන් අඩුපාඩුකම් තියනවා නේ. ඉතින් normally day to day campus වැඩ ටික කරගන්න model එකක් select කරගන්න විදිහ අපි බලමු. මමත් undergraduate level එකේ ඉන්න නිසා මගේ personal experience එක, knowledge එක මම share කරගන්නවා ඔයාලත් එක්ක 😊💗\n\n" +
+                    "ඉතින් undergraduate level එකේ ඉන්න ඔයාලට ඉස්සරහටම කියන්න ඕන studio එකක් කරන ගානට යන performance ඕන devices මේ කාලෙට අවශ්‍ය නැ කියන එක. මොකද ඔයාලා invest කරල buy කරන්නෙ නෑ නේද තාම? හැමෝම තියනවා නේ ආර්ථික පැත්තෙන් අඩුපාඩුකම්. ඉතින් normally day to day campus වැඩ ටික කරගන්න model එකක් select කරගන්න විදිහ අපි බලමු. මමත් undergraduate level එකේ ඉන්න නිසා මගේ personal experience එක, knowledge එක මම share කරගන්නවා ඔයාලත් එක්ක 😊💗\n\n" +
                     "📌 *Question 01*\n" +
                     "මම යන්න ඕන Brand new ද used condition laptop එකකටද?\n\n" +
                     "✅ *Answer:*\n" +
@@ -277,7 +280,7 @@ GOOD LUCK & ALL THE BEST! 🍀🎓❤️
                     "✅ *Answer:*\n" +
                     "ඔයා කලින් Model එක select කරගෙන යනවනං shop එකෙන් ඒ model එක ඔයාට පෙන්නයි. මේ වැඩේට පැයක් 2ක් වගේ යයි. මතක ඇතුව ඔයා යනකොට pen එකකට හොඳ high quality video clip එකක් download කරගෙන දාලා අරගෙන යන්න.\n\n" +
                     "1️⃣ **Physical Condition:** laptop එක අතට දුන්නහම physical conditions check කරන්න. කොන් තැලිලා සිරිලා තියෙනවනම් purchase කරන්න එපා 👋\n" +
-                    "2️⃣ **Ports Check:** pen drive එක USB ports වලට plug කර කර බලන්න. issue එකක් නැතුව pen එක වැඩනම් USB OK ✅ අනිත් ports ටිකත් check කරගන්න.\n" +
+                    "2️⃣ **Ports Check:** pen drive එක USB ports වලට plug කර බලන්න. issue එකක් නැතුව pen එක වැඩනම් USB OK ✅ අනිත් ports ටිකත් check කරගන්න.\n" +
                     "3️⃣ **Display, Sound & Battery:** pen drive එකේ video එක play කරන්න. brightness full වැඩි කරලා, charge එකේ තියෙනවනං unplug කරන්න. speakers volume එක 75%ක් දාලා sounds check කරන්න. display එකේ burn marks එහෙම තියෙනවද බලාගන්න. විනාඩි 10ක් විතර video එක play කරන්න.\n" +
                     "4️⃣ **WiFi Connection:** shop එකෙන් wifi connect කරලා connections stable ද බලන්න.\n\n" +
                     "📌 *Question 04*\n" +
@@ -735,7 +738,7 @@ client.on("group_join", async (notification) => {
                 await directRemoveParticipant(groupId, userId);
                 continue;
             }
-// 🛑 Member ගෲප් එකට join වුණු ගමන් වහාම මැසේජ් යවන්නේ නැතුව තත්පර 30ක් ඉඳීම (30000 ms)
+
             await new Promise(resolve => setTimeout(resolve, 30000));
             
 
@@ -776,7 +779,6 @@ client.on("group_join", async (notification) => {
             await client.sendMessage(userId, secondWelcomeMsg);
             console.log(`✅ Second Welcome (Commands Info) sent to: ${info.name}`);
 
-            // 🛑 ඊළඟ Member ට යැවීමට පෙර විනාඩි 1ක (තත්පර 60ක) ආරක්ෂිත Delay එක
              await new Promise(resolve => setTimeout(resolve, 60000));
         }
     } catch (error) {
@@ -784,13 +786,11 @@ client.on("group_join", async (notification) => {
     }
 });
 
-// 🔥🔥🔥 100% වැඩ කරන Fixed Admin Checker Function (Handles LIDs & Phone Numbers) 🔥🔥🔥
 async function checkIsAdmin(message, senderId, actualNumber) {
     try {
         const authorId = message.author || message.from || senderId || "";
         const pureNumber = authorId.replace(/\D/g, '');
         
-        // 1. EXTRA_ADMINS ලිස්ට් එක පරීක්ෂා කිරීම (අංකය හෝ Actual Number එක හරහා)
         const isExtra = EXTRA_ADMINS.some(adminNum => 
             pureNumber.includes(adminNum) || 
             adminNum.includes(pureNumber) || 
@@ -798,7 +798,6 @@ async function checkIsAdmin(message, senderId, actualNumber) {
         );
         if (isExtra) return true;
 
-        // 2. WhatsApp ගෲප් participants හරහා පරීක්ෂා කිරීම
         const chat = await message.getChat();
         if (chat && chat.participants) {
             const participant = chat.participants.find(p => {
@@ -815,19 +814,16 @@ async function checkIsAdmin(message, senderId, actualNumber) {
 }
 
 // ==========================================
-// PRIVATE INBOX REDIRECTION & AI FEATURES
+// PRIVATE INBOX REDIRECTION & RAG AI FEATURES
 // ==========================================
 client.on('message', async (message) => {
-    
-    // 1. බොට්ගේම මැසේජ් Ignore කරන්න
     if (message.fromMe) return;
 
     const isGroup = message.from.endsWith('@g.us');
     const msgText = message.body ? message.body.trim() : '';
     const textLower = msgText.toLowerCase();
-    const senderId = message.from;
 
-    // 2. AI Auto-Moderation (ගෲප් එකේ Spam links මකන්න)
+    // 1. AI Auto-Moderation (ගෲප් එකේ Spam links මකන්න)
     if (isGroup && textLower.includes('http')) {
         try {
             const modRes = await groq.chat.completions.create({
@@ -847,19 +843,35 @@ client.on('message', async (message) => {
         } catch (e) {}
     }
 
-    // 3. AI Assistant (/ai හෝ Mention කළාම)
+    // 2. RAG AI Assistant (/ai හෝ Mention කළාම Guidebook පාවිච්චි කරමින් උත්තර දීම)
     const isMentioned = message.mentionedIds && client.info?.wid && message.mentionedIds.includes(client.info.wid._serialized);
     if (textLower.startsWith('/ai') || isMentioned) {
         let query = msgText.replace(/^\/ai\s*/i, '').replace(/@\d+/g, '').trim();
         if (!query) query = "Hello, can you help me with student loan details?";
         
+        // යුසර් සිංහලෙන් අහලා තියෙනවද බැලීම
+        const isSinhala = /[\u0D80-\u0DFF]/.test(query);
+        let selectedGuide = isSinhala ? sinhalaGuide : englishGuide;
+        let languageInstruction = isSinhala 
+            ? "Answer strictly in Sinhala based on the provided Sinhala guide context." 
+            : "Answer strictly in English based on the provided English guide context.";
+
         try {
             const completion = await groq.chat.completions.create({
                 model: 'openai/gpt-oss-20b',
                 messages: [
                     { 
-                        role: 'system', 
-                        content: "You are the AI assistant for the IFSLS government student loan group in Sri Lanka. Help students with clear answers about student loans and guidelines in Sinhala or English." 
+                        role: "system", 
+                        content: `You are the official AI assistant for the IFSLS (Interest Free Student Loan Scheme) government student loan program in Sri Lanka.
+                        
+                        --- OFFICIAL PDF GUIDEBOOK CONTEXT ---
+                        ${selectedGuide}
+                        --------------------------------------
+                        
+                        Rules:
+                        1. ${languageInstruction}
+                        2. Be accurate, precise, and professional.
+                        3. Do not repeat words, loop, or hallucinate. If the answer is not in the guidelines, state that you cannot find it.` 
                     },
                     { role: 'user', content: query }
                 ]
@@ -876,31 +888,24 @@ client.on('message', async (message) => {
 
 client.on('message', async (message) => {
     if (message.fromMe) return;
-    if (message.from.endsWith('@g.us')) return; // Group messages ignore කරනවා
+    if (message.from.endsWith('@g.us')) return;
 
     const senderId = message.from;
 
-    // කලින් Welcome ගිය කෙනෙක් නම්, ඊළඟ පාර එවන මැසේජ් වලට මේක යවනවා:
     if (welcomedUsers.has(senderId)) {
         await message.reply("👋 Hello, මම IFSLS group administrator bot! කරුණාකර වැඩි විස්තර සඳහා BOT official අංකයට Messages යොමු කරන්න: 📞 +94762068122");
         return;
     }
 
-    // Inbox එකට ආපු අලුත් කෙනෙක් නම්:
     await message.reply("ආයුබෝවන්! අප හා සම්බන්ධ වීමට ස්තුතියි.කරුණාකර වැඩි විස්තර සඳහා BOT official අංකයට Messages යොමු කරන්න: 📞 +94762068122");
     welcomedUsers.add(senderId);
 });
-
-
 
 client.on("message_create", async (message) => {
     try {
         const msgText = message.body ? message.body.trim() : "";
         const textLower = msgText.toLowerCase();
 
-// =========================================================
-        // 📢 1. DIRECT ADMIN BROADCAST HANDLER (LID & NUMBER SUPPORT)
-        // =========================================================
         if (textLower.startsWith("/broadcast") || textLower.startsWith("/boradcast")) {
             const rawSender = message.author || message.from;
             const senderDigits = rawSender.replace(/\D/g, "");  
@@ -913,7 +918,6 @@ client.on("message_create", async (message) => {
 
             console.log(`[BROADCAST ATTEMPT] SenderDigits: ${senderDigits} | ContactDigits: ${contactDigits}`);
 
-            // 🌟 මෙන්න මෙතැනට ඔයාගේ LID එකත් (168182413316185) අමතරව ඇතුළත් කරන්න!
             const HARDCODED_ADMIN_LIDS = ['168182413316185']; 
 
             const isAdmin = HARDCODED_ADMIN_LIDS.includes(senderDigits) || 
@@ -930,13 +934,13 @@ client.on("message_create", async (message) => {
 
           console.log(`✅ [BROADCAST AUTHORIZED] Sending update to groups...`);
 
-          const textToSend =`📢 *IFSLS SMART BOT UPDATE* ✨🤖
+          const textToSend = `📢 *IFSLS SMART BOT UPDATE* ✨🤖
 
 👋 *හැමෝටම සුභ දවසක් ළමයි මම ඔයාලගේ IFSLS BOT!.*
 
 අපේ බොට් ට අලුත් විස්තර ටිකක් එකතු කළා! දැන් පහත commands group එකේ පාවිච්චි කරන්න පුළුවන්:
 • **/ministrycontact** - උසස් අධ්‍යාපන අමාත්‍යාංශයේ සියලුම නිල අංක සහ විස්තර ලබාගන්න පුලුවන්.\n\n
-• **/affidavit** - දිවුරුම් ප්‍රකාශ (Affidavit) ගැන දැනගන්න ඕන විස්තර සහ Google Drive Form Link එක ලබාගන්න පුලුවන්.`;
+• **/affidavit** - දිවුරුම් ප්‍රකාශ (Affidavit) ගැන දැනගන්න ඕන විස්තර සහ Google Drive Form Link එක ලබාගන්න පුළුවන්.`;
             
             let count = 0;
             for (const groupId of TARGET_GROUP_IDS) {
@@ -963,10 +967,8 @@ client.on("message_create", async (message) => {
         const info = await getContactInfo(senderId);
         if (!info) return;
 
-        // 🔥 Admin ද කියලා බලනවා
         const isAdmin = await checkIsAdmin(message, senderId, info.actualNumber);
 
-        // 🖨 ටර්මිනල් එකේ ලොග් එක ප්‍රින්ට් වීම
         console.log("\n----------------------------------------");
         console.log(`📩 Group ID : ${groupId}`);
         console.log(`👤 Name     : ${info.name} (${info.actualNumber})`);
@@ -975,43 +977,36 @@ client.on("message_create", async (message) => {
         console.log(`💬 Message  : ${message.body || "[Media / Sticker / Invite]"}`);
         console.log("----------------------------------------");
 
-// Stickers සහ GIFs පාලනය කිරීම (Warning & 24 Hours Ban)
         const isSticker = message.type === 'sticker';
         const isGif = message.isGif || (message.type === 'video' && message._data && message._data.isGif);
 
         if (isSticker || isGif) {
             if (isAdmin) {
                 console.log(`👑 Admin sent a Sticker/GIF. Allowed.`);
-                return; // Admin නම් මෙතැනින් කෝඩ් එක නතර වේ
+                return; 
             }
 
             const warningKey = `${groupId}_${senderId}`;
 
             if (!stickerWarnings[warningKey]) {
-                // පළමු වතාව - Warning එක ලබා දීම
                 stickerWarnings[warningKey] = 1;
                 
                 const warningMsg = `⚠️ @${senderId.split('@')[0]}, මෙම සමූහය තුළ සාමාජිකයන් සදහා කරදරකාරී වන Stickers හෝ GIFs භාවිතය සිමා කර ඇත!\n\n` +
                                    `📌 මෙය ඔබගේ **පළමු සහ අවසන් අනතුරු ඇඟවීමයි**. නැවත වතාවක් යොමු කලහොත් ඔබව සමූහයෙන් Automatically ඉවත් වෙනු ලැබේ.`;
                 
                 await client.sendMessage(groupId, warningMsg, { mentions: [senderId] });
-                console.log(`⚠️ First sticker/gif warning sent to: ${senderId}`);
 
             } else {
-                // දෙවන වතාව - ගෲප් එකෙන් Remove කර පැය 24 කට Ban කිරීම
                 const removeMsg = `🚫 @${senderId.split('@')[0]} අනතුරු ඇඟවීම නොතකා නැවත Stickers/GIFs දැමූ නිසා සමූහයෙන් ඉවත් කර පැය 24 කට තහනම් කරන ලදී.`;
                 await client.sendMessage(groupId, removeMsg, { mentions: [senderId] });
 
-                // 1. Group එකෙන් Kick කිරීම
                 await directRemoveParticipant(groupId, senderId);
 
-                // 2. පැය 24ක කාලයක් සඳහා Blacklist කිරීම
                 const BAN_DURATION_24H = 24 * 60 * 60 * 1000;
                 blacklistedUsers[senderId] = Date.now() + BAN_DURATION_24H;
                 if (typeof saveBlacklist === 'function') saveBlacklist();
 
                 delete stickerWarnings[warningKey];
-                console.log(`🚫 User banned for 24 hours due to repeated sticker/gif: ${senderId}`);
             }
         }
 
@@ -1028,7 +1023,6 @@ client.on("message_create", async (message) => {
         
        const isNativeGroupInvite = message.type === 'group_invite';
         
-        // 🔗 සැබෑ ලින්ක් සහ ඩොමේන් පමණක් අඳුනා ගන්නා දැඩි Regex එක
         const strictLinkRegex = /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9-]+\.(com|lk|org|net|gov|edu|io|me|info|co|biz|xyz|app|dev)(\/[^\s]*)?|chat\.whatsapp\.com\/[^\s]+)/i;
         
         const hasLinkIndicator = isNativeGroupInvite || strictLinkRegex.test(message.body);
@@ -1124,9 +1118,6 @@ client.on("message_create", async (message) => {
             return;
         }
 
-        // ==========================================
-        // 🚫 STATUS GROUP MENTION FILTER (Admins Only)
-        // ==========================================
         const isStatusMention = textLower.includes("mentioned this group") || 
                                 textLower.includes("in a status") || 
                                 textLower.includes("තත්වයක් තුළ මෙම සමූහය");
@@ -1148,9 +1139,6 @@ client.on("message_create", async (message) => {
             }
         }
 
-        // ==========================================
-        // 💡 3. IFSLS FAQ & Campus Commands Logic
-        // ==========================================
         const msgCommand = textLower.trim();
 
         if (msgCommand === "/menu" || msgCommand === "/help") {
@@ -1260,4 +1248,9 @@ async function checkSpam(message, senderId, name, groupId) {
     }
 }
 
-client.initialize();
+// ==========================================
+// 📌 LOAD GUIDES & INITIALIZE BOT
+// ==========================================
+loadGuides().then(() => {
+    client.initialize();
+});
