@@ -11,7 +11,9 @@ const stickerWarnings = {};
 // ==========================================
 // 📌 PDF GUIDE BOOKS LOAD CONFIGURATION
 // ==========================================
-const pdfParse = require('pdf-parse');
+const pdfParseLib = require('pdf-parse');
+// සමහර version වල pdfParseLib කියන්නේම function එකක්, නැත්නම් .default දාන්න වෙනවා
+const pdfParse = typeof pdfParseLib === 'function' ? pdfParseLib : pdfParseLib.default;
 
 // Global variables for PDF Guides text
 let englishGuide = "";
