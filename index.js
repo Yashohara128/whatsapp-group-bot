@@ -798,7 +798,7 @@ client.on('message', async (message) => {
     if (isGroup && textLower.includes('http')) {
         try {
             const modRes = await groq.chat.completions.create({
-                model: 'llama-3.1-8b-instant',
+                model: 'openai/gpt-oss-20b',
                 messages: [
                     { 
                         role: 'user', 
@@ -822,7 +822,7 @@ client.on('message', async (message) => {
         
         try {
             const completion = await groq.chat.completions.create({
-                model: 'llama-3.1-8b-instant',
+                model: 'openai/gpt-oss-20b',
                 messages: [
                     { 
                         role: 'system', 
