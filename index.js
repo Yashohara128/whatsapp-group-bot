@@ -3,10 +3,8 @@ const qrcode = require("qrcode-terminal");
 const cron = require("node-cron"); 
 const fs = require("fs"); 
 const path = require("path");
-const OpenAI = require('openai');
-const openai = new OpenAI({
-    apiKey: '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' 
-});
+const Groq = require('groq-sdk');
+const groq = new Groq({'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'});
 const welcomedUsers = new Set();
 const stickerWarnings = {};
 
@@ -799,8 +797,8 @@ client.on('message', async (message) => {
     // 2. AI Auto-Moderation (ගෲප් එකේ Spam links මකන්න)
     if (isGroup && textLower.includes('http')) {
         try {
-            const modRes = await openai.chat.completions.create({
-                model: 'gpt-4o-mini',
+            const modRes = await groq.chat.completions.create({
+                model: 'llama-3.3-70b-versatile',
                 messages: [
                     { 
                         role: 'user', 
@@ -808,8 +806,8 @@ client.on('message', async (message) => {
                     }
                 ]
             });
-            const modReply = modRes.choices[0].message.content;
-            if (modReply && modReply.trim().toUpperCase().includes('YES')) {
+            const modReply = modRes.choices[0]?.message?.content || '';
+            if (modReply.trim().toUpperCase().includes('YES')) {
                 await message.delete(true);
                 return;
             }
@@ -823,19 +821,20 @@ client.on('message', async (message) => {
         if (!query) query = "Hello, can you help me with student loan details?";
         
         try {
-            const completion = await openai.chat.completions.create({
-                model: 'gpt-4o-mini',
+            const completion = await groq.chat.completions.create({
+                model: 'llama-3.3-70b-versatile',
                 messages: [
                     { 
                         role: 'system', 
-                        content: "You are the AI assistant for the IFSLS government student loan group in Sri Lanka. Help students with clear answers about student loans and guidelines in Sinhala and English both languages." 
+                        content: "You are the AI assistant for the IFSLS government student loan group in Sri Lanka. Help students with clear answers about student loans and guidelines in Sinhala or English." 
                     },
                     { role: 'user', content: query }
                 ]
             });
-            await message.reply(completion.choices[0].message.content);
+            const replyText = completion.choices[0]?.message?.content || "⚠️ මට මේ මොහොතේ උත්තර ලබා දීමට නොහැකි විය.";
+            await message.reply(replyText);
         } catch (err) {
-            console.error("OpenAI Error:", err);
+            console.error("Groq Error:", err);
             await message.reply("⚠️ මට මේ මොහොතේ උත්තර ලබා දීමට නොහැකි විය.");
         }
         return; 
