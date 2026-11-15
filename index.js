@@ -809,6 +809,10 @@ async function checkIsAdmin(message, senderId, actualNumber) {
     }
 }
 
+client.on('message', async (message) => {
+    let msgText = message.body;
+    let textLower = msgText.toLowerCase();
+
 // 2. RAG AI Assistant (/ai හෝ Mention කළාම System Prompt එකේ ඇති Knowledge Base එක පාවිච්චි කරමින් උත්තර දීම)
     const isMentioned = message.mentionedIds && client.info?.wid && message.mentionedIds.includes(client.info.wid._serialized);
     if (textLower.startsWith('/ai') || isMentioned) {
