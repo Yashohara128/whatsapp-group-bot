@@ -847,7 +847,7 @@ client.on('message', async (message) => {
         
         // යුසර් සිංහලෙන් අහලා තියෙනවද බැලීම
         const isSinhala = /[\u0D80-\u0DFF]/.test(query);
-        let selectedGuide = isSinhala ? sinhalaGuide : englishGuide;
+        let selectedGuide = isSinhala ? sinhalaGuide.substring(0, 10000) : englishGuide.substring(0, 10000);
         let languageInstruction = isSinhala 
             ? "Answer strictly in Sinhala based on the provided Sinhala guide context." 
             : "Answer strictly in English based on the provided English guide context.";
