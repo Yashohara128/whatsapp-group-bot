@@ -809,37 +809,7 @@ async function checkIsAdmin(message, senderId, actualNumber) {
     }
 }
 
-// ==========================================
-// PRIVATE INBOX REDIRECTION & RAG AI FEATURES
-// ==========================================
-client.on('message', async (message) => {
-    if (message.fromMe) return;
-
-    const isGroup = message.from.endsWith('@g.us');
-    const msgText = message.body ? message.body.trim() : '';
-    const textLower = msgText.toLowerCase();
-
-    // 1. AI Auto-Moderation (ගෲප් එකේ Spam links මකන්න)
-    if (isGroup && textLower.includes('http')) {
-        try {
-            const modRes = await groq.chat.completions.create({
-                model: 'openai/gpt-oss-20b',
-                messages: [
-                    { 
-                        role: 'user', 
-                        content: `Is this message spam or a scam link? Reply ONLY "YES" or "NO": "${msgText}"` 
-                    }
-                ]
-            });
-            const modReply = modRes.choices[0]?.message?.content || '';
-            if (modReply.trim().toUpperCase().includes('YES')) {
-                await message.delete(true);
-                return;
-            }
-        } catch (e) {}
-    }
-
-    // 2. RAG AI Assistant (/ai හෝ Mention කළාම System Prompt එකේ ඇති Guide දත්ත පාවිච්චි කරමින් උත්තර දීම)
+// 2. RAG AI Assistant (/ai හෝ Mention කළාම System Prompt එකේ ඇති Knowledge Base එක පාවිච්චි කරමින් උත්තර දීම)
     const isMentioned = message.mentionedIds && client.info?.wid && message.mentionedIds.includes(client.info.wid._serialized);
     if (textLower.startsWith('/ai') || isMentioned) {
         let query = msgText.replace(/^\/ai\s*/i, '').replace(/@\d+/g, '').trim();
@@ -852,9 +822,7 @@ client.on('message', async (message) => {
             : "Answer strictly in clear and professional English.";
 
         try {
-            const dynamicGroq = getGroqClient(); // Multi-key rotation function එක
-
-            const completion = await dynamicGroq.chat.completions.create({
+            const completion = await groq.chat.completions.create({
                 model: 'openai/gpt-oss-20b',
                 messages: [
                     { 
