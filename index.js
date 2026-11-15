@@ -9,40 +9,37 @@ const welcomedUsers = new Set();
 const stickerWarnings = {};
 
 // ==========================================
-// 📌 PDF GUIDE BOOKS LOAD CONFIGURATION
+// 📌 TEXT GUIDE BOOKS LOAD CONFIGURATION
 // ==========================================
-
-// Global variables for PDF Guides text
 let englishGuide = "";
 let sinhalaGuide = "";
 
-// PDF Guides කියවා Memory එකට ලෝඩ් කරගැනීම
+// Text Guides කියවා Memory එකට ලෝඩ් කරගැනීම
 async function loadGuides() {
     try {
         const enPath = path.join(__dirname, 'ifsls-guide-en.txt');
         if (fs.existsSync(enPath)) {
-            const enBuffer = fs.readFileSync(enPath);
-            const enData = await pdfParse(enBuffer);
-            englishGuide = enData.text;
-            console.log('✅ English Guide PDF Loaded Successfully!');
+            englishGuide = fs.readFileSync(enPath, 'utf8');
+            console.log('✅ English Guide Text File Loaded Successfully!');
+        } else {
+            console.log('⚠️ English Guide Text File not found!');
         }
     } catch (e) {
-        console.log('❌ Error loading English PDF:', e);
+        console.log('❌ Error loading English Text File:', e);
     }
 
     try {
         const siPath = path.join(__dirname, 'ifsls-guide-si.txt');
         if (fs.existsSync(siPath)) {
-            const siBuffer = fs.readFileSync(siPath);
-            const siData = await pdfParse(siBuffer);
-            sinhalaGuide = siData.text;
-            console.log('✅ Sinhala Guide PDF Loaded Successfully!');
+            sinhalaGuide = fs.readFileSync(siPath, 'utf8');
+            console.log('✅ Sinhala Guide Text File Loaded Successfully!');
+        } else {
+            console.log('⚠️ Sinhala Guide Text File not found!');
         }
     } catch (e) {
-        console.log('❌ Error loading Sinhala PDF:', e);
+        console.log('❌ Error loading Sinhala Text File:', e);
     }
 }
-
 
 const TARGET_GROUP_IDS = [
     "120363427144307038@g.us",
