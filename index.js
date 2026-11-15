@@ -3,10 +3,9 @@ const qrcode = require("qrcode-terminal");
 const cron = require("node-cron"); 
 const fs = require("fs"); 
 const path = require("path");
-const { GoogleGenAI } = require('@google/genai');
-const ai = new GoogleGenAI({ 
-    vertexai: true, 
-    apiKey: 'AQ.Ab8RN6IYi2YKj46TZComcdPS0FE506QLXKIS35eiLzq8u6BHvw' 
+const OpenAI = require('openai');
+const openai = new OpenAI({
+    apiKey: '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' 
 });
 const welcomedUsers = new Set();
 const stickerWarnings = {};
@@ -797,14 +796,20 @@ client.on('message', async (message) => {
     const textLower = msgText.toLowerCase();
     const senderId = message.from;
 
-    // 2. AI Auto-Moderation (ଗෲප් එකේ Spam links මකන්න)
+    // 2. AI Auto-Moderation (ගෲප් එකේ Spam links මකන්න)
     if (isGroup && textLower.includes('http')) {
         try {
-            const modRes = await ai.models.generateContent({
-                model: 'gemini-3.8-flash',
-                contents: `Is this message spam or a scam link? Reply ONLY "YES" or "NO": "${msgText}"`
+            const modRes = await openai.chat.completions.create({
+                model: 'gpt-4o-mini',
+                messages: [
+                    { 
+                        role: 'user', 
+                        content: `Is this message spam or a scam link? Reply ONLY "YES" or "NO": "${msgText}"` 
+                    }
+                ]
             });
-            if (modRes.text && modRes.text.trim().toUpperCase().includes('YES')) {
+            const modReply = modRes.choices[0].message.content;
+            if (modReply && modReply.trim().toUpperCase().includes('YES')) {
                 await message.delete(true);
                 return;
             }
@@ -818,20 +823,24 @@ client.on('message', async (message) => {
         if (!query) query = "Hello, can you help me with student loan details?";
         
         try {
-            const res = await ai.models.generateContent({
-                model: 'gemini-3.8-flash',
-                contents: query,
-                config: {
-                    systemInstruction: "You are the AI assistant for the IFSLS government student loan group in Sri Lanka. Help students with clear answers about student loans and guidelines in Sinhala or English."
-                }
+            const completion = await openai.chat.completions.create({
+                model: 'gpt-4o-mini',
+                messages: [
+                    { 
+                        role: 'system', 
+                        content: "You are the AI assistant for the IFSLS government student loan group in Sri Lanka. Help students with clear answers about student loans and guidelines in Sinhala and English both languages." 
+                    },
+                    { role: 'user', content: query }
+                ]
             });
-            await message.reply(res.text);
+            await message.reply(completion.choices[0].message.content);
         } catch (err) {
+            console.error("OpenAI Error:", err);
             await message.reply("⚠️ මට මේ මොහොතේ උත්තර ලබා දීමට නොහැකි විය.");
         }
         return; 
     }
-    });
+});
 
 client.on('message', async (message) => {
     if (message.fromMe) return;
