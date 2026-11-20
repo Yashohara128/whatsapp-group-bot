@@ -1000,16 +1000,23 @@ client.on("message_create", async (message) => {
 
             console.log(`✅ [BROADCAST AUTHORIZED] Sending update to groups...`);
 
-            const textToSend = `📢 *විශේෂ දැනුම්දීමයි!* 📢
+            const textToSend = `📢🎓 *IFSLS 11th INTAKE – BOT & IMPORTANT UPDATES* 🎓📢
 
-ළමයි අපේ බොට්ව දැන් සම්පූර්ණයෙන්ම Fully AI smart agent කෙනෙක් ලෙස upgrade කරල තියනවා ! 🎉
-ඔයාලට තියෙන ඕනෑම ප්‍රශ්නයක් බොට්ගෙන් අහන්න පුළුවන්.
+ළමයි, Interviews අවසන් වීමත් සමඟ අපේ Smart Bot එකට අලුත් features සහ වැදගත් updates කිහිපයක් එකතු කරලා තියෙනවා! 🎉
 
-හැබැයි මතක තියාගන්න ළමයි, මේක දැන්ම ටෙස්ට් මට්ටමේ limited edition එකක් දැනට (Testing phase) තමයි තියෙන්නේ එක දිගට messages යොමු කරන්න ඒපා අනවශ්‍ය ලෙස! ⚠️
+✨ *අලුත් Updates මොනවද?*
+📊 */results* – Selection Results Portal link එක සහ Intake 11 ප්‍රතිඵල (2026 දෙසැම්බර් මස බලාපොරොත්තු වන) පිළිබඳ විස්තර.
+📌 */specialnotes* – Interviews වලින් පසු Selection Results, Physical Registration සහ Appeals (අභියාචනා) ගැන වැදගත් උපදෙස්.
+🤖 */ai* (හෝ @mention) – ශිෂ්‍ය ණය (IFSLS) ගැන ඔයාලගේ ප්‍රශ්න වලට AI assistant හරහා පිළිතුරු ලබාගැනීමේ පහසුකම.
+🛡️ *Safe System & Anti-Spam* – Group එකේ සාමය සහ ආරක්ෂාව වෙනුවෙන් anti-spam සහ safe messaging rules තවදුරටත් ශක්තිමත් කර ඇත.
 
-💬 *ප්‍රශ්න අහන්නේ කොහොමද?*
-- /ai කියලා ටයිප් කරලා හිස්තැනක් තියල ඊට පස්සේ ඔයාගේ ප්‍රශ්නේ type කරලා group send කරන්න.
-- නැත්නම් බොට්ව මෙන්ෂන් කරලා (@) ප්‍රශ්නේ අහන්න පුළුවන්. 😊💙`; //[cite: 2]
+💬 *කොහොමද පාවිච්චි කරන්නේ?*
+• Group එක ඇතුළේ `/menu` කියලා type කරලා සියලුම commands බලාගන්න.
+• ප්‍රශ්නයක් අහන්න ඕන නම් `/ai [ඔයාගේ ප්‍රශ්නය]` ලෙස type කරන්න (අනවශ්‍ය ලෙස එක දිගට messages යැවීමෙන් වළකින්න ⚠️).
+
+📩 Ministry එකෙන් එන Emails (Inbox + Spam) නිතර check කරන්න, නිල නිවේදන පමණක් විශ්වාස කරන්න! ✅
+
+🎓 *IFSLS STUDENT ADMIN COMMUNITY*`; //[cite: 2]
 
             let count = 0;
             for (const groupId of TARGET_GROUP_IDS) {
