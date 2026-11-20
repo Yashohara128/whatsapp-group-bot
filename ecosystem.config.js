@@ -1,3 +1,4 @@
+rm -f ecosystem.config.js
 cat << 'EOF' > ecosystem.config.js
 module.exports = {
   apps: [
@@ -12,3 +13,4 @@ module.exports = {
   ]
 };
 EOF
+node -c ecosystem.config.js
