@@ -1052,13 +1052,14 @@ client.on("message_create", async (message) => {
 📊 */results* – Selection Results Portal link එක සහ Intake 11 ප්‍රතිඵල (2026 දෙසැම්බර් මස බලාපොරොත්තු වන) පිළිබඳ විස්තර.
 📌 */specialnotes* – Interviews වලින් පසු Selection Results, Physical Registration සහ Appeals (අභියාචනා) ගැන වැදගත් උපදෙස්.
 🤖 */ai* (හෝ @mention) – ශිෂ්‍ය ණය (IFSLS) ගැන ඔයාලගේ ප්‍රශ්න වලට AI assistant හරහා පිළිතුරු ලබාගැනීමේ පහසුකම.
-🛡️ *Safe System & Anti-Spam* – Group එකේ සාමය සහ ආරක්ෂාව වෙනුවෙන් anti-spam සහ safe messaging rules තවදුරටත් ශක්තිමත් කර ඇත.
+🛡️ *Safe System & Anti-Spam* – Group එකේ  ආරක්ෂාව වෙනුවෙන් anti-spam සහ safe messaging rules තවදුරටත් වැඩිදියුණු කර ඇත.
 
 💬 *කොහොමද පාවිච්චි කරන්නේ?*
-• Group එක ඇතුළේ `/menu` කියලා type කරලා සියලුම commands බලාගන්න.
-• ප්‍රශ්නයක් අහන්න ඕන නම් \`/ai [ඔයාගේ ප්‍රශ්නය]\` ලෙස type කරන්න (අනවශ්‍ය ලෙස එක දිගට messages යැවීමෙන් වළකින්න ⚠️).
+• Group එක ඇතුළේ /menu කියලා type කරලා සියලුම commands බලාගන්න පුලුවන්.
+• ප්‍රශ්නයක් අහන්න ඕන නම් /ai [ඔයාගේ ප්‍රශ්නය] ලෙස type කරන්න (Ai limitations ඇති නිසා අනවශ්‍ය ලෙස එක දිගට messages යැවීමෙන් වළකින්න ⚠️).
 
 📩 Ministry එකෙන් එන Emails (Inbox + Spam) නිතර check කරන්න, නිල නිවේදන පමණක් විශ්වාස කරන්න! ✅
+📩 final results ලැබෙන තුරු තමාගේ personal details campus එක හරහා direct හුවමාරු කර ගැනීමෙන් වලකින්න!
 
 🎓 *IFSLS STUDENT ADMIN COMMUNITY*`;
 
