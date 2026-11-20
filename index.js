@@ -1000,7 +1000,7 @@ client.on("message_create", async (message) => {
 
             console.log(`✅ [BROADCAST AUTHORIZED] Sending update to groups...`);
 
-            const textToSend = const textToSend = `📢🎓 *IFSLS 11th INTAKE – BOT & IMPORTANT UPDATES* 🎓📢
+            const textToSend =`📢🎓 *IFSLS 11th INTAKE – BOT & IMPORTANT UPDATES* 🎓📢
 
 ළමයි, Interviews අවසන් වීමත් සමඟ අපේ Smart Bot එකට අලුත් features සහ වැදගත් updates කිහිපයක් එකතු කරලා තියෙනවා! 🎉
 
