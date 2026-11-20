@@ -4,7 +4,7 @@ const cron = require("node-cron");
 const fs = require("fs");
 const path = require("path");
 const Groq = require('groq-sdk');
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || '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' }); //
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || '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' }); //
 
 const stickerWarnings = {};
 const pmRepliedUsers = new Map();
