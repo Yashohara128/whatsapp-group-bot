@@ -1072,7 +1072,7 @@ client.on("message_create", async (message) => {
                     console.log(`✅ [BROADCAST] Sent to ${groupId} (Total: ${count})`);
                     await new Promise(resolve => setTimeout(resolve, 5000));
                 } catch (err) {
-                    console.error(`❌ [BROADCAST ERROR] Group: ${groupId} | Message: ${err?.message || err}`);
+                    console.error(`❌ [BROADCAST ERROR] Group: ${groupId}`, err);
                 }
             }
 
@@ -1340,7 +1340,7 @@ client.on("message_create", async (message) => {
         await checkSpam(message, senderId, info.name, groupId);
 
     } catch (error) {
-        console.error("message_create error:", error?.message || error);
+        console.error("message_create error:", error);
     }
 });
 
