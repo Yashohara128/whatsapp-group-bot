@@ -132,7 +132,7 @@ const ifslsAnswers = {
                      "🏛 *SIBA:* රු. 25,000/= (ටී.ආර්.එස්.සිරිගංගොඩ - 070 7 940 940 / සාග්‍යා - 081 24 21 693)\n" +
                      "🏛 *ICASL:* රු. 20,000/= (ඉසුරි සමරවික්‍රම - 0112 807 407)", //[cite: 2]
     "/private": "👤 *Private Candidates (පෞද්ගලික අයදුම්කරුවන්):*\nපෞද්ගලිකව උසස් පෙළ පෙනී සිටි අයදුම්කරුවන්, පාසලේ අස්වීමේ සහතිකය,'ග්‍රාම නිලධාරී සහතිකය (ප්‍රාදේශීය ලේකම් අනුමත කළ,පදිංචිය ස්ථිර කරගැනිම සදහා)' හෝ 'සාම විනිසුරුවරයෙකුගෙන් (JP) ලබාගත් චරිත සහතිකයක්' සම්මුඛ පරීක්ෂණයේදී ඉදිරිපත් කළ යුතුය.", //[cite: 2]
-    "/documents": "📂 *ඉන්ටවිව් එකට රැගෙන යා යුතු ලියකියවිලි (Originals):*\n1. ජාතික හැඳුනුම්පත (NIC)\n2. උප්පැන්න සහතිකය\n3. O/L සහ A/L සහතික(Z score සහිත)\n4. Online Application එකේ Print Out එක (විදුහල්පති හෝ සාමවිනිසුරු (JP) සහතික කරන ලද)\n5.පාසලේ අස්වීමේ සහතිකය, ග්‍රාම සේවා සහතිකය \n6.Bridging Courses Results(Bridging කරලා තියනවනම්)\n7.Course Changing Letter(Courses Change කරනවනම්)", //[cite: 2]
+    "/documents": "📂 *ඉන්ටවිව් එකට රැගෙන යා යුතු ලියකියවිලි (Originals):*\n1. ජාතික හැඳුනුම්පත (NIC)\n2. උප්පැන්න සහතිකය\n3. O/L සහ A/L සහතික(Z score සහිත)\n4. Online Application එකේ Print Out එක (විදුහල්පති හෝ සාමවිනිසුරු (JP) සහතික කරන ලද)\n5.පාසලේ අස්වීමේ සහතිකය\n6.Bridging Courses Results(Bridging කරලා තියනවනම්)\n7.Course Changing Letter(Courses Change කරනවනම්)", //[cite: 2]
     "/applysteps": "📝 *අයදුම් කරන ආකාරය:*\n1. https://studentloans.mohe.gov.lk/loan_application/ වෙත පිවිසෙන්න.\n2. NIC අංකයෙන් Register වෙන්න.\n3. O/L, A/L ප්‍රතිඵල සහ පෞද්ගලික විස්තර පුරවන්න (වැඩි විස්තර සදහා guide book එකේ සදහන් ලියාපදිංචි පියවරයන් අනුගමනය කරන්න)\n4. ඔබට අවශ්‍ය කැම්පස් සහ උපාධි කැමැත්තේ අනුපිළිවෙලට (Preferences) තෝරන්න.\n5. තහවුරු කර Submit කර, Application එක Print කරගන්න.", //[cite: 2]
     "/afterapplysteps": "🎓 *අයදුම් කළ පසු ඊළඟ පියවර (After Apply Steps):*\n\n" +
                         "1️⃣ *සම්මුඛ පරීක්ෂණයට කැඳවීම:* අයදුම්පත්‍ර භාරගැනීම අවසන් වී මාසයක් පමණ ඇතුළත, සුදුසුකම් ලැබූ සිසුන්ට Online Interview එක සඳහා Email එකක් මගින් දැනුම් දෙනු ලැබේ. තේරුණු සිසුන්ගේ නාමලේඛනය studentloans.mohe.gov.lk වෙබ් අඩවියේ පළ කෙරේ.\n\n" +
@@ -140,103 +140,44 @@ const ifslsAnswers = {
                         "3️⃣ *පාඨමාලාවට තේරී පත්වීම:* Interview එකෙන් පසු තේරී පත් වූ උපාධිය සහ කැම්පස් එක වෙබ් අඩවියේ පළ කරන අතර, කැම්පස් Physical ලියාපදිංචි විය යුතු දිනයන් Email  මගින් දැනුම් දෙනු ඇත.\n\n" +
                         "4️⃣ *අභියාචනා යොමු කිරීම (Appeals):* තේරීම් ප්‍රතිඵල පැමිණිමෙන් වෙනසක් කරගැනිමට (Course/Campus මාරු කරගන්න අවශ්‍යය)නම්, ප්‍රතිඵල පැමිණ මසක් තුල වෙබ් අඩවිය හරහා (https://studentloans.mohe.gov.lk) අභියාචනයක් අයදුම් කල හැක (අභියාචනා කළ නොහැකි අය: තෝරාගත් උපාධි පිරිනමන ආයතනවල දැනටමත් ලියාපදිංචි වී සිටින අයට අභියාචනා ඉදිරිපත් කළ නොහැක.   තෝරාගැනීමේ පදනම: අභියාචනා සලකා බලන්නේ පවතින පුරප්පාඩු මත වන අතර, පුරප්පාඩු වලට වඩා අභියාචනා සංඛ්‍යාව වැඩි වුවහොත් අයදුම්කරුවන්ගේ Z-අගය (Z-scores) සැලකිල්ලට ගනී.   ප්‍රතික්ෂේප වීම් හා අවසන් තීරණය: නියමිත කාලසීමාවෙන් පසු යොමු කරන අභියාචනා භාර නොගන්නා අතර, අභියාචනා සම්බන්ධයෙන් අමාත්‍යාංශ ලේකම්වරයා ගන්නා තීරණය අවසාන තීරණය ලෙස සැලකේ.)", //[cite: 2]
 
-    "/specialnotes": `📢🎓 *IFSLS 11th INTAKE – INTERVIEW IMPORTANT NOTICE 01* 🎓📢
+    "/specialnotes": `📢🎓 *IFSLS 11th INTAKE – POST-INTERVIEW IMPORTANT NOTICE* 🎓📢
 
-IFSLS 11th Intake සඳහා අයදුම් කර ඇති සියලුම සිසුන්ගේ අවධානයටයි.
-Interview එක සම්බන්ධයෙන් පහත පියවර පිළිවෙලට මතක තබාගන්න. 👇✨
-
-━━━━━━━━━━━━━━━━━━
-
-📩 *FIRST – CONFIRMATION EMAIL*
-
-මුලින්ම Ministry එකෙන් Interview Confirmation Email එකක් ලැබෙනවා. 📬
-
-👉 Email එක හොඳින් කියවන්න.
-👉 ලබා දී ඇති instructions අනිවාර්යයෙන් follow කරන්න. ✅
-👉 Online / Physical Interview සඳහා option එකක් ලබා දී තිබේ නම්, තමන්ට අවශ්‍ය option එක select කර confirm කරන්න.
-👉 ⏰ Email එකේ සඳහන් DEADLINE එකට පෙර confirmation එක අනිවාර්යයෙන් complete කරන්න.
-
-🚨 ⚠️ DEADLINE එක miss කරන්න එපා! ⚠️
-📌 Confirmation එක complete කළ බව නැවතත් check කරගන්න. ✅
+IFSLS 11th Intake සඳහා සම්මුඛ පරීක්ෂණ (Interviews) වලට සහභාගී වූ සියලුම සිසුන්ගේ අවධානයටයි.
+Interviews අවසන් වීමෙන් පසු ඉදිරි පියවර පහත පරිදි මතක තබාගන්න. 👇✨
 
 ━━━━━━━━━━━━━━━━━━
 
-📩 *SECOND – DATE & TIME EMAIL*
+📊 *01. SELECTION RESULTS (තේරීම් ප්‍රතිඵල නිකුත් වීම)*
 
-Confirmation එක complete කළාට පසුව, Interview එකට අදාළ Date, Time සහ අනෙකුත් instructions ඇතුළත් දෙවන Email එක ලැබෙනවා. 📅⏰
-
-💻 Online Interview නම්:
-🔗 Email එකේ ලබා දී ඇති platform / link එක හරහා interview එකට join වෙන්න.
-
-🏢 Physical Interview නම්:
-📍 Email එකේ ලබා දී ඇති Ministry location, Date සහ Time අනුව physically attend වෙන්න.
-
-📌 Date, Time සහ Online Link / Physical Location එක save කරගන්න. 💾
+✅ සම්මුඛ පරීක්ෂණ අවසන් වීමෙන් පසු, තේරී පත් වූ උපාධිය සහ විශ්වවිද්‍යාලය (Campus) ඇතුළත් තේරීම් ප්‍රතිඵල **2026 දෙසැම්බර් මස** නිකුත් වීමට ඉඩ ඇත.
+🌐 නිල වෙබ් අඩවිය හරහා ප්‍රතිඵල පරීක්ෂා කළ හැක: https://studentloans.mohe.gov.lk
+📩 තේරී පත් වූ සිසුන්ට Ministry එක මඟින් Email මඟින්ද දැනුම් දෙනු ලැබේ.
 
 ━━━━━━━━━━━━━━━━━━
 
-📑 *DOCUMENTS – කලින්ම සූදානම් කරගන්න*
+🏛️ *02. CAMPUS PHYSICAL REGISTRATION (ලියාපදිංචි වීම)*
 
-📋 පහත documents කලින්ම සූදානම් කරගෙන සිටීම වැදගත්:
+📌 ප්‍රතිඵල නිකුත් වූ පසු අදාළ Campus එකේ Physical Registration සඳහා ලබා දෙන දිනයන් Email මඟින් දැනුම් දෙනු ඇත.
+📂 සියලුම මුල් ලේඛන (Original Documents) සුරක්ෂිතව ළඟ තබාගන්න.
 
-🪪 NIC / Passport
-📜 Original Birth Certificate
-📜 Original G.C.E. A/L Certificate
-📜 Original G.C.E. O/L Certificate
-🏫 School Leaving Certificate
-📄 Grama Niladhari (GN) Certificate
-📝 Printed Application Copy + Principal’s Certificate
-📊 Bridging Course Result – applicable නම්
-📄 Course Changing Letter – applicable නම්
+━━━━━━━━━━━━━━━━━━
 
-💻 Online Interview නම්:
-Required documents වල scanned copies, Ministry එකෙන් ලබා දෙන official instructions අනුව සඳහන් කර ඇති email address එකට submit කරන්න. 📧
+📝 *03. APPEALS (අභියාචනා ඉදිරිපත් කිරීම)*
 
-🏢 Physical Interview නම්:
-Email එකේ සඳහන් කර ඇති required original documents සමඟ interview එකට සහභාගී වන්න. 📑
+🔄 ඔබට තේරී පත් වූ Course එක හෝ Campus එක වෙනස් කරගැනීමට අවශ්‍ය නම්, ප්‍රතිඵල නිකුත් වී **මාසයක් (1 Month) ඇතුළත** නිල වෙබ් අඩවිය හරහා Online Appeal එකක් ඉදිරිපත් කළ හැක.
+⚠️ *වැදගත්:* ඔබ දැනටමත් තේරී පත් වූ Campus එකේ ලියාපදිංචි (Register) වී ඇත්නම් අභියාචනා ඉදිරිපත් කළ නොහැක.
 
 ━━━━━━━━━━━━━━━━━━
 
 ⚠️📌 *IMPORTANT REMINDER*
 
-📩 Ministry එකෙන් ලබා දෙන emails නිතර check කරන්න.
-📂 Inbox + Spam/Junk folders ද පරීක්ෂා කරන්න.
-⏰ Confirmation Deadline එක අනිවාර්යයෙන් මතක තබාගන්න.
-📌 Ministry එකෙන් ලබා දෙන latest official instructions පමණක් follow කරන්න. ✅
+📩 Ministry එකෙන් ලැබෙන Emails (Inbox සහ Spam/Junk folders) නිතර පරීක්ෂා කරන්න.
+📊 ප්‍රතිඵල බලාගන්නා Link එක සඳහා group එකේ */results* කියලා type කරන්න.
+📌 නිල නිවේදන (Official Notices) පමණක් විශ්වාස කරන්න. ✅
 
 ━━━━━━━━━━━━━━━━━━
 
-📋 *INTERVIEW INSTRUCTIONS & GUIDELINES*
-
-📌 *01. අවශ්‍ය ලේඛන සූදානම් කරගැනීම*
-සම්මුඛ පරීක්ෂණයට අදාළ සියලුම ලේඛන කල්වේලා ඇතිව සූදානම් කරගත යුතුය.
-
-📧 *02. ලේඛන විද්‍යුත් තැපෑල මඟින් යොමු කිරීම*
-සම්මුඛ පරීක්ෂණය පැවැත්වීමට අවම වශයෙන් පැයකට පෙර, ලබා දී ඇති විද්‍යුත් තැපැල් ලිපිනය වෙත අදාළ සියලුම ලේඛන යොමු කළ යුතුය.
-
-✅ *03. විද්‍යුත් තැපෑල ලැබී ඇති බව තහවුරු කරගැනීම*
-යොමු කරන ලද විද්‍යුත් තැපෑල සාර්ථකව යවා ඇති බවත්, අදාළ පාර්ශ්වය වෙත ලැබී ඇති බවත් තහවුරු කරගත යුතුය.
-
-📱 *04. තාක්ෂණික පහසුකම් පරීක්ෂා කිරීම*
-සම්මුඛ පරීක්ෂණයට සහභාගී වන උපකරණයේ අන්තර්ජාල සම්බන්ධතාව, කැමරාව සහ බැටරි ආරෝපණය නිසි පරිදි පවතින බව කල්තියා තහවුරු කරගත යුතුය.
-
-📂 *05. මුල් ලේඛන සූදානම් කරගැනීම*
-විද්‍යුත් තැපෑල මඟින් යොමු කරන ලද සියලුම ලේඛනවල මුල් පිටපත් (Original Documents) සම්මුඛ පරීක්ෂණයට සහභාගී වන අවස්ථාවේදී ළඟ තබාගත යුතුය.
-
-⏰ *06. නියමිත වේලාවට පෙර සම්බන්ධ වීම*
-ලබා දී ඇති වේලාවට අවම වශයෙන් විනාඩි 20කට පෙර සම්මුඛ පරීක්ෂණය සඳහා සම්බන්ධ විය යුතුය.
-
-🖥️ *07. Waiting Room තුළ අවධානයෙන් සිටීම*
-තම වාරය පැමිණෙන තෙක් Waiting Room තුළ රැඳී සිටීමට සිදුවිය හැකි බැවින්, එම කාලය තුළ අවධානයෙන් හා සූදානමින් සිටිය යුතුය.
-
-⚠️ *විශේෂ දැනුම්දීම*
-ඉහත උපදෙස් පිළිපදිමින්, සම්මුඛ පරීක්ෂණය සඳහා අවශ්‍ය සියලු කටයුතු කල්වේලා ඇතිව සූදානම් කරගන්නා ලෙස සියලුම සිසුන්ට කාරුණිකව දැනුම් දෙනු ලැබේ.
-
-━━━━━━━━━━━━━━━━━━
-
-🎓🌟 *ALL THE VERY BEST FOR YOUR IFSLS INTERVIEW!* 🌟🎓
-
-GOOD LUCK & ALL THE BEST! 🍀🎓❤️
+🎓🌟 *WISH YOU ALL THE BEST FOR YOUR SELECTION RESULTS!* 🌟🎓
 
 🎓 *IFSLS STUDENT ADMIN COMMUNITY*`, //[cite: 2]
 
