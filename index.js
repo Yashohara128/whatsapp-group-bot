@@ -624,15 +624,19 @@ client.on("authenticated", () => {
     console.log("✅ WhatsApp authenticated");
 });
 
-client.on("auth_failure", (msg) => {
-    console.error("❌ AUTH FAILURE:", msg);
-});
-
 client.on("ready", async () => {
     console.log("\n========================================");
     console.log("🤖 BOT READY - SAFE QUEUE & ANTI-SPAM SYSTEM");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
+});
+
+// ==========================================
+// 📌 LOAD GUIDES & INITIALIZE BOT
+// ==========================================
+loadGuides().then(async () => {
+    await client.initialize();
+    console.log("ℹ️ client.initialize() promise resolved");
 });
 
 async function getContactInfo(id) {
