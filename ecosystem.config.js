@@ -1,4 +1,3 @@
-cd ~/whatsapp-group-bot
 cat << 'EOF' > ecosystem.config.js
 module.exports = {
   apps: [
