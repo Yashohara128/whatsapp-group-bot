@@ -568,6 +568,7 @@ const client = new Client({
     authStrategy: new LocalAuth(),
 puppeteer: {
     headless: true,
+    executablePath: '/snap/bin/chromium',
     args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
