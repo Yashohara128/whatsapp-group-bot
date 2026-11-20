@@ -1000,7 +1000,7 @@ client.on("message_create", async (message) => {
 
             console.log(`✅ [BROADCAST AUTHORIZED] Sending update to groups...`);
 
-            const textToSend = `📢🎓 *IFSLS 11th INTAKE – BOT & IMPORTANT UPDATES* 🎓📢
+            const textToSend = const textToSend = `📢🎓 *IFSLS 11th INTAKE – BOT & IMPORTANT UPDATES* 🎓📢
 
 ළමයි, Interviews අවසන් වීමත් සමඟ අපේ Smart Bot එකට අලුත් features සහ වැදගත් updates කිහිපයක් එකතු කරලා තියෙනවා! 🎉
 
@@ -1012,7 +1012,7 @@ client.on("message_create", async (message) => {
 
 💬 *කොහොමද පාවිච්චි කරන්නේ?*
 • Group එක ඇතුළේ `/menu` කියලා type කරලා සියලුම commands බලාගන්න.
-• ප්‍රශ්නයක් අහන්න ඕන නම් `/ai [ඔයාගේ ප්‍රශ්නය]` ලෙස type කරන්න (අනවශ්‍ය ලෙස එක දිගට messages යැවීමෙන් වළකින්න ⚠️).
+• ප්‍රශ්නයක් අහන්න ඕන නම් \`/ai [ඔයාගේ ප්‍රශ්නය]\` ලෙස type කරන්න (අනවශ්‍ය ලෙස එක දිගට messages යැවීමෙන් වළකින්න ⚠️).
 
 📩 Ministry එකෙන් එන Emails (Inbox + Spam) නිතර check කරන්න, නිල නිවේදන පමණක් විශ්වාස කරන්න! ✅
 
