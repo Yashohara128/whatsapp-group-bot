@@ -347,7 +347,7 @@ GOOD LUCK & ALL THE BEST! 🍀🎓❤️
              "👥 *Community Groups:*\n" +
              "• *Jobs & Internships Group 01:* https://whatsapp.com/channel/0029Vb615LUHVvTdCZmE4B1A\n" +
              "• *Jobs & Internships Group 02:* https://whatsapp.com/channel/0029Va9Xpxx8PgsOtsAbFn45\n\n" +
-             "💡 *Tip:* CV එකක් නිවැරදිව හදාගෙන LinkedIn Profile එක Update තබාගැනීමෙන් පහසුවෙන් Opportunities ලබාගත හැක." 
+             "💡 *Tip:* CV එකක් නිවැරදිව හදාගෙන LinkedIn Profile එක Update තබාගැනීමෙන් පහසුවෙන් Opportunities ලබාගත හැක.", 
     
     "/results": "📊 *IFSLS Selection Results & Portal:*\n\n" +
                 "ශිෂ්‍ය ණය (IFSLS) තේරීම් ප්‍රතිඵල (Selection Results) සහ ඔබගේ අයදුම්පතේ තත්ත්වය (Application / Appeal Status) පරීක්ෂා කිරීමට පහත නිල වෙබ් අඩවියට පිවිසෙන්න:\n\n" +
