@@ -624,19 +624,15 @@ client.on("authenticated", () => {
     console.log("✅ WhatsApp authenticated");
 });
 
+client.on("auth_failure", (msg) => {
+    console.error("❌ AUTH FAILURE:", msg);
+});
+
 client.on("ready", async () => {
     console.log("\n========================================");
     console.log("🤖 BOT READY - SAFE QUEUE & ANTI-SPAM SYSTEM");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
-});
-
-// ==========================================
-// 📌 LOAD GUIDES & INITIALIZE BOT
-// ==========================================
-loadGuides().then(async () => {
-    await client.initialize();
-    console.log("ℹ️ client.initialize() promise resolved");
 });
 
 async function getContactInfo(id) {
@@ -1133,6 +1129,7 @@ client.on("message_create", async (message) => {
 
                 delete stickerWarnings[warningKey];
             }
+            return;
         }
 
         if (info.actualNumber && !isSriLankan(info.actualNumber)) {
@@ -1148,7 +1145,7 @@ client.on("message_create", async (message) => {
 
         const isNativeGroupInvite = message.type === "group_invite";
         const strictLinkRegex = /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9-]+\.(com|lk|org|net|gov|edu|io|me|info|co|biz|xyz|app|dev)(\/[^\s]*)?|chat\.whatsapp\.com\/[^\s]+)/i;
-        const hasLinkIndicator = isNativeGroupInvite || strictLinkRegex.test(message.body);
+        const hasLinkIndicator = isNativeGroupInvite || strictLinkRegex.test(message.body || "");
 
         if (hasLinkIndicator) {
             if (!isAdmin) {
@@ -1374,6 +1371,7 @@ async function checkSpam(message, senderId, name, groupId) {
 // ==========================================
 // 📌 LOAD GUIDES & INITIALIZE BOT
 // ==========================================
-loadGuides().then(() => {
-    client.initialize();
+loadGuides().then(async () => {
+    await client.initialize();
+    console.log("ℹ️ client.initialize() promise resolved");
 });
