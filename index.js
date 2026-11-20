@@ -4,7 +4,7 @@ const cron = require("node-cron");
 const fs = require("fs");
 const path = require("path");
 const Groq = require('groq-sdk');
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || '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' });
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || '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' }); //
 
 const stickerWarnings = {};
 const pmRepliedUsers = new Map();
@@ -18,7 +18,7 @@ let sinhalaGuide = "";
 
 async function loadGuides() {
     try {
-        const enPath = path.join(__dirname, 'ifsls-guide-en.txt');
+        const enPath = path.join(__dirname, 'ifsls-guide-en.txt'); //[cite: 2]
         if (fs.existsSync(enPath)) {
             englishGuide = fs.readFileSync(enPath, 'utf8');
             console.log('✅ English Guide Text File Loaded Successfully!');
@@ -30,7 +30,7 @@ async function loadGuides() {
     }
 
     try {
-        const siPath = path.join(__dirname, 'ifsls-guide-si.txt');
+        const siPath = path.join(__dirname, 'ifsls-guide-si.txt'); //[cite: 2]
         if (fs.existsSync(siPath)) {
             sinhalaGuide = fs.readFileSync(siPath, 'utf8');
             console.log('✅ Sinhala Guide Text File Loaded Successfully!');
@@ -46,7 +46,7 @@ const TARGET_GROUP_IDS = [
     "120363427144307038@g.us",
     "120363428845309010@g.us",
     "120363431402119738@g.us"
-];
+]; //[cite: 2]
 
 const EXTRA_ADMINS = [
     "94722268122",
@@ -65,23 +65,23 @@ const EXTRA_ADMINS = [
     "94786215746",
     "94764466939",
     "185126747156564"
-];
+]; //[cite: 2]
 
-const CHROME_PATH = "/usr/bin/chromium-browser";
-const ENABLE_AUTO_REMOVE = true;
-const SPAM_WINDOW_MS = 10 * 1000;
-const SPAM_LIMIT = 6;
-const BAD_WORDS = ["hutto", "uba", "thopi", "pakyala", "palayan", "pnnyo"];
-const BAN_DURATION_MS = 24 * 60 * 60 * 1000;
+const CHROME_PATH = "/usr/bin/chromium-browser"; //[cite: 2]
+const ENABLE_AUTO_REMOVE = true; //[cite: 2]
+const SPAM_WINDOW_MS = 10 * 1000; //[cite: 2]
+const SPAM_LIMIT = 6; //[cite: 2]
+const BAD_WORDS = ["hutto", "uba", "thopi", "pakyala", "palayan", "pnnyo"]; //[cite: 2]
+const BAN_DURATION_MS = 24 * 60 * 60 * 1000; //[cite: 2]
 
 // ==========================================
 // 🎓 1. IFSLS පොදු ප්‍රශ්න සහ පිළිතුරු (FAQs)
 // ==========================================
 const ifslsAnswers = {
-    "/about": "🎓 *IFSLS යනු කුමක්ද?*\nමෙය ශ්‍රී ලංකා රජය මගින් රාජ්‍ය නොවන විශ්වවිද්‍යාල වල උපාධියක් හැදෑරීම සඳහා සිසුන්ට ලබාදෙන 100% ක් පොලී රහිත ශිෂ්‍ය ණය යෝජනා ක්‍රමයකි.",
-    "/ministrycontact": "🏛️ *MINISTRY OF HIGHER EDUCATION - CONTACT DETAILS* 🇱🇰\n\n🏢 *Non-State Higher Education Division (Ethul Kotte Office):*\n\n• *Address:* No. 980/4A, Wickramasinghe Place, Ethul Kotte, Sri Lanka\n\n• *Director (Student Loans):* +94 11 287 9724\n\n• *Student Loans Division:* +94 11 287 9727\n\n• *Assistant Director (Student Loans):* +94 11 287 9718\n\n• *Assistant Director (Admin):* +94 11 287 9723\n\n• *Subject Officers:* +94 70 355 5971 to +94 70 355 5979\n\n• *Fax:* +94 11 287 9719\n\n• *Whatsapp Messages Only:* +94703555974\n\n• *Email:* dsls@mohe.gov.lk / adsls@mohe.gov.lk\n\n• *Official Portal:* https://studentloans.mohe.gov.lk/loan_application/\n\n🏛️ *Main Ministry Office (Colombo 07):*\n\n• *Address:* No. 18, Ward Place, Colombo 07, Sri Lanka\n\n• *General Numbers:* +94 11 269 4486 / +94 11 269 7133 / +94 11 269 7721 / +94 11 269 1378\n\n• *Government Information Center:* 1919",
-    "/eligibility": "✅ *මූලික සුදුසුකම්:*\n1️⃣ A/L වර්ෂ: 2023, 2024 හෝ 2025\n2️⃣ ප්‍රතිඵල: විෂයයන් 3ම එකවර සමත් වීම (අවම 'S' 3ක්).\n3️⃣ CGT ලකුණු: අවම 30ක්.\n4️⃣ ඉංග්‍රීසි: O/L හෝ A/L ඉංග්‍රීසි විෂයට අවම 'S' සාමාර්ථයක්.\n5️⃣ වයස: 2026 සැප්තැම්බර් 27 දිනට වයස 25 ට අඩු වීම.",
-    "/loan": "💰 *ණය මුදල සහ අමතර වියදම්:*\nඋපාධිය සඳහා උපරිම රු. 1,500,000 දක්වා ණය මුදලක් ගෙවනු ලැබේ. මීට අමතරව, ඔබේ දෛනික වියදම් සඳහා (Stipend) වසරකට රු. 75,000 බැගින් (වසර 4ට ලක්ෂ 3ක්) වෙනම මුදලක් ලබාගත හැක. සම්පූර්ණ පොලිය රජය විසින් දරයි.",
+    "/about": "🎓 *IFSLS යනු කුමක්ද?*\nමෙය ශ්‍රී ලංකා රජය මගින් රාජ්‍ය නොවන විශ්වවිද්‍යාල වල උපාධියක් හැදෑරීම සඳහා සිසුන්ට ලබාදෙන 100% ක් පොලී රහිත ශිෂ්‍ය ණය යෝජනා ක්‍රමයකි.", //[cite: 2]
+    "/ministrycontact": "🏛️ *MINISTRY OF HIGHER EDUCATION - CONTACT DETAILS* 🇱🇰\n\n🏢 *Non-State Higher Education Division (Ethul Kotte Office):*\n\n• *Address:* No. 980/4A, Wickramasinghe Place, Ethul Kotte, Sri Lanka\n\n• *Director (Student Loans):* +94 11 287 9724\n\n• *Student Loans Division:* +94 11 287 9727\n\n• *Assistant Director (Student Loans):* +94 11 287 9718\n\n• *Assistant Director (Admin):* +94 11 287 9723\n\n• *Subject Officers:* +94 70 355 5971 to +94 70 355 5979\n\n• *Fax:* +94 11 287 9719\n\n• *Whatsapp Messages Only:* +94703555974\n\n• *Email:* dsls@mohe.gov.lk / adsls@mohe.gov.lk\n\n• *Official Portal:* https://studentloans.mohe.gov.lk/loan_application/\n\n🏛️ *Main Ministry Office (Colombo 07):*\n\n• *Address:* No. 18, Ward Place, Colombo 07, Sri Lanka\n\n• *General Numbers:* +94 11 269 4486 / +94 11 269 7133 / +94 11 269 7721 / +94 11 269 1378\n\n• *Government Information Center:* 1919", //[cite: 2]
+    "/eligibility": "✅ *මූලික සුදුසුකම්:*\n1️⃣ A/L වර්ෂ: 2023, 2024 හෝ 2025\n2️⃣ ප්‍රතිඵල: විෂයයන් 3ම එකවර සමත් වීම (අවම 'S' 3ක්).\n3️⃣ CGT ලකුණු: අවම 30ක්.\n4️⃣ ඉංග්‍රීසි: O/L හෝ A/L ඉංග්‍රීසි විෂයට අවම 'S' සාමාර්ථයක්.\n5️⃣ වයස: 2026 සැප්තැම්බර් 27 දිනට වයස 25 ට අඩු වීම.", //[cite: 2]
+    "/loan": "💰 *ණය මුදල සහ අමතර වියදම්:*\nඋපාධිය සඳහා උපරිම රු. 1,500,000 දක්වා ණය මුදලක් ගෙවනු ලැබේ. මීට අමතරව, ඔබේ දෛනික වියදම් සඳහා (Stipend) වසරකට රු. 75,000 බැගින් (වසර 4ට ලක්ෂ 3ක්) වෙනම මුදලක් ලබාගත හැක. සම්පූර්ණ පොලිය රජය විසින් දරයි.", //[cite: 2]
     "/maxloan": "💰 *උපරිම ණය මුදල (Maximum Loan Amounts):*\n\n" +
                 "🎓 *වසර 4ක උපාධි සඳහා:*\n" +
                 "• මානව ශාස්ත්‍ර හා සමාජ විද්‍යා - රු. 800,000\n" +
@@ -96,28 +96,28 @@ const ifslsAnswers = {
                 "• මානව ශාස්ත්‍ර / සමාජ විද්‍යා / වාණිජ - රු. 600,000\n" +
                 "• ඉංජිනේරු තාක්ෂණය - රු. 800,000\n" +
                 "• IT (පරිගණකවේදී) - රු. 600,000\n" +
-                "• IT (විද්‍යාවේදී) - රු. 800,000",
-    "/repayment": "⏳ *ණය ආපසු ගෙවීම:*\nඋපාධිය අවසන් වී වසරක (1 year) සහන කාලයක් හිමි වේ. ඉන්පසු වසර 7කින් හෝ 8කින් සමාන වාරික වශයෙන් ණය මුදල ගෙවා නිම කළ යුතුය. (සම්පූර්ණ ණය කාලය වසර 12කි).",
-    "/disqualified": "❌ *අයදුම් කළ නොහැක්කේ කාටද?*\nරජයේ කැම්පස් (UGC) සඳහා තේරී පත්වී ඇති/ලියාපදිංචි වී ඇති සිසුන්, විද්‍යාපීඨ (College of Education), HND වැනි වසර 2කට වැඩි රජයේ ඩිප්ලෝමා සඳහා තේරී ඇති සිසුන්ට අයදුම් කළ නොහැක.",
-    "/guarantors": "✍️ *ඇපකරුවන්:*\nපළමු ඇපකරු ලෙස මව, පියා හෝ නීත්‍යානුකූල භාරකරු අත්සන් කළ යුතු අතර, දෙවන ඇපකරු ලෙස සමීප ඥාතියෙකු අත්සන් කළ යුතුය.",
-    "/bridging": "🌉 *ඈඳුනු පාඨමාලා (Bridging Courses):*\nඔබ IT හෝ Management උපාධියක් කිරීමට අපේක්ෂා කරන්නේ නම්, නමුත් A/L සඳහා ICT හෝ අදාළ විෂයයන් හදාරා නොමැති නම්, කැම්පස් එක මගින් පවත්වන කෙටි කාලීන 'ඈඳුනු පාඨමාලාවක්' සමත් වීමෙන් පසු අදාළ උපාධිය හැදෑරිය හැක.",
+                "• IT (විද්‍යාවේදී) - රු. 800,000", //[cite: 2]
+    "/repayment": "⏳ *ණය ආපසු ගෙවීම:*\nඋපාධිය අවසන් වී වසරක (1 year) සහන කාලයක් හිමි වේ. ඉන්පසු වසර 7කින් හෝ 8කින් සමාන වාරික වශයෙන් ණය මුදල ගෙවා නිම කළ යුතුය. (සම්පූර්ණ ණය කාලය වසර 12කි).", //[cite: 2]
+    "/disqualified": "❌ *අයදුම් කළ නොහැක්කේ කාටද?*\nරජයේ කැම්පස් (UGC) සඳහා තේරී පත්වී ඇති/ලියාපදිංචි වී ඇති සිසුන්, විද්‍යාපීඨ (College of Education), HND වැනි වසර 2කට වැඩි රජයේ ඩිප්ලෝමා සඳහා තේරී ඇති සිසුන්ට අයදුම් කළ නොහැක.", //[cite: 2]
+    "/guarantors": "✍️ *ඇපකරුවන්:*\nපළමු ඇපකරු ලෙස මව, පියා හෝ නීත්‍යානුකූල භාරකරු අත්සන් කළ යුතු අතර, දෙවන ඇපකරු ලෙස සමීප ඥාතියෙකු අත්සන් කළ යුතුය.", //[cite: 2]
+    "/bridging": "🌉 *ඈඳුනු පාඨමාලා (Bridging Courses):*\nඔබ IT හෝ Management උපාධියක් කිරීමට අපේක්ෂා කරන්නේ නම්, නමුත් A/L සඳහා ICT හෝ අදාළ විෂයයන් හදාරා නොමැති නම්, කැම්පස් එක මගින් පවත්වන කෙටි කාලීන 'ඈඳුනු පාඨමාලාවක්' සමත් වීමෙන් පසු අදාළ උපාධිය හැදෑරිය හැක.", //[cite: 2]
     "/stipend": "💳 *ශිෂ්‍යාධාර දීමනාව (Stipend Allowance):*\n\n" +
                 "ඔබගේ දෛනික වියදම් පියවා ගැනීම සඳහා වසරකට රු. 75,000/= ක අමතර පොලී රහිත ණය මුදලක් (ශිෂ්‍යාධාරයක්) ඉල්ලුම් කළ හැක.\n\n" +
                 "💰 *ගෙවන ආකාරය:*\n" +
                 "• මාසයකට රු. 6,250/= බැගින් ගණනය කර, ත්‍රෛමාසිකව (මාස 3කට වරක්) රු. 18,750/= ක් ලෙස ශිෂ්‍යයා වෙත ගෙවනු ලැබේ (ගෙවීමේ ක්‍රමය campus එක හා degree semester එක අනුව තීරණය වේ)\n" +
                 "• වසර 4 ක උපාධියක් සඳහා උපරිම රු. 300,000/= ක් ද, වසර 3 ක උපාධියක් සඳහා රු. 225,000/= ක් ද ලබාගත හැක\n" +
-                "• මුදල් ලබාගැනීමට අදාළ බැංකුවෙන් නිකුත් කරන වවුචරයක් අත්සන් කළ යුතුය.",
+                "• මුදල් ලබාගැනීමට අදාළ බැංකුවෙන් නිකුත් කරන වවුචරයක් අත්සන් කළ යුතුය.", //[cite: 2]
     "/conditions": "⚠️ *උපාධිය හදාරන කාලය තුළ අනිවාර්ය නීති රීති:*\n\n" +
                    "1️⃣ *පැමිණීම සහ ප්‍රතිඵල:* සෑම අනිවාර්ය අධ්‍යයන විෂයයක් සඳහාම අවම වශයෙන් 'C' (සම්මාන) සාමාර්ථයක් ලබාගත යුතු අතර, 80% ක පැමිණීමක් අනිවාර්ය වේ.\n" +
                    "2️⃣ *විභාග අසමත් වීම:* යම් විෂයයක් අසමත් වුවහොත්, නැවත විභාග ගාස්තු ගෙවා ඊළඟ වාරයේදී එය සමත් විය යුතුය.\n" +
                    "3️⃣ *පාඨමාලාව අතහැරීම:* පෞද්ගලික හේතුවක් මත පාඨමාලාව අතහැරියහොත්, බැංකුව ගෙවූ සම්පූර්ණ මුදල සහ පොලිය එකවර ගෙවිය යුතුය.\n" +
                    "4️⃣ *CRIB එකට දැමීම:* ණය මුදල ආපසු ගෙවීම පැහැර හරින සහ පාඨමාලාව අතහැර මුදල් නොගෙවන සිසුන්ව සහ ඇපකරුවන්ව ශ්‍රී ලංකා ණය තොරතුරු කාර්යාංශයේ (CRIB) අසාදු ලේඛනයට ඇතුළත් කරනු ලැබේ.\n" +
-                   "5️⃣ *විදේශගත වීම:* උපාධියෙන් පසු විදේශගත වීමට අවශ්‍ය නම්, ලබාගත් සම්පූර්ණ ණය මුදල එකවර ගෙවා නිම කළ යුතුය.",
+                   "5️⃣ *විදේශගත වීම:* උපාධියෙන් පසු විදේශගත වීමට අවශ්‍ය නම්, ලබාගත් සම්පූර්ණ ණය මුදල එකවර ගෙවා නිම කළ යුතුය.", //[cite: 2]
     "/applycenters": "📍 *අන්තර්ජාල පහසුකම් නොමැති සිසුන්ට අයදුම් කළ හැකි ස්ථාන:*\n\n" +
                      "ඔබට නිවසේ සිට අයදුම් කිරීමට අපහසු නම්, පහත මධ්‍යස්ථාන වෙත ගොස් නොමිලේ අයදුම්පත සම්පූර්ණ කළ හැක.\n" +
                      "1. ශ්‍රී ලංකා විවෘත විශ්වවිද්‍යාලයේ (OUSL) NODES සහ NACS මධ්‍යස්ථාන.\n" +
                      "2. අධ්‍යාපන අමාත්‍යාංශය යටතේ ඇති පළාත් හා කලාපීය ICT මධ්‍යස්ථාන.\n" +
-                     "3. තොරතුරු හා සන්නිවේදන තාක්ෂණ නියෝජිතායතනය (ICTA) යටතේ ඇති 'නැණසල' මධ්‍යස්ථාන.",
+                     "3. තොරතුරු හා සන්නිවේදන තාක්ෂණ නියෝජිතායතනය (ICTA) යටතේ ඇති 'නැණසල' මධ්‍යස්ථාන.", //[cite: 2]
     "/bridginginfo": "🌉 *ඈඳුනු පාඨමාලා (Bridging Courses) ගාස්තු සහ නිලධාරීන්:*\n\n" +
                      "🏛 *SLIIT:* රු. 25,000/= (චාමිනී වීරක්කොඩි - 011 754 3392)\n" +
                      "🏛 *CINEC:* රු. 75,000/= (රුවනි කරුණාදාස - 076 9442866)\n" +
@@ -130,15 +130,15 @@ const ifslsAnswers = {
                      "🏛 *BCI:* රු. 25,000/= (අශානි පෙරේරා - 074 016 5896 / ප්‍රසාද්‍යා - 070 603 5100)\n" +
                      "🏛 *NIIBS:* රු. 25,000/= (ආචාර්ය සජීව ප්‍රේමසිංහ - 0112 904 675)\n" +
                      "🏛 *SIBA:* රු. 25,000/= (ටී.ආර්.එස්.සිරිගංගොඩ - 070 7 940 940 / සාග්‍යා - 081 24 21 693)\n" +
-                     "🏛 *ICASL:* රු. 20,000/= (ඉසුරි සමරවික්‍රම - 0112 807 407)",
-    "/private": "👤 *Private Candidates (පෞද්ගලික අයදුම්කරුවන්):*\nපෞද්ගලිකව උසස් පෙළ පෙනී සිටි අයදුම්කරුවන්, පාසලේ අස්වීමේ සහතිකය,'ග්‍රාම නිලධාරී සහතිකය (ප්‍රාදේශීය ලේකම් අනුමත කළ,පදිංචිය ස්ථිර කරගැනිම සදහා)' හෝ 'සාම විනිසුරුවරයෙකුගෙන් (JP) ලබාගත් චරිත සහතිකයක්' සම්මුඛ පරීක්ෂණයේදී ඉදිරිපත් කළ යුතුය.",
-    "/documents": "📂 *ඉන්ටවිව් එකට රැගෙන යා යුතු ලියකියවිලි (Originals):*\n1. ජාතික හැඳුනුම්පත (NIC)\n2. උප්පැන්න සහතිකය\n3. O/L සහ A/L සහතික(Z score සහිත)\n4. Online Application එකේ Print Out එක (විදුහල්පති හෝ සාමවිනිසුරු (JP) සහතික කරන ලද)\n5.පාසලේ අස්වීමේ සහතිකය, ග්‍රාම සේවා සහතිකය \n6.Bridging Courses Results(Bridging කරලා තියනවනම්)\n7.Course Changing Letter(Courses Change කරනවනම්)",
-    "/applysteps": "📝 *අයදුම් කරන ආකාරය:*\n1. https://studentloans.mohe.gov.lk/loan_application/ වෙත පිවිසෙන්න.\n2. NIC අංකයෙන් Register වෙන්න.\n3. O/L, A/L ප්‍රතිඵල සහ පෞද්ගලික විස්තර පුරවන්න (වැඩි විස්තර සදහා guide book එකේ සදහන් ලියාපදිංචි පියවරයන් අනුගමනය කරන්න)\n4. ඔබට අවශ්‍ය කැම්පස් සහ උපාධි කැමැත්තේ අනුපිළිවෙලට (Preferences) තෝරන්න.\n5. තහවුරු කර Submit කර, Application එක Print කරගන්න.",
+                     "🏛 *ICASL:* රු. 20,000/= (ඉසුරි සමරවික්‍රම - 0112 807 407)", //[cite: 2]
+    "/private": "👤 *Private Candidates (පෞද්ගලික අයදුම්කරුවන්):*\nපෞද්ගලිකව උසස් පෙළ පෙනී සිටි අයදුම්කරුවන්, පාසලේ අස්වීමේ සහතිකය,'ග්‍රාම නිලධාරී සහතිකය (ප්‍රාදේශීය ලේකම් අනුමත කළ,පදිංචිය ස්ථිර කරගැනිම සදහා)' හෝ 'සාම විනිසුරුවරයෙකුගෙන් (JP) ලබාගත් චරිත සහතිකයක්' සම්මුඛ පරීක්ෂණයේදී ඉදිරිපත් කළ යුතුය.", //[cite: 2]
+    "/documents": "📂 *ඉන්ටවිව් එකට රැගෙන යා යුතු ලියකියවිලි (Originals):*\n1. ජාතික හැඳුනුම්පත (NIC)\n2. උප්පැන්න සහතිකය\n3. O/L සහ A/L සහතික(Z score සහිත)\n4. Online Application එකේ Print Out එක (විදුහල්පති හෝ සාමවිනිසුරු (JP) සහතික කරන ලද)\n5.පාසලේ අස්වීමේ සහතිකය, ග්‍රාම සේවා සහතිකය \n6.Bridging Courses Results(Bridging කරලා තියනවනම්)\n7.Course Changing Letter(Courses Change කරනවනම්)", //[cite: 2]
+    "/applysteps": "📝 *අයදුම් කරන ආකාරය:*\n1. https://studentloans.mohe.gov.lk/loan_application/ වෙත පිවිසෙන්න.\n2. NIC අංකයෙන් Register වෙන්න.\n3. O/L, A/L ප්‍රතිඵල සහ පෞද්ගලික විස්තර පුරවන්න (වැඩි විස්තර සදහා guide book එකේ සදහන් ලියාපදිංචි පියවරයන් අනුගමනය කරන්න)\n4. ඔබට අවශ්‍ය කැම්පස් සහ උපාධි කැමැත්තේ අනුපිළිවෙලට (Preferences) තෝරන්න.\n5. තහවුරු කර Submit කර, Application එක Print කරගන්න.", //[cite: 2]
     "/afterapplysteps": "🎓 *අයදුම් කළ පසු ඊළඟ පියවර (After Apply Steps):*\n\n" +
                         "1️⃣ *සම්මුඛ පරීක්ෂණයට කැඳවීම:* අයදුම්පත්‍ර භාරගැනීම අවසන් වී මාසයක් පමණ ඇතුළත, සුදුසුකම් ලැබූ සිසුන්ට Online Interview එක සඳහා Email එකක් මගින් දැනුම් දෙනු ලැබේ. තේරුණු සිසුන්ගේ නාමලේඛනය studentloans.mohe.gov.lk වෙබ් අඩවියේ පළ කෙරේ.\n\n" +
                         "2️⃣ *Interview එකට සූදානම් වීම:* Online Interview එකට පෙර අවශ්‍ය ලියකියවිලි වල (Application එකේ මුද්‍රිත පිටපත, NIC, උප්පැන්න, O/L සහ A/L සහතික මුල් පිටපත්, පාසලේ අස්වීමේ සහතිකය, චරිත සහතිකය ආදී) Scan කොපි අමාත්‍යාංශයෙන් දෙන Email එකට යැවිය යුතුය.\n\n" +
                         "3️⃣ *පාඨමාලාවට තේරී පත්වීම:* Interview එකෙන් පසු තේරී පත් වූ උපාධිය සහ කැම්පස් එක වෙබ් අඩවියේ පළ කරන අතර, කැම්පස් Physical ලියාපදිංචි විය යුතු දිනයන් Email  මගින් දැනුම් දෙනු ඇත.\n\n" +
-                        "4️⃣ *අභියාචනා යොමු කිරීම (Appeals):* තේරීම් ප්‍රතිඵල පැමිණිමෙන් වෙනසක් කරගැනිමට (Course/Campus මාරු කරගන්න අවශ්‍යය)නම්, ප්‍රතිඵල පැමිණ මසක් තුල වෙබ් අඩවිය හරහා (https://studentloans.mohe.gov.lk) අභියාචනයක් අයදුම් කල හැක (අභියාචනා කළ නොහැකි අය: තෝරාගත් උපාධි පිරිනමන ආයතනවල දැනටමත් ලියාපදිංචි වී සිටින අයට අභියාචනා ඉදිරිපත් කළ නොහැක.   තෝරාගැනීමේ පදනම: අභියාචනා සලකා බලන්නේ පවතින පුරප්පාඩු මත වන අතර, පුරප්පාඩු වලට වඩා අභියාචනා සංඛ්‍යාව වැඩි වුවහොත් අයදුම්කරුවන්ගේ Z-අගය (Z-scores) සැලකිල්ලට ගනී.   ප්‍රතික්ෂේප වීම් හා අවසන් තීරණය: නියමිත කාලසීමාවෙන් පසු යොමු කරන අභියාචනා භාර නොගන්නා අතර, අභියාචනා සම්බන්ධයෙන් අමාත්‍යාංශ ලේකම්වරයා ගන්නා තීරණය අවසාන තීරණය ලෙස සැලකේ.)",
+                        "4️⃣ *අභියාචනා යොමු කිරීම (Appeals):* තේරීම් ප්‍රතිඵල පැමිණිමෙන් වෙනසක් කරගැනිමට (Course/Campus මාරු කරගන්න අවශ්‍යය)නම්, ප්‍රතිඵල පැමිණ මසක් තුල වෙබ් අඩවිය හරහා (https://studentloans.mohe.gov.lk) අභියාචනයක් අයදුම් කල හැක (අභියාචනා කළ නොහැකි අය: තෝරාගත් උපාධි පිරිනමන ආයතනවල දැනටමත් ලියාපදිංචි වී සිටින අයට අභියාචනා ඉදිරිපත් කළ නොහැක.   තෝරාගැනීමේ පදනම: අභියාචනා සලකා බලන්නේ පවතින පුරප්පාඩු මත වන අතර, පුරප්පාඩු වලට වඩා අභියාචනා සංඛ්‍යාව වැඩි වුවහොත් අයදුම්කරුවන්ගේ Z-අගය (Z-scores) සැලකිල්ලට ගනී.   ප්‍රතික්ෂේප වීම් හා අවසන් තීරණය: නියමිත කාලසීමාවෙන් පසු යොමු කරන අභියාචනා භාර නොගන්නා අතර, අභියාචනා සම්බන්ධයෙන් අමාත්‍යාංශ ලේකම්වරයා ගන්නා තීරණය අවසාන තීරණය ලෙස සැලකේ.)", //[cite: 2]
 
     "/specialnotes": `📢🎓 *IFSLS 11th INTAKE – INTERVIEW IMPORTANT NOTICE 01* 🎓📢
 
@@ -238,7 +238,7 @@ Email එකේ සඳහන් කර ඇති required original documents ස
 
 GOOD LUCK & ALL THE BEST! 🍀🎓❤️
 
-🎓 *IFSLS STUDENT ADMIN COMMUNITY*`,
+🎓 *IFSLS STUDENT ADMIN COMMUNITY*`, //[cite: 2]
 
     "/onlinecertificate": "📜 *Online A/L & O/L Exam Certificates ගෙදරටම ගෙන්වා ගන්නා ආකාරය:*\n\n" +
                           "සහතිකය Online මඟින් අයදුම් කර ගෙදරටම ගෙන්වා ගැනීමට පහත පියවර අනුගමනය කරන්න:\n" +
@@ -246,19 +246,19 @@ GOOD LUCK & ALL THE BEST! 🍀🎓❤️
                           "2️⃣ එහි ඇති 'Online Certificate Application' හරහා Apply කරන්න.\n" +
                           "3️⃣ ගාස්තුව Online හෝ තැපැල් කාර්යාලය හරහා ගෙවා දින කිහිපයකින් Post එකෙන් සහතිකය ගෙදරටම ගෙන්වා ගන්න.\n\n" +
                           "🎥 *වීඩියෝ මාර්ගෝපදේශය (Video Guide):*\n" +
-                          "🔗 https://www.facebook.com/share/v/1JxcGvZMoQ/",
+                          "🔗 https://www.facebook.com/share/v/1JxcGvZMoQ/", //[cite: 2]
 
     "/coursechange": "📝 *Course Change Letter Structure:*\n\n" +
                      "ඔබට Course එකක් හෝ Campus එකක් වෙනස් කරගැනීමට අවශ්‍ය නම් අමාත්‍යාංශයට යොමු කළ යුතු Letter එකේ Format එක මෙන්න (සිංහල letter එක edit කිරිම සදහා PC එකක් භාවිතා කරන්න සියලුම letters word document format එකෙන් ලබා දී ඇත):\n\n" +
                      "🔗 English Letter Format: https://docs.google.com/document/d/10vvIaWHQY_JpzJu80Uc0UjOT0uGaeWy1/edit?usp=sharing&ouid=113936433707512643329&rtpof=true&sd=true\n\n" +
-                     "🔗 Sinhala Letter Format: https://docs.google.com/document/d/1qRNlfFBMn-ICdXM4Vsv2dISdkyYYjal3/edit?usp=sharing&ouid=113936433707512643329&rtpof=true&sd=true",
+                     "🔗 Sinhala Letter Format: https://docs.google.com/document/d/1qRNlfFBMn-ICdXM4Vsv2dISdkyYYjal3/edit?usp=sharing&ouid=113936433707512643329&rtpof=true&sd=true", //[cite: 2]
 
-    "/affidavit": "📜 *AFFIDAVIT (දිවුරුම් ප්‍රකාශය) පිළිබඳ උපදෙස් සහ Document Link* 🏛️\n\n1️⃣ **දිවුරුම් ප්‍රකාශයක් (Affidavit) ලබා ගන්නේ කෙසේද?**\n• සාමදාන විනිශ්චයකාරවරයෙකු (JP - Justice of the Peace) හෝ දිවුරුම් කොමසාරිස්වරයෙකු (Commissioner for Oaths) ලවා සහතික කරගත යුතුය.\n• ඔබගේ නිවැරදි ජාතික හැඳුනුම්පත් (NIC) විස්තර සහ අදාළ කරුණු පැහැදිලිව ඇතුළත් කළ යුතුය.\n\n2️⃣ **අවශ්‍ය වන සාමාන්‍ය අවස්ථා:**\n• නම් වල වෙනස්කම් / අක්ෂර වින්‍යාසයේ දෝෂ (Name Correction)\n• ලිපිනයන් තහවුරු කිරීම (Address Verification)\n\n📁 *Download Affidavit Form / Sample (Google Drive):*\nhttps://drive.google.com/file/d/1MvbFANFnO8mYvgszPAJidsiVA0YEkQc4/view?usp=sharing\n\n✨ *වැඩි විස්තර සදහා Admin වරයෙක් සම්බන්ධ කරගන්න!*",
+    "/affidavit": "📜 *AFFIDAVIT (දිවුරුම් ප්‍රකාශය) පිළිබඳ උපදෙස් සහ Document Link* 🏛️\n\n1️⃣ **දිවුරුම් ප්‍රකාශයක් (Affidavit) ලබා ගන්නේ කෙසේද?**\n• සාමදාන විනිශ්චයකාරවරයෙකු (JP - Justice of the Peace) හෝ දිවුරුම් කොමසාරිස්වරයෙකු (Commissioner for Oaths) ලවා සහතික කරගත යුතුය.\n• ඔබගේ නිවැරදි ජාතික හැඳුනුම්පත් (NIC) විස්තර සහ අදාළ කරුණු පැහැදිලිව ඇතුළත් කළ යුතුය.\n\n2️⃣ **අවශ්‍ය වන සාමාන්‍ය අවස්ථා:**\n• නම් වල වෙනස්කම් / අක්ෂර වින්‍යාසයේ දෝෂ (Name Correction)\n• ලිපිනයන් තහවුරු කිරීම (Address Verification)\n\n📁 *Download Affidavit Form / Sample (Google Drive):*\nhttps://drive.google.com/file/d/1MvbFANFnO8mYvgszPAJidsiVA0YEkQc4/view?usp=sharing\n\n✨ *වැඩි විස්තර සදහා Admin වරයෙක් සම්බන්ධ කරගන්න!*", //[cite: 2]
 
     "/ugccancel": "🚫 *UGC (රජයේ කැම්පස්) ලියාපදිංචිය අවලංගු කර පාසල් අස්වීමේ සහතිකය ලබාගැනීම:*\n\n" +
                   "ඔබ රජයේ විශ්වවිද්‍යාලයකට (UGC) තේරීපත්වී, පසුව IFSLS ණය යෝජනා ක්‍රමය යටතේ වෙනත් කැම්පස් එකකට යාමට අපේක්ෂා කරන්නේ නම්, UGC ලියාපදිංචිය නිල වශයෙන් අවලංගු කර (Cancel කර) පාසල් අස්වීමේ සහතිකය (School Leaving Certificate) ලබාගත යුතුය.\n\n" +
                   "📁 *අදාළ Official Document Form එක මෙතනින් ඩවුන්ලෝඩ් කරගන්න:*\n" +
-                  "🔗 [https://drive.google.com/file/d/113EmLqJJeRiPHdwp4XNJKZhlBIxsb1uR/view?usp=sharing]",
+                  "🔗 [https://drive.google.com/file/d/113EmLqJJeRiPHdwp4XNJKZhlBIxsb1uR/view?usp=sharing]", //[cite: 2]
 
     "/laptopguide": "💻 *Undergraduate Laptop Buying Guide 2026*\n\n" +
                     "හැමෝම මේ දවස් වල campus apply කරන ගමන් නේ. ඉතින් ගොඩක් අයට එන ප්‍රශ්නයක් තමා කොහොමද අපි අපේ ඉස්සරහට degree එකට ගැලපෙන laptop model එකක් එහෙම නැත්නම් PC එකක් select කරගන්නේ කියල. \n\n" +
@@ -328,7 +328,7 @@ GOOD LUCK & ALL THE BEST! 🍀🎓❤️
                     "• Asus TUF\n" +
                     "• MSI Cyber\n" +
                     "• Lenovo Legion\n" +
-                    "• Lenovo LOQ",
+                    "• Lenovo LOQ", //[cite: 2]
 
     "/boarding": "🏠 *Boarding Places & Accommodation (නවාතැන් පහසුකම් හොයාගන්නා හැටි):*\n\n" +
                  "ඔබගේ කැම්පස් එක අසලින් බෝඩිමක් / ඇනෙක්ස් එකක් හොයාගැනීමට පහත වෙබ් අඩවි සහ Video භාවිතා කරන්න:\n\n" +
@@ -336,7 +336,7 @@ GOOD LUCK & ALL THE BEST! 🍀🎓❤️
                  "🔗 https://www.facebook.com/share/v/18ZG8KkSgf/\n\n" +
                  "🌐 *හොඳම Boarding Web Platforms:*\n" +
                  "• *Ikman.lk (Property Section):* https://lk.ikman.lk/en/ads/property/rooms-annexes\n" +
-                 "• *Lankapropertyweb:* https://www.lankapropertyweb.com",
+                 "• *Lankapropertyweb:* https://www.lankapropertyweb.com", //[cite: 2]
 
     "/jobs": "💼 *Internships & Job Opportunities (අධ්‍යාපනය අතරතුර රැකියා තොරතුරු):*\n\n" +
              "Degree එක කරන අතරතුර හෝ අවසානයේ Internships / Jobs හොයාගන්න පුළුවන් Groups පහතින් ලබාගත හැක:\n\n" +
@@ -347,7 +347,13 @@ GOOD LUCK & ALL THE BEST! 🍀🎓❤️
              "👥 *Community Groups:*\n" +
              "• *Jobs & Internships Group 01:* https://whatsapp.com/channel/0029Vb615LUHVvTdCZmE4B1A\n" +
              "• *Jobs & Internships Group 02:* https://whatsapp.com/channel/0029Va9Xpxx8PgsOtsAbFn45\n\n" +
-             "💡 *Tip:* CV එකක් නිවැරදිව හදාගෙන LinkedIn Profile එක Update තබාගැනීමෙන් පහසුවෙන් Opportunities ලබාගත හැක."
+             "💡 *Tip:* CV එකක් නිවැරදිව හදාගෙන LinkedIn Profile එක Update තබාගැනීමෙන් පහසුවෙන් Opportunities ලබාගත හැක." 
+    
+    "/results": "📊 *IFSLS Selection Results & Portal:*\n\n" +
+                "ශිෂ්‍ය ණය (IFSLS) තේරීම් ප්‍රතිඵල (Selection Results) සහ ඔබගේ අයදුම්පතේ තත්ත්වය (Application / Appeal Status) පරීක්ෂා කිරීමට පහත නිල වෙබ් අඩවියට පිවිසෙන්න:\n\n" +
+                "🌐 *Official IFSLS Portal:* https://studentloans.mohe.gov.lk/loan_application/\n" +
+                "🌐 *Main Website:* https://studentloans.mohe.gov.lk\n\n" +
+                "💡 *සටහන:* ප්‍රතිඵල නිකුත් වූ පසු ඔබගේ NIC / Login විස්තර මගින් Portal එකට log වී results පරීක්ෂා කරන්න Intake 11 තේරීම් ප්‍රතිඵල (Selection Results) 2026 දෙසැම්බර් මස බලාපොරොත්තු විය හැක.",
 };
 
 // ==========================================
@@ -378,7 +384,7 @@ const campusAnswers = {
               "• BSc in Information Technology\n" +
               "• BSc Honours in Software Engineering\n" +
               "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
-              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
+              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*", //[cite: 2]
 
     "/nsbm": "🎓 *NSBM Green University*\n\n" +
              "📘 *Faculty of Humanities & Social Sciences*\n" +
@@ -401,7 +407,7 @@ const campusAnswers = {
              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*\n\n" +
              "• BSc in Multimedia\n" +
              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් සහ ඉංග්‍රීසි සඳහා 'S' 1ක්.\n" +
-             "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි 'C' සහ ගණිතය 'C' සාමාර්ථයක්.",
+             "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි 'C' සහ ගණිතය 'C' සාමාර්ථයක්.", //[cite: 2]
 
     "/cinec": "🎓 *CINEC Campus*\n\n" +
               "📘 *Faculty of Humanities & Education*\n" +
@@ -430,7 +436,7 @@ const campusAnswers = {
               "💻 *Faculty of Computing*\n" +
               "• BSc Honours in Software Engineering / Computer Science (Network Security & Forensics)\n" +
               "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
-              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
+              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*", //[cite: 2]
 
     "/kiu": "🎓 *KIU Campus*\n\n" +
             "📘 *Faculty of Humanities & Social Sciences*\n" +
@@ -450,7 +456,7 @@ const campusAnswers = {
             "💻 *Faculty of Computing*\n" +
             "• BSc Honours in Management Information Systems / Software Engineering / Computer Networks & Cyber Security / Data Science\n" +
             "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
-            "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
+            "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*", //[cite: 2]
 
     "/horizon": "🎓 *HORIZON Campus*\n\n" +
                 "📘 *Faculty of Education*\n" +
@@ -467,7 +473,7 @@ const campusAnswers = {
                 "💻 *Faculty of Information Technology*\n" +
                 "• BSc Honours in Information Technology / Data Science / IT (Networking)\n" +
                 "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
-                "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
+                "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*", //[cite: 2]
 
     "/sltc": "🎓 *SLTC (Sri Lanka Technological Campus)*\n\n" +
              "📊 *Faculty of Business & Management*\n" +
@@ -482,7 +488,7 @@ const campusAnswers = {
              "💻 *Faculty of Computing*\n" +
              "• BSc Honours in Data Science / Software Engineering / Cyber Security / Cloud Computing\n" +
              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
-             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
+             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*", //[cite: 2]
 
     "/saegis": "🎓 *SAEGIS Campus*\n\n" +
                "📘 *Faculty of Humanities & Social Sciences*\n" +
@@ -495,7 +501,7 @@ const campusAnswers = {
                "💻 *Faculty of Computing*\n" +
                "• BSc in Information Technology / BSc Honours in IT / Software Engineering / Computer Science\n" +
                "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
-               "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
+               "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*", //[cite: 2]
 
     "/icbt": "🎓 *ICBT Campus*\n\n" +
              "📊 *Faculty of Business*\n" +
@@ -505,7 +511,7 @@ const campusAnswers = {
              "💻 *Faculty of Computing*\n" +
              "• BSc Honours in Software Engineering / IT (Cyber Security / Data Science / AI)\n" +
              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
-             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
+             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*", //[cite: 2]
 
     "/bci": "🎓 *BCI Campus*\n\n" +
             "📘 *Faculty of Humanities & Social Sciences*\n" +
@@ -521,7 +527,7 @@ const campusAnswers = {
             "💻 *Faculty of Computing*\n" +
             "• BSc Honours in Information Technology / Software Engineering\n" +
             "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
-            "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
+            "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*", //[cite: 2]
 
     "/icasl": "🎓 *ICASL Campus*\n\n" +
               "📊 *Faculty of Business*\n" +
@@ -530,7 +536,7 @@ const campusAnswers = {
               "  ✔️ *සා/පෙළ:* ගණිතය සහ ව්‍යාපාර අධ්‍යනය හා ගිණුම්කරණය සඳහා 'C' සාමාර්ථයක්.\n\n" +
               "• BBM Honours in Business Analytics\n" +
               "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
-              "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.",
+              "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.", //[cite: 2]
 
     "/esoft": "🎓 *ESOFT Metro Campus*\n\n" +
               "📊 *Faculty of Business*\n" +
@@ -539,7 +545,7 @@ const campusAnswers = {
               "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.\n\n" +
               "💻 *Faculty of Computing*\n" +
               "• BSc Honours in Information Technology\n" +
-              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'S' 3ක් ලබා තිබීම.",
+              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'S' 3ක් ලබා තිබීම.", //[cite: 2]
 
     "/siba": "🎓 *SIBA Campus*\n\n" +
              "📊 *Faculty of Business*\n" +
@@ -549,7 +555,7 @@ const campusAnswers = {
              "💻 *Faculty of Computing*\n" +
              "• BSc in Information Technology\n" +
              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
-             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
+             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*", //[cite: 2]
 
     "/slita": "🎓 *SLITA Campus*\n\n" +
               "⚙️ *Faculty of Engineering & Technology*\n" +
@@ -557,36 +563,36 @@ const campusAnswers = {
               "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා, ජීව විද්‍යා හෝ තාක්ෂණ අංශයෙන් 'S' 3ක් (Apparel Studies සඳහා ඕනෑම අංශයකින් 'S' 3ක්).\n" +
               "  ✔️ *සා/පෙළ:* ගණිතය සහ විද්‍යාව සඳහා අවම වශයෙන් වාර දෙකක් තුළ 'C' සාමාර්ථයක්.\n\n" +
               "• Bachelor of Technology Honours in Environmental Technology\n" +
-              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් එකවර ලබා තිබීම.",
+              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් එකවර ලබා තිබීම.", //[cite: 2]
 
     "/niibs": "🎓 *NIIBS Campus*\n\n" +
               "💻 *Faculty of Computing*\n" +
               "• BSc Honours in Information Technology\n" +
-              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'S' 3ක් ලබා තිබීම.",
+              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'S' 3ක් ලබා තිබීම.", //[cite: 2]
 
     "/ichem": "🎓 *ICHEM Campus*\n\n" +
               "🔬 *Faculty of Science*\n" +
               "• BSc Honours in Chemical Science\n" +
-              "  ✔️ *උ/පෙළ:* ජීව විද්‍යා හෝ භෞතික විද්‍යා අංශයෙන් එකවර 'S' 3ක් ලබා තිබීම.",
+              "  ✔️ *උ/පෙළ:* ජීව විද්‍යා හෝ භෞතික විද්‍යා අංශයෙන් එකවර 'S' 3ක් ලබා තිබීම.", //[cite: 2]
 
     "/lyc": "🎓 *LYC Campus*\n\n" +
             "📘 *Faculty of Education*\n" +
             "• Bachelor of Education Honours in Primary Education\n" +
             "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'S' 3ක් ලබා තිබීම.\n" +
-            "  ✔️ *සා/පෙළ:* සිංහල/දෙමළ, ගණිතය සහ ඉංග්‍රීසි සඳහා අවම 'S' 3ක් ලබා තිබීම.",
+            "  ✔️ *සා/පෙළ:* සිංහල/දෙමළ, ගණිතය සහ ඉංග්‍රීසි සඳහා අවම 'S' 3ක් ලබා තිබීම.", //[cite: 2]
 
     "/bms": "🎓 *BMS*\n\n" +
             "📊 *Faculty of Business*\n" +
             "• Bachelor of Business Management Honours\n" +
             "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
-            "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්."
+            "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්." //[cite: 2]
 };
 
 const spamTracker = new Map();
 const linkWarningTracker = new Map();
 const badWordWarningTracker = new Map();
 
-const BLACKLIST_FILE = "./blacklist.json";
+const BLACKLIST_FILE = "./blacklist.json"; //[cite: 2]
 let blacklistedUsers = {};
 
 if (fs.existsSync(BLACKLIST_FILE)) {
@@ -635,7 +641,7 @@ const client = new Client({
 });
 
 client.on("qr", (qr) => {
-    qrcode.generate(qr, { small: true });
+    qrcode.generate(qr, { small: true }); //[cite: 2]
 });
 
 client.on("authenticated", () => {
@@ -716,12 +722,12 @@ function buildWelcomeMessages(actualNumber) {
         `*GROUP RULES / නීති මාලාව:*\n` +
         `1️⃣ Be respectful to everyone.\n(සියලුම සාමාජිකයින්ට ගෞරවයෙන් සලකන්න.)\n\n` +
         `2️⃣ 🚫 No Spamming or flooding messages.\n(අනවශ්‍ය පණිවිඩ යැවීමෙන් වළකින්න.)\n\n` +
-        `3️⃣ 🚫 No unauthorized links (Other WhatsApp groups, Telegram, Scam/Business links). Only educational links are allowed.\n(වෙනත් WhatsApp Group, Telegram හෝ ව්‍යාපාරික ලින්ක් දැමීම සපුරා තහනම්. අධ්‍යාපනික ලින්ක් සඳහා පමණක් අවසර ඇත.)\n\n` +
+        `3️⃣ 🚫 No unauthorized links (Other WhatsApp groups, Telegram, Scam/Business links). Only educational links are allowed.\n(වෙනත් WhatsApp Group, Telegram හෝ ව්‍යාපාරික ලින්ක් දැමීම සපුරා තහනම්. අවසරලත් අධ්‍යාපනික ලින්ක් සඳහා පමණක් අවසර ඇත.)\n\n` +
         `4️⃣ 🎓 For further questions regarding student loans, please contact the group admins. Please watch the YouTube playlist below for more information.\n(ශිෂ්‍ය ණය පිළිබඳ වැඩිදුර ප්‍රශ්න සඳහා සමූහයේ Admin වරුන් සම්බන්ධ කරගන්න. ණය පිළිබඳ සියලුම තොරතුරු දැනගැනීමට පහත YouTube Playlist එක අනිවාර්යයෙන්ම නරඹන්න.)\n` +
         `📺 *YouTube Playlist:* https://youtube.com/playlist?list=PL-ZbzAh0pKykpa-odcUrDEg94PBbTQp9M&si=F9L3Spy-pLZJq31n\n\n` +
         `⚠️ *Note:* Breaking these rules will result in an automatic permanent ban by the system.\n(මෙම නීති කඩකරන අයව පද්ධතිය මගින් ස්වයංක්‍රීයව සමූහයෙන් ඉවත් කරනු ලැබේ.)\n\n` +
         `Thank you! / ස්තූතියි!\n` +
-        `🤖 _System Generated Message. Please do not reply._`;
+        `🤖 _System Generated Message. Please do not reply._`; //[cite: 2]
 
     const secondMsg =
         `🤖 *Smart Bot Commands IFSLS Group Only Don't Send Direct Message to this Number (ස්වයංක්‍රීය සහය)* 🤖\n\n` +
@@ -731,10 +737,11 @@ function buildWelcomeMessages(actualNumber) {
         `📌 */eligibility* - ණය ලබාගැනීමේ සුදුසුකම්.\n` +
         `📌 */stipend* - ශිෂ්‍යාධාර දීමනා පිළිබඳව.\n` +
         `📌 */conditions* - Degree හදාරන කාලය තුලදි පිලිපැදිය යුතු නීති.\n` +
-        `📌 */applycenters* - Apply කීරිමේ මධ්‍යස්ථාන පිලිබඳ විස්තර.\n` +
+        `📌 */applycenters* - Apply කීරිමේ මධ්‍යස්ථාන පිළිබඳ විස්තර.\n` +
         `📌 */applysteps* - අයදුම් කිරීමේ පියවර.\n` +
         `📌 */afterapplysteps* - අයදුම් කිරීමෙන් පසු පියවර.\n` +
         `📌 */ministrycontact* - Ministry Department එක contact කර ගැනීම සදහා\n\n` +
+        `✅ */results* - IFSLS selection results check කරන ආකාරය \n\n` + 
         `📌 */onlinecertificate* - O/L & A/L Exam Certificates Online ගෙන්වා ගැනීම සදහා\n` +
         `📌 */coursechange* - Course Change Letter Format\n` +
         `📌 */Affidavit* - දිවුරුම් ප්‍රකාශයක් ලබා ගැනීම සදහා\n` +
@@ -742,13 +749,13 @@ function buildWelcomeMessages(actualNumber) {
         `📌 */laptopguide* - Degree එකට හරියන Laptop Buying Guide\n` +
         `📌 */jobs* - Internships සහ Jobs විස්තර\n` +
         `📌 */boarding* - බෝඩිම් / Accommodation Web & Video\n\n` +
-        `📄 *Guide Books (භාෂා 3න්ම):*\n` +
+        `📄 *Guide Books (භාෂා 3):*\n` +
         `🇱🇰 */guidepdf-si* (සිංහල මාර්ගෝපදේශකය)\n` +
         `🌍 */guidepdf-ta* (දෙමළ මාර්ගෝපදේශකය)\n` +
         `🇬🇧 */guidepdf-en* (ඉංග්‍රීසි මාර්ගෝපදේශකය)\n\n` +
         `🏫 *කැම්පස් වල ඔයාලට දෙන Degrees වලට අදාල විස්තර බලාගන්න අවශ්‍යනම් කැම්පස් එකේ නමට කලින් / දාලා campus නම ගෲප් එකට සෙන්ඩ් කරන්න.*\n` +
         `(උදාහරණ: */sliit*, */nsbm*, */cinec*, */saegis*)\n\n` +
-        `💡 *දැන්ම Group එකට ගිහින් /menu කියලා Type කරලා බලන්නකො ළමයි!* 😎`;
+        `💡 *දැන්ම Group එකට ගිහින් /menu කියලා Type කරලා බලන්නකො ළමයි!* 😎`; //[cite: 2]
 
     return { firstMsg, secondMsg };
 }
@@ -756,7 +763,6 @@ function buildWelcomeMessages(actualNumber) {
 function enqueueWelcomeUser(userId, actualNumber, name) {
     if (!userId || queuedWelcomeUsers.has(userId)) return;
 
-    // විනාඩි 30 ත් 60 ත් අතර අහඹු පළමු පරතරය (Initial random delay)
     const initialDelayMs = Math.floor(Math.random() * (60 - 30 + 1) + 30) * 60 * 1000;
     const sendAfter = Date.now() + initialDelayMs;
 
@@ -790,15 +796,17 @@ async function processWelcomeQueue() {
                 const chat = await client.getChatById(task.userId);
                 const { firstMsg, secondMsg } = buildWelcomeMessages(task.actualNumber);
 
-                // First Welcome Message with Typing simulation
-                await chat.sendStateTyping();
+                if (chat && typeof chat.sendStateTyping === 'function') {
+                    try { await chat.sendStateTyping(); } catch (e) {}
+                }
                 await new Promise(resolve => setTimeout(resolve, 6000));
                 await client.sendMessage(task.userId, firstMsg, { mentions: [task.userId] });
                 console.log(`✅ First Welcome sent to: ${task.name} (${task.actualNumber})`);
 
-                // Second Welcome Message after short natural pause
                 await new Promise(resolve => setTimeout(resolve, 5000));
-                await chat.sendStateTyping();
+                if (chat && typeof chat.sendStateTyping === 'function') {
+                    try { await chat.sendStateTyping(); } catch (e) {}
+                }
                 await new Promise(resolve => setTimeout(resolve, 6000));
                 await client.sendMessage(task.userId, secondMsg);
                 console.log(`✅ Second Welcome sent to: ${task.name} (${task.actualNumber})`);
@@ -809,7 +817,6 @@ async function processWelcomeQueue() {
             welcomeQueue.shift();
             queuedWelcomeUsers.delete(task.userId);
 
-            // ඊළඟ සාමාජිකයාට යවන්න කලින් විනාඩි 5 ත් 12 ත් අතර අහඹු විවේකයක් (Spam නොවෙන්න)
             if (welcomeQueue.length > 0) {
                 const nextGapMs = Math.floor(Math.random() * (12 - 5 + 1) + 5) * 60 * 1000;
                 console.log(`💤 [WELCOME QUEUE] Waiting ~${Math.round(nextGapMs / 60000)} mins before next welcome...`);
@@ -902,22 +909,30 @@ client.on('message', async (message) => {
 
         const msgText = message.body ? message.body.trim() : "";
         const textLower = msgText.toLowerCase();
-        const chat = await message.getChat();
+
+        let chat = null;
+        let isGroupChat = typeof message.from === 'string' && message.from.endsWith('@g.us');
+        try {
+            chat = await message.getChat();
+            if (chat && typeof chat.isGroup === 'boolean') {
+                isGroupChat = chat.isGroup;
+            }
+        } catch (chatErr) {
+            isGroupChat = typeof message.from === 'string' && message.from.endsWith('@g.us');
+        }
 
         // ==========================================
         // 📩 SAFE PM / INBOX AUTO-REPLY (24h Cooldown)
         // ==========================================
-        if (!chat.isGroup && !message.from.endsWith('@g.us')) {
+        if (!isGroupChat && !(typeof message.from === 'string' && message.from.endsWith('@g.us'))) {
             const senderId = message.from;
             const now = Date.now();
             const pmCooldownMs = 24 * 60 * 60 * 1000;
 
-            // පැය 24ක් ඇතුළත මේ කෙනාට reply කරලා නම් ආයෙ reply කරන්නේ නැහැ (Spam/Ban වළක්වන්න)
             if (pmRepliedUsers.has(senderId) && (now - pmRepliedUsers.get(senderId) < pmCooldownMs)) {
                 return;
             }
 
-            // තත්පර 60ක් ඇතුළත incoming PMs 3කට වඩා ආවොත් temporarily pause කරනවා
             const recentPms = (pmCooldownTimestamps.get(senderId) || []).filter(ts => now - ts < 60 * 1000);
             recentPms.push(now);
             pmCooldownTimestamps.set(senderId, recentPms);
@@ -927,13 +942,15 @@ client.on('message', async (message) => {
             }
 
             const typingDelay = Math.floor(Math.random() * (8000 - 4000 + 1)) + 4000;
-            await chat.sendStateTyping();
+            if (chat && typeof chat.sendStateTyping === 'function') {
+                try { await chat.sendStateTyping(); } catch (e) {}
+            }
             await new Promise(resolve => setTimeout(resolve, typingDelay));
 
             const pmReplyText =
-                `ආයුබෝවන්! 👋 අප හා සම්බන්ධ වීමට ස්තුතියි. 💙\n\n` +
-                `⚠️ කරුණාකර මෙම අංකයට පෞද්ගලික පණිවිඩ (Inbox/Direct Messages) එවීමෙන් වළකින්න.\n\n` +
-                `ශිෂ්‍ය ණය (IFSLS) සහ අභියාචනා (Appeals) පිළිබඳ ඕනෑම ප්‍රශ්නයක් අපේ *IFSLS Main Group* එක ඇතුළට ගිහින් */ai* හෝ */menu* කියලා ටයිප් කරලා අහන්න පුළුවන්! 😊`;
+                `ආයුබෝවන්! IFSLS Group එක සමග සම්බන්ධ වීමට ස්තුතියි ඔයාට . 👋💙\n\n` +
+                `⚠️ කරුණාකර මෙම අංකයට පෞද්ගලික පණිවිඩ හා ණය පිලිබද විස්තර (Inbox/Direct Messages) එවීමෙන් වළකින්න.\n\n` +
+                `ශිෂ්‍ය ණය (IFSLS) පිළිබඳ ඕනෑම ඔබට ඇති ඔනම ප්‍රශ්නයක් අපේ *IFSLS Main Group* එක ඇතුළට ගිහින් */menu* කියලා ටයිප් කරලා ලබා ගන්න පුළුවන් ලමයි නැත්නම් group admin කෙනෙක් හා සම්බන්ධ වෙන්න පුලුවන්! 😊`;
 
             await message.reply(pmReplyText);
             pmRepliedUsers.set(senderId, now);
@@ -956,11 +973,11 @@ client.on('message', async (message) => {
 
             try {
                 const completion = await groq.chat.completions.create({
-                    model: 'openai/gpt-oss-20b',
+                    model: 'openai/gpt-oss-20b', //[cite: 2]
                     messages: [
                         {
                             role: "system",
-                            content: `You are a friendly, supportive, and warm AI assistant (like an older student or helpful senior friend) for the IFSLS (Interest Free Student Loan Scheme) student community in Sri Lanka.
+                            content: `You are a friendly, supportive, and warm AI assistant (like an older student or helpful senior admin friend in group) for the IFSLS (Interest Free Student Loan Scheme) student community in Sri Lanka.
 
 --- OFFICIAL IFSLS KNOWLEDGE BASE ---
 1. What is IFSLS: 100% interest-free government student loan scheme for non-state higher education degrees in Sri Lanka.
@@ -990,18 +1007,18 @@ client.on('message', async (message) => {
 
 Rules:
 1. ${languageInstruction}
-2. Tone & Style: Be extremely friendly, warm, and supportive (like a helpful senior friend talking to junior students). Use appropriate friendly emojis (like 😊, 👍, 💙) to make students feel comfortable.
+2. Tone & Style: Be extremely lovely & friendly, warm, and supportive (like a helpful senior friend talking to junior students). Use appropriate friendly emojis (like 😊, 👍, 💙) to make students feel comfortable.
 3. Reply in clean plain text. Do NOT include unnecessary markdown symbols, code blocks, or weird formatting characters.
-4. Be accurate and precise based on the knowledge base above. Do not hallucinate. If the answer is not in the knowledge base, politely state that you cannot find it and suggest contacting a group admin.`
+4. Be accurate and precise based on the knowledge base above. Do not hallucinate. If the answer is not in the knowledge base find using these web site https://www.mohe.gov.lk/index.php?option=com_content&view=article&id=348%3Ainterest-free-student-loan-scheme&catid=48&Itemid=331&lang=en, politely state that you cannot find it and suggest contacting a group admin.` //[cite: 2]
                         },
                         { role: 'user', content: query }
                     ]
                 });
-                const replyText = completion.choices[0]?.message?.content || "⚠️ මට මේ මොහොතේ උත්තර ලබා දීමට නොහැකි විය.";
+                const replyText = completion.choices[0]?.message?.content || "⚠️ සමාවෙන්න මට මේ මොහොතේ උත්තර ලබා දීමට නොහැකි විය.";
                 await message.reply(replyText);
             } catch (err) {
                 console.error("Groq Error:", err);
-                await message.reply("⚠️ මට මේ මොහොතේ උත්තර ලබා දීමට නොහැකි විය.");
+                await message.reply("⚠️ සමාවෙන්න මට මේ මොහොතේ උත්තර ලබා දීමට නොහැකි විය.");
             }
         }
     } catch (err) {
@@ -1026,7 +1043,7 @@ client.on("message_create", async (message) => {
 
             console.log(`[BROADCAST ATTEMPT] SenderDigits: ${senderDigits} | ContactDigits: ${contactDigits}`);
 
-            const HARDCODED_ADMIN_LIDS = ['168182413316185'];
+            const HARDCODED_ADMIN_LIDS = ['168182413316185']; //[cite: 2]
 
             const isAdmin = HARDCODED_ADMIN_LIDS.includes(senderDigits) ||
                             HARDCODED_ADMIN_LIDS.includes(contactDigits) ||
@@ -1051,7 +1068,7 @@ client.on("message_create", async (message) => {
 
 💬 *ප්‍රශ්න අහන්නේ කොහොමද?*
 - /ai කියලා ටයිප් කරලා හිස්තැනක් තියල ඊට පස්සේ ඔයාගේ ප්‍රශ්නේ type කරලා group send කරන්න.
-- නැත්නම් බොට්ව මෙන්ෂන් කරලා (@) ප්‍රශ්නේ අහන්න පුළුවන්. 😊💙`;
+- නැත්නම් බොට්ව මෙන්ෂන් කරලා (@) ප්‍රශ්නේ අහන්න පුළුවන්. 😊💙`; //[cite: 2]
 
             let count = 0;
             for (const groupId of TARGET_GROUP_IDS) {
@@ -1102,11 +1119,11 @@ client.on("message_create", async (message) => {
                 stickerWarnings[warningKey] = 1;
 
                 const warningMsg = `⚠️ @${senderId.split('@')[0]}, මෙම සමූහය තුළ සාමාජිකයන් සදහා කරදරකාරී වන Stickers හෝ GIFs භාවිතය සිමා කර ඇත!\n\n` +
-                                   `📌 මෙය ඔබගේ **පළමු සහ අවසන් අනතුරු ඇඟවීමයි**. නැවත වතාවක් යොමු කලහොත් ඔබව සමූහයෙන් Automatically ඉවත් වෙනු ලැබේ.`;
+                                   `📌 මෙය ඔබගේ **පළමු සහ අවසන් අනතුරු ඇඟවීමයි**. නැවත වතාවක් යොමු කලහොත් ඔබව සමූහයෙන් Automatically ඉවත් වෙනු ලැබේ.`; //[cite: 2]
 
                 await client.sendMessage(groupId, warningMsg, { mentions: [senderId] });
             } else {
-                const removeMsg = `🚫 @${senderId.split('@')[0]} අනතුරු ඇඟවීම නොතකා නැවත Stickers/GIFs දැමූ නිසා සමූහයෙන් ඉවත් කර පැය 24 කට තහනම් කරන ලදී.`;
+                const removeMsg = `🚫 @${senderId.split('@')[0]} අනතුරු ඇඟවීම නොතකා නැවත Stickers/GIFs දැමූ නිසා සමූහයෙන් ඉවත් කර පැය 24 කට තහනම් කරන ලදී.`; //[cite: 2]
                 await client.sendMessage(groupId, removeMsg, { mentions: [senderId] });
 
                 await directRemoveParticipant(groupId, senderId);
@@ -1180,7 +1197,7 @@ client.on("message_create", async (message) => {
                                            `• docs.google.com\n` +
                                            `• forms.gle\n` +
                                            `• classroom.google.com\n` +
-                                           `• facebook.com`;
+                                           `• facebook.com`; //[cite: 2]
 
                         await client.sendMessage(groupId, warningMsg, { mentions: [senderId] });
                     } else {
@@ -1263,19 +1280,20 @@ client.on("message_create", async (message) => {
                             `📂 */documents* - සම්මුඛ පරීක්ෂණ ලියකියවිලි\n` +
                             `📌 */stipend* - ශිෂ්‍යාධාර දීමනා පිළිබඳව.\n` +
                             `📌 */conditions* - Degree හදාරන කාලය තුලදි පිලිපැදිය යුතු නීති.\n` +
-                            `📌 */applycenters* - Apply කීරිමේ මධ්‍යස්ථාන පිලිබඳ විස්තර.\n` +
+                            `📌 */applycenters* - Apply කීරිමේ මධ්‍යස්ථාන පිළිබඳ විස්තර.\n` +
                             `📝 */applysteps* - අයදුම් කරන පියවර\n` +
                             `📝 */afterapplysteps* - අයදුම් කිරීමෙන් පසු \n` +
                             `📌 */specialnotes* - interview සදහා වැදගත් වන විස්තර\n` +
                             `⏰ */deadline* - අවසන් දිනය\n` +
-                            `✅ */ministrycontact* - Ministry Department එක contact කරන විදිහ\n\n` +
-                            `📌 */onlinecertificate* - O/L & A/L Exam Certificates Online ගෙන්න ගන්නා හැටි\n` +
+                            `✅ */ministrycontact* - Ministry Department එක contact කරන ආකාරය\n\n` +
+                            `✅ */results* - IFSLS selection results check කරන ආකාරය \n\n` +                
+                            `📌 */onlinecertificate* - O/L & A/L Exam Certificates Online ගෙන්න ගන්නා ආකාරය \n` +
                             `📌 */coursechange* - Course Change Letter Format\n` +
                             `📌 */Affidavit* - දිවුරුම් ප්‍රකාශයක් ලබා ගැනීම සදහා\n` +
-                            `📌 */ugccancel* - UGC Registration Cancel කරන හැටි\n` +
+                            `📌 */ugccancel* - UGC Registration Cancel කරන ආකාරය\n` +
                             `📌 */jobs* - Internships සහ Jobs විස්තර \n` +
-                            `📌 */boarding* - බෝඩිම් / Accommodation Web & Video\n\n` +
-                            `*📄 මාර්ගෝපදේශක PDF (භාෂා 3න්ම):*\n` +
+                            `📌 */boarding* - බෝඩිම් සොයාගන්නා ආකාරය / Accommodation Web & Video\n\n` +
+                            `*📄 මාර්ගෝපදේශක PDF (භාෂා 3):*\n` +
                             `🇱🇰 */guidepdf-si* - සිංහල මාර්ගෝපදේශකය\n` +
                             `🌍 */guidepdf-ta* - දෙමළ මාර්ගෝපදේශකය\n` +
                             `🇬🇧 */guidepdf-en* - ඉංග්‍රීසි මාර්ගෝපදේශකය\n\n` +
@@ -1283,7 +1301,7 @@ client.on("message_create", async (message) => {
                             `*/sliit* | */nsbm* | */cinec* | */kiu*\n` +
                             `*/sltc* | */saegis* | */horizon* | */icbt*\n` +
                             `*/bci* | */icasl* | */esoft* | */siba*\n` +
-                            `*/slita* | */niibs* | */ichem* | */lyc* | */bms*`;
+                            `*/slita* | */niibs* | */ichem* | */lyc* | */bms*`; //[cite: 2]
 
             await message.reply(menuMsg);
         }
@@ -1294,16 +1312,16 @@ client.on("message_create", async (message) => {
             await message.reply(campusAnswers[msgCommand]);
         }
         else if (msgCommand === "/guidepdf-si") {
-            await client.sendMessage(groupId, "🇱🇰 *IFSLS 2026/27 සිංහල මාර්ගෝපදේශක PDF එක පහත ලින්ක් එකෙන් ඩවුන්ලෝඩ් කරගන්න:*\n\nhttps://drive.google.com/file/d/122Q6dk3Q8mlM0yWTlzLVDqKyIH4KjSFG/view?usp=sharing");
+            await client.sendMessage(groupId, "🇱🇰 *IFSLS 2026/27 සිංහල මාර්ගෝපදේශක PDF එක පහත ලින්ක් එකෙන් ඩවුන්ලෝඩ් කරගන්න:*\n\nhttps://drive.google.com/file/d/122Q6dk3Q8mlM0yWTlzLVDqKyIH4KjSFG/view?usp=sharing"); //[cite: 2]
         }
         else if (msgCommand === "/guidepdf-ta") {
-            await client.sendMessage(groupId, "🌍 *IFSLS 2026/27 தமிழ் வழிகாட்டி PDF ஐ கீழே உள்ள இணைப்பில் பதிவிறக்கம் செய்யவும்:*\n\nhttps://drive.google.com/file/d/1-AMByxSgGDfOwKE3mxTZgxvSSpBbtjOz/view?usp=sharing");
+            await client.sendMessage(groupId, "🌍 *IFSLS 2026/27 தமிழ் வழிகாட்டி PDF ஐ கீழே உள்ள இணைப்பில் பதிவிறக்கம் செய்யவும்:*\n\nhttps://drive.google.com/file/d/1-AMByxSgGDfOwKE3mxTZgxvSSpBbtjOz/view?usp=sharing"); //[cite: 2]
         }
         else if (msgCommand === "/guidepdf-en") {
-            await client.sendMessage(groupId, "🇬🇧 *Download the IFSLS 2026/27 English Guide PDF from the link below:*\n\nhttps://drive.google.com/file/d/15eUJyKdYOcgeczEtkKXtwDucswSnJAUs/view?usp=sharing");
+            await client.sendMessage(groupId, "🇬🇧 *Download the IFSLS 2026/27 English Guide PDF from the link below:*\n\nhttps://drive.google.com/file/d/15eUJyKdYOcgeczEtkKXtwDucswSnJAUs/view?usp=sharing"); //[cite: 2]
         }
         else if (msgCommand === "/deadline") {
-            const deadlineDate = new Date("2026-09-27T23:59:59").getTime();
+            const deadlineDate = new Date("2026-09-27T23:59:59").getTime(); //[cite: 2]
             const now = new Date().getTime();
             const timeLeft = deadlineDate - now;
 
@@ -1316,11 +1334,11 @@ client.on("message_create", async (message) => {
                 const countdownMsg = `⏳ *IFSLS 11th Intake Application Deadline*\n\n` +
                                      `අයදුම්පත් භාරගන්නා අවසන් දිනයට තව:\n` +
                                      `*දින ${days}යි, පැය ${hours}යි, විනාඩි ${minutes}යි, තත්පර ${seconds}යි!* 🏃‍♂️💨\n\n` +
-                                     `ඉක්මන් කරන්න! අවසන් මොහොත වෙනකන් ඉන්න එපා. අදම අයදුම් කරන්න. ✅`;
+                                     `ඉක්මන් කරන්න! අවසන් මොහොත වෙනකන් ඉන්න එපා. අදම අයදුම් කරන්න. ✅`; //[cite: 2]
 
                 await message.reply(countdownMsg);
             } else {
-                await message.reply("🚫 *IFSLS 11th Intake සඳහා අයදුම්පත් භාරගන්නා කාලය දැන් අවසන් වී ඇත!*");
+                await message.reply("🚫 *IFSLS 11th Intake සඳහා අයදුම්පත් භාරගන්නා කාලය දැන් අවසන් වී ඇත!*"); //[cite: 2]
             }
         }
 
@@ -1346,7 +1364,7 @@ async function checkSpam(message, senderId, name, groupId) {
             if (info && info.actualId) blacklistedUsers[info.actualId] = Date.now() + BAN_DURATION_MS;
             saveBlacklist();
             if (ENABLE_AUTO_REMOVE) {
-                await client.sendMessage(groupId, `🚨 @${senderId.split('@')[0]} (*${name}*) has been temporarily removed for SPAMMING (24h ban).`, { mentions: [senderId] });
+                await client.sendMessage(groupId, `🚨 @${senderId.split('@')[0]} (*${name}*) has been temporarily removed for Detected SPAMMING for rejoining please contact group admins after 24hours (24h ban).`, { mentions: [senderId] });
             }
         }
     }
