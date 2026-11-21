@@ -172,7 +172,7 @@ function buildBotStatusReport({ targetGroupsCount, welcomeQueueLength, blacklist
         `⏱️ *Uptime:* පැය ${hrs}යි, විනාඩි ${mins}යි\n` +
         `👥 *Active Groups:* ${targetGroupsCount}\n` +
         `⏳ *Welcome Inbox Queue:* ${welcomeQueueLength} users pending\n` +
-        `🚫 *Active 24h Bans:* ${activeBans}\n` +
+        `🚫 *Active 24h Bans Members:* ${activeBans}\n` +
         `🧠 *Bot Server Total RAM:* ${botRamGb} GB *(VPS Free: ${freeSysRamGb} GB / Total: ${totalSysRamGb} GB)*\n` +
         `⚡ *BOT CPU Usage:* ${cpuUsage}\n` +
         `💾 *BOT Storage (/):* ${storageInfo}\n` +
@@ -189,7 +189,7 @@ function startScheduledReminders(client, targetGroupIds, sendWithTimeout) {
                 `1️⃣ *Emails Check කරන්න:* Ministry එකෙන් එන දැනුම්දීම් සඳහා ඔයාලගේ Email *Inbox* එක වගේම *Spam / Junk* folder එකත් නිතර check කරන්න.\n` +
                 `2️⃣ *Official Notices පමණක් විශ්වාස කරන්න:* Selection Results ගැන නිල තොරතුරු https://studentloans.mohe.gov.lk වෙබ් අඩවියෙන් පමණක් බලන්න.\n` +
                 `3️⃣ *Scam Links වලින් පරිස්සම් වෙන්න:* නොදන්නා WhatsApp groups හෝ personal details ඉල්ලන links වලට තොරතුරු දෙන්න එපා.\n\n` +
-                `💡 ඕනෑම ප්‍රශ්නයක් තියෙනවා නම් group එකේ */menu* හෝ */ai* පාවිච්චි කරන්න! 😊`;
+                `💡 ඕනෑම ප්‍රශ්නයක් තියෙනවා නම් group එකේ Admin team member කෙනෙක් හෝ */menu* හෝ */ai* පාවිච්චි කරන්න! 😊`;
 
             for (const groupId of targetGroupIds) {
                 try {
