@@ -88,7 +88,17 @@ async function handleAdminControlCommands({
             await message.reply("⚠️ Ban කිරීමට අවශ්‍ය සාමාජිකයාගේ message එකකට *Reply* කර `/ban` ලෙස යවන්න.");
             return true;
         }
-        const quoted = await message.getQuotedMessage();
+
+        let quoted;
+        try {
+            quoted = await message.getQuotedMessage();
+        } catch (err) {
+            console.error("⚠️ [/ban getQuotedMessage error]:", err.message || err);
+            await message.reply("⚠️ Quoted message එක load කරගැනීමට නොහැකි විය. කරුණාකර වෙනත් text message එකකට Reply කර `/ban` ගහන්න.");
+            return true;
+        }
+
+        if (!quoted) return true;
         const targetId = quoted.author || quoted.from;
         if (!targetId) return true;
 
@@ -108,7 +118,17 @@ async function handleAdminControlCommands({
             await message.reply("⚠️ Warning දීමට අවශ්‍ය message එකකට *Reply* කර `/warn` ලෙස යවන්න.");
             return true;
         }
-        const quoted = await message.getQuotedMessage();
+
+        let quoted;
+        try {
+            quoted = await message.getQuotedMessage();
+        } catch (err) {
+            console.error("⚠️ [/warn getQuotedMessage error]:", err.message || err);
+            await message.reply("⚠️ Quoted message එක load කරගැනීමට නොහැකි විය. කරුණාකර වෙනත් text message එකකට Reply කර `/warn` ගහන්න.");
+            return true;
+        }
+
+        if (!quoted) return true;
         const targetId = quoted.author || quoted.from;
         if (!targetId) return true;
 
@@ -175,7 +195,7 @@ function buildBotStatusReport({ targetGroupsCount, welcomeQueueLength, blacklist
         `🚫 *Active 24h Bans:* ${activeBans}\n` +
         `🧠 *Bot Server Total RAM:* ${botRamGb} GB *(VPS Free: ${freeSysRamGb} GB / Total: ${totalSysRamGb} GB)*\n` +
         `⚡ *BOT CPU Usage:* ${cpuUsage}\n` +
-        `💾 *BOT Storage (/):* ${storageInfo}\n` +
+        `💾 *BOT Storage (/):* ${storageInfo}`
     );
 }
 
