@@ -630,6 +630,9 @@ client.on("loading_screen", (percent, message) => {
 
 client.on("authenticated", () => {
     console.log("✅ WhatsApp authenticated");
+
+    startScheduledReminders(client, TARGET_GROUP_IDS, sendWithTimeout);
+    
 });
 
 client.on("auth_failure", (msg) => {
@@ -664,10 +667,8 @@ client.on("authenticated", () => {
 });
 
     
-startScheduledReminders(client, TARGET_GROUP_IDS, sendWithTimeout);
 
-    
-});
+
 
 async function getContactInfo(id) {
     try {
