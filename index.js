@@ -641,6 +641,28 @@ client.on("ready", async () => {
     console.log("🤖 BOT READY - SAFE QUEUE & ANTI-SPAM SYSTEM");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
+
+    let isReadyTriggered = true;
+
+client.on("authenticated", () => {
+    setTimeout(async () => {
+        if (isReadyTriggered) return;
+        try {
+            const page = client.pupPage;
+            if (!page) return;
+            const state = await page.evaluate(() => ({
+                hasWWebJS: Boolean(window.WWebJS),
+                href: window.location.href || ""
+            }));
+            if (state.hasWWebJS || state.href.includes("web.whatsapp.com")) {
+                isReadyTriggered = true;
+                console.log("⚡ [AUTO-READY] Bypassing Store hang -> Bot active!");
+                startScheduledReminders(client, TARGET_GROUP_IDS, sendWithTimeout);
+            }
+        } catch (_) {}
+    }, 15000);
+});
+
     
 startScheduledReminders(client, TARGET_GROUP_IDS, sendWithTimeout);
 
