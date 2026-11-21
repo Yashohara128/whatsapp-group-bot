@@ -4,6 +4,14 @@ const cron = require("node-cron");
 const fs = require("fs");
 const path = require("path");
 const Groq = require("groq-sdk");
+const {
+    handleCalculatorCommand,
+    handleAdminControlCommands,
+    buildBotStatusReport,
+    startScheduledReminders,
+    handleCommonQuestionAutoReply
+} = require("./features");
+
 
 const groqApiKey = process.env.GROQ_API_KEY;
 if (!groqApiKey) {
@@ -633,6 +641,10 @@ client.on("ready", async () => {
     console.log("🤖 BOT READY - SAFE QUEUE & ANTI-SPAM SYSTEM");
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
+    
+startScheduledReminders(client, TARGET_GROUP_IDS, sendWithTimeout);
+
+    
 });
 
 async function getContactInfo(id) {
