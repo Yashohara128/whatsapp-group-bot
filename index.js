@@ -605,6 +605,9 @@ const executablePath = resolveChromiumPath();
 
 const client = new Client({
     authStrategy: new LocalAuth(),
+    webVersionCache: {
+        type: "local"
+    },
     puppeteer: {
         headless: true,
         ...(executablePath ? { executablePath } : {}),
