@@ -5,6 +5,14 @@ const fs = require("fs");
 const path = require("path");
 const Groq = require("groq-sdk");
 
+const {
+    handleCalculatorCommand,
+    handleAdminControlCommands,
+    buildBotStatusReport,
+    startScheduledReminders,
+    handleCommonQuestionAutoReply
+} = require("./features");
+
 const groqApiKey = process.env.GROQ_API_KEY;
 if (!groqApiKey) {
     console.warn("⚠️ [WARN] GROQ_API_KEY environment variable is not set!");
@@ -612,6 +620,18 @@ const client = new Client({
     }
 });
 
+let isBotReady = false;
+
+async function onBotReady() {
+    if (isBotReady) return;
+    isBotReady = true;
+    console.log("\n========================================");
+    console.log("🤖 BOT READY - SAFE QUEUE & ANTI-SPAM SYSTEM");
+    console.log("========================================");
+    console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
+    startScheduledReminders(client, TARGET_GROUP_IDS, sendWithTimeout);
+}
+
 client.on("qr", (qr) => {
     qrcode.generate(qr, { small: true });
 });
@@ -622,6 +642,31 @@ client.on("loading_screen", (percent, message) => {
 
 client.on("authenticated", () => {
     console.log("✅ WhatsApp authenticated");
+    setTimeout(async () => {
+        try {
+            if (!client.pupPage) {
+                console.log("⚠️ pupPage not available yet");
+                return;
+            }
+            const status = await client.pupPage.evaluate(() => {
+                return {
+                    hasStore: Boolean(window.Store),
+                    hasWWebJS: Boolean(window.WWebJS),
+                    hasChatStore: Boolean(window.Store && window.Store.Chat),
+                    chatCount: window.Store && window.Store.Chat && window.Store.Chat.models ? window.Store.Chat.models.length : -1,
+                    url: window.location.href
+                };
+            });
+            console.log("🔍 [DIAGNOSTIC AFTER AUTH]:", status);
+
+            if (!isBotReady && (status.hasWWebJS || (status.url && status.url.includes("web.whatsapp.com")))) {
+                console.log("⚠️ [FALLBACK] Triggering onBotReady() after authentication (hasWWebJS=" + status.hasWWebJS + ", hasStore=" + status.hasStore + ")...");
+                await onBotReady();
+            }
+        } catch (err) {
+            console.error("❌ [DIAGNOSTIC ERROR]:", err);
+        }
+    }, 8000);
 });
 
 client.on("auth_failure", (msg) => {
@@ -629,10 +674,7 @@ client.on("auth_failure", (msg) => {
 });
 
 client.on("ready", async () => {
-    console.log("\n========================================");
-    console.log("🤖 BOT READY - SAFE QUEUE & ANTI-SPAM SYSTEM");
-    console.log("========================================");
-    console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
+    await onBotReady();
 });
 
 async function getContactInfo(id) {
@@ -743,7 +785,7 @@ function buildWelcomeMessages(actualNumber) {
 function enqueueWelcomeUser(userId, actualNumber, name) {
     if (!userId || queuedWelcomeUsers.has(userId)) return;
 
-    const initialDelayMs = Math.floor(Math.random() * (60 - 30 + 1) + 30) * 60 * 1000;
+    const initialDelayMs = 30 * 60 * 1000; // 30 mins initial delay
     const sendAfter = Date.now() + initialDelayMs;
 
     queuedWelcomeUsers.add(userId);
@@ -798,7 +840,7 @@ async function processWelcomeQueue() {
             queuedWelcomeUsers.delete(task.userId);
 
             if (welcomeQueue.length > 0) {
-                const nextGapMs = Math.floor(Math.random() * (12 - 5 + 1) + 5) * 60 * 1000;
+                const nextGapMs = 30 * 60 * 1000; // 30 mins gap between users
                 console.log(`💤 [WELCOME QUEUE] Waiting ~${Math.round(nextGapMs / 60000)} mins before next welcome...`);
                 await new Promise(resolve => setTimeout(resolve, nextGapMs));
             }
@@ -886,6 +928,7 @@ async function checkIsAdmin(message, senderId, actualNumber) {
 client.on("message", async (message) => {
     try {
         if (!message || message.fromMe || message.from === "status@broadcast") return;
+        console.log("📥 [INBOUND MSG]", { from: message.from, type: message.type, bodyLen: (message.body || "").length });
 
         const msgText = message.body ? message.body.trim() : "";
         const textLower = msgText.toLowerCase();
@@ -901,6 +944,18 @@ client.on("message", async (message) => {
             isGroupChat = typeof message.from === "string" && message.from.endsWith("@g.us");
         }
 
+        // Deduplicate identical WhatsApp message IDs
+        const msgUniqueId = message.id && message.id._serialized ? message.id._serialized : null;
+        if (msgUniqueId) {
+            if (!global.processedInboundMsgIds) global.processedInboundMsgIds = new Map();
+            if (global.processedInboundMsgIds.has(msgUniqueId)) return;
+            global.processedInboundMsgIds.set(msgUniqueId, Date.now());
+            if (global.processedInboundMsgIds.size > 2000) {
+                const oldestKey = global.processedInboundMsgIds.keys().next().value;
+                global.processedInboundMsgIds.delete(oldestKey);
+            }
+        }
+
         // ==========================================
         // 📩 SAFE PM / INBOX AUTO-REPLY (24h Cooldown)
         // ==========================================
@@ -908,15 +963,33 @@ client.on("message", async (message) => {
             const senderId = message.from;
             const now = Date.now();
             const pmCooldownMs = 24 * 60 * 60 * 1000;
+            if (!global.pmInFlightUsers) global.pmInFlightUsers = new Set();
 
-            if (pmRepliedUsers.has(senderId) && (now - pmRepliedUsers.get(senderId) < pmCooldownMs)) {
+            let pmUserKey = senderId;
+            try {
+                const contact = await message.getContact();
+                const digits = (contact && (contact.number || (contact.id && contact.id.user)) || "").replace(/\D/g, "");
+                if (digits) pmUserKey = digits;
+            } catch (e) {}
+
+            if (
+                global.pmInFlightUsers.has(senderId) ||
+                global.pmInFlightUsers.has(pmUserKey) ||
+                (pmRepliedUsers.has(senderId) && (now - pmRepliedUsers.get(senderId) < pmCooldownMs)) ||
+                (pmRepliedUsers.has(pmUserKey) && (now - pmRepliedUsers.get(pmUserKey) < pmCooldownMs))
+            ) {
                 return;
             }
+
+            global.pmInFlightUsers.add(senderId);
+            global.pmInFlightUsers.add(pmUserKey);
 
             const recentPms = (pmCooldownTimestamps.get(senderId) || []).filter(ts => now - ts < 60 * 1000);
             recentPms.push(now);
             pmCooldownTimestamps.set(senderId, recentPms);
             if (recentPms.length > 3) {
+                global.pmInFlightUsers.delete(senderId);
+                global.pmInFlightUsers.delete(pmUserKey);
                 console.log(`⚠️ [PM RATE LIMIT] Throttling rapid PMs from ${senderId}`);
                 return;
             }
@@ -927,13 +1000,35 @@ client.on("message", async (message) => {
             }
             await new Promise(resolve => setTimeout(resolve, typingDelay));
 
-            const pmReplyText =
+                        const pmReplyText =
                 `ආයුබෝවන්! IFSLS Group එක සමග සම්බන්ධ වීමට ස්තුතියි ඔයාට . 👋💙\n\n` +
                 `⚠️ කරුණාකර මෙම අංකයට පෞද්ගලික පණිවිඩ හා ණය පිලිබද විස්තර (Inbox/Direct Messages) එවීමෙන් වළකින්න.\n\n` +
-                `ශිෂ්‍ය ණය (IFSLS) පිළිබඳ ඕනෑම ඔබට ඇති ඔනම ප්‍රශ්නයක් අපේ *IFSLS Main Group* එක ඇතුළට ගිහින් */menu* කියලා ටයිප් කරලා ලබා ගන්න පුළුවන් ලමයි නැත්නම් group admin කෙනෙක් හා සම්බන්ධ වෙන්න පුලුවන්! 😊`;
+                `ශිෂ්‍ය ණය (IFSLS) පිළිබඳ ඕනෑම ඔබට ඇති ඔනම ප්‍රශ්නයක් අපේ *IFSLS Main Group* එක ඇතුළට ගිහින් */menu* කියලා ටයිප් කරලා ලබා ගන්න පුළුවන් ලමයි නැත්නම් group admin කෙනෙක් හා සම්බන්ධ වෙන්න පුලුවන්! 😊\n\n` +
+                `📞 *Admins & Contacts:*\n\n` +
+                `🛠️ *BOT Programmer*\n` +
+                `• 076 206 8122\n\n` +
+                `🎓 *SLIIT*\n` +
+                `• Chathuranga — 076 120 0261\n` +
+                `• Yasiru — 071 087 5268\n` +
+                `• Vidushi — 078 621 5746\n` +
+                `• Manuja — 078 532 5617\n` +
+                `• Rusindu — 075 113 2588\n\n` +
+                `🎓 *Horizon*\n` +
+                `• Yasho — 076 206 8122\n` +
+                `• Lahiru — 077 375 1413\n\n` +
+                `🎓 *CINEC*\n` +
+                `• Isuru — 076 063 0712\n\n` +
+                `🎓 *SLTC*\n` +
+                `• Suwani      | 071 197 2394`;
 
-            await message.reply(pmReplyText);
-            pmRepliedUsers.set(senderId, now);
+            try {
+                await message.reply(pmReplyText);
+                pmRepliedUsers.set(senderId, now);
+                pmRepliedUsers.set(pmUserKey, now);
+            } finally {
+                global.pmInFlightUsers.delete(senderId);
+                global.pmInFlightUsers.delete(pmUserKey);
+            }
             console.log(`📩 [SAFE PM AUTO-REPLY] Sent once (24h cooldown) to ${senderId}`);
             return;
         }
@@ -1052,13 +1147,14 @@ client.on("message_create", async (message) => {
 📊 */results* – Selection Results Portal link එක සහ Intake 11 ප්‍රතිඵල (2026 දෙසැම්බර් මස බලාපොරොත්තු වන) පිළිබඳ විස්තර.
 📌 */specialnotes* – Interviews වලින් පසු Selection Results, Physical Registration සහ Appeals (අභියාචනා) ගැන වැදගත් උපදෙස්.
 🤖 */ai* (හෝ @mention) – ශිෂ්‍ය ණය (IFSLS) ගැන ඔයාලගේ ප්‍රශ්න වලට AI assistant හරහා පිළිතුරු ලබාගැනීමේ පහසුකම.
-🛡️ *Safe System & Anti-Spam* – Group එකේ සාමය සහ ආරක්ෂාව වෙනුවෙන් anti-spam සහ safe messaging rules තවදුරටත් ශක්තිමත් කර ඇත.
+🛡️ *Safe System & Anti-Spam* – Group එකේ  ආරක්ෂාව වෙනුවෙන් anti-spam සහ safe messaging rules තවදුරටත් වැඩිදියුණු කර ඇත.
 
 💬 *කොහොමද පාවිච්චි කරන්නේ?*
-• Group එක ඇතුළේ `/menu` කියලා type කරලා සියලුම commands බලාගන්න.
-• ප්‍රශ්නයක් අහන්න ඕන නම් \`/ai [ඔයාගේ ප්‍රශ්නය]\` ලෙස type කරන්න (අනවශ්‍ය ලෙස එක දිගට messages යැවීමෙන් වළකින්න ⚠️).
+• Group එක ඇතුළේ /menu කියලා type කරලා සියලුම commands බලාගන්න පුලුවන්.
+• ප්‍රශ්නයක් අහන්න ඕන නම් /ai [ඔයාගේ ප්‍රශ්නය] ලෙස type කරන්න (Ai limitations ඇති නිසා අනවශ්‍ය ලෙස එක දිගට messages යැවීමෙන් වළකින්න ⚠️).
 
 📩 Ministry එකෙන් එන Emails (Inbox + Spam) නිතර check කරන්න, නිල නිවේදන පමණක් විශ්වාස කරන්න! ✅
+📩 final results ලැබෙන තුරු තමාගේ personal details campus එක හරහා direct හුවමාරු කර ගැනීමෙන් වලකින්න!
 
 🎓 *IFSLS STUDENT ADMIN COMMUNITY*`;
 
@@ -1071,7 +1167,7 @@ client.on("message_create", async (message) => {
                     console.log(`✅ [BROADCAST] Sent to ${groupId} (Total: ${count})`);
                     await new Promise(resolve => setTimeout(resolve, 5000));
                 } catch (err) {
-                    console.error(`❌ [BROADCAST ERROR] Group: ${groupId} | Message: ${err?.message || err}`);
+                    console.error(`❌ [BROADCAST ERROR] Group: ${groupId}`, err);
                 }
             }
 
@@ -1128,6 +1224,7 @@ client.on("message_create", async (message) => {
 
                 delete stickerWarnings[warningKey];
             }
+            return;
         }
 
         if (info.actualNumber && !isSriLankan(info.actualNumber)) {
@@ -1143,7 +1240,7 @@ client.on("message_create", async (message) => {
 
         const isNativeGroupInvite = message.type === "group_invite";
         const strictLinkRegex = /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9-]+\.(com|lk|org|net|gov|edu|io|me|info|co|biz|xyz|app|dev)(\/[^\s]*)?|chat\.whatsapp\.com\/[^\s]+)/i;
-        const hasLinkIndicator = isNativeGroupInvite || strictLinkRegex.test(message.body);
+        const hasLinkIndicator = isNativeGroupInvite || strictLinkRegex.test(message.body || "");
 
         if (hasLinkIndicator) {
             if (!isAdmin) {
@@ -1258,6 +1355,34 @@ client.on("message_create", async (message) => {
 
         const msgCommand = textLower.trim();
 
+        const handledAdminCmd = await handleAdminControlCommands({
+            message,
+            msgCommand,
+            msgText,
+            groupId,
+            isAdmin,
+            blacklistedUsers,
+            saveBlacklist,
+            directRemoveParticipant,
+            BAN_DURATION_MS
+        });
+        if (handledAdminCmd) return;
+
+        if (msgCommand === "/status" && isAdmin) {
+            const statusReport = buildBotStatusReport({
+                targetGroupsCount: TARGET_GROUP_IDS.length,
+                welcomeQueueLength: welcomeQueue.length,
+                blacklistedUsers
+            });
+            await message.reply(statusReport);
+            return;
+        }
+
+        if (msgCommand.startsWith("/calc")) {
+            await message.reply(handleCalculatorCommand(msgText));
+            return;
+        }
+
         if (msgCommand === "/menu" || msgCommand === "/help") {
             const menuMsg = `*🎓 IFSLS 2026/27 සම්පූර්ණ තොරතුරු මෙනුව 🎓*\n\n` +
                             `*පොදු තොරතුරු සඳහා පහත කමාන්ඩ් Type කරන්න:*\n` +
@@ -1336,10 +1461,11 @@ client.on("message_create", async (message) => {
             }
         }
 
+        await handleCommonQuestionAutoReply(message, groupId, textLower);
         await checkSpam(message, senderId, info.name, groupId);
 
     } catch (error) {
-        console.error("message_create error:", error?.message || error);
+        console.error("message_create error:", error);
     }
 });
 
@@ -1369,6 +1495,7 @@ async function checkSpam(message, senderId, name, groupId) {
 // ==========================================
 // 📌 LOAD GUIDES & INITIALIZE BOT
 // ==========================================
-loadGuides().then(() => {
-    client.initialize();
+loadGuides().then(async () => {
+    await client.initialize();
+    console.log("ℹ️ client.initialize() promise resolved");
 });
