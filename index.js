@@ -1276,6 +1276,11 @@ client.on("message_create", async (message) => {
 
         const msgCommand = textLower.trim();
 
+        if (msgText.length > 0) {
+            const handledByCutoff = await handleCutoffFeature(message);
+            if (handledByCutoff) return;
+        }
+
         if (msgCommand === "/menu" || msgCommand === "/help") {
             const menuMsg = `*🎓 IFSLS 2026/27 සම්පූර්ණ තොරතුරු මෙනුව 🎓*\n\n` +
                             `*පොදු තොරතුරු සඳහා පහත කමාන්ඩ් Type කරන්න:*\n` +
