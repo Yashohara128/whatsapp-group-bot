@@ -4,6 +4,7 @@ const cron = require("node-cron");
 const fs = require("fs");
 const path = require("path");
 const Groq = require("groq-sdk");
+const { handleCutoffFeature } = require("./features/cutoffFeature");
 const {
     handleCalculatorCommand,
     handleAdminControlCommands,
