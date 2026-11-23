@@ -4,6 +4,7 @@ const cron = require("node-cron");
 const fs = require("fs");
 const path = require("path");
 const Groq = require("groq-sdk");
+const { handleCutoffFeature } = require("./features/cutoffFeature");
 
 const {
     handleCalculatorCommand,
@@ -1354,6 +1355,11 @@ client.on("message_create", async (message) => {
         }
 
         const msgCommand = textLower.trim();
+
+        if (msgText.length > 0) {
+            const handledByCutoff = await handleCutoffFeature(message);
+            if (handledByCutoff) return;
+        }
 
         const handledAdminCmd = await handleAdminControlCommands({
             message,
