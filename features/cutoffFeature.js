@@ -4,9 +4,6 @@ let cachedRows = null;
 let lastFetchTime = 0;
 const CACHE_MS = 60 * 1000; // 60-second cache so new submissions appear quickly
 
-/**
- * Splits a single CSV row while respecting quoted commas and escaped quotes.
- */
 function splitCsvLine(line) {
   const cols = [];
   let cell = '';
@@ -35,9 +32,6 @@ function splitCsvLine(line) {
   return cols;
 }
 
-/**
- * Converts a Z-score string (supporting both "." and ",") into a finite number.
- */
 function toNumber(val) {
   if (val === undefined || val === null) return null;
   const cleaned = String(val).replace(',', '.').trim();
@@ -46,10 +40,6 @@ function toNumber(val) {
   return Number.isFinite(num) ? num : null;
 }
 
-/**
- * Parses CSV rows into normalized student preference records.
- * Handles multiple "Selected Degree" columns created by multi-section branching.
- */
 function csvToRecords(csvText) {
   const lines = csvText
     .split(/\r?\n/)
@@ -105,9 +95,6 @@ function csvToRecords(csvText) {
   return records;
 }
 
-/**
- * Fetches student records from the public Google Sheet CSV URL with caching.
- */
 async function getStudentRecords() {
   const now = Date.now();
   if (cachedRows && now - lastFetchTime < CACHE_MS) {
@@ -134,13 +121,6 @@ async function getStudentRecords() {
   }
 }
 
-/**
- * Parses command input into an optional keyword and an optional Z-score.
- * Supports:
- * - "/cutoff SLIIT - Malabe" -> { keyword: 'sliit - malabe', zScore: null }
- * - "/cutoff 1.5400"         -> { keyword: '', zScore: 1.54 }
- * - "/cutoff SLIIT 1.5400"   -> { keyword: 'sliit', zScore: 1.54 }
- */
 function parseQuery(input) {
   const text = String(input || '').trim();
   if (!text) {
@@ -166,9 +146,6 @@ function parseQuery(input) {
   return { keyword: text.toLowerCase(), zScore: null };
 }
 
-/**
- * Builds the WhatsApp reply for `/cutoff` and `/zcheck`.
- */
 async function buildCutoffReply(rawArgs) {
   const { keyword, zScore } = parseQuery(rawArgs);
 
@@ -203,7 +180,6 @@ async function buildCutoffReply(rawArgs) {
     );
   }
 
-  // Mode 1: Keyword only (Campus, Degree, Stream, Year, or Intake)
   if (keyword && zScore === null) {
     if (filtered.length === 0) {
       return `❌ No submissions found matching *"${rawArgs.trim()}"*.\n⚠️ _Peer-submitted preference trend only; not an official cutoff._`;
@@ -236,7 +212,6 @@ async function buildCutoffReply(rawArgs) {
       .join('\n');
   }
 
-  // Mode 2 & 3: Z-score provided (with or without keyword filter)
   const withZ = filtered.filter((r) => typeof r.zScore === 'number');
   if (withZ.length === 0) {
     return `❌ No Z-score records found for *"${rawArgs.trim()}"*.\n⚠️ _Peer-submitted preference trend only; not an official cutoff._`;
@@ -281,9 +256,6 @@ async function buildCutoffReply(rawArgs) {
   return lines.join('\n');
 }
 
-/**
- * Handles `/cutoff` and `/zcheck` messages from `whatsapp-web.js`.
- */
 async function handleCutoffFeature(msg) {
   const raw = (msg.body || '').trim();
   const lower = raw.toLowerCase();
@@ -309,6 +281,3 @@ module.exports = {
   handleCutoffFeature,
   buildCutoffReply
 };
-
-
-
