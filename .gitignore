@@ -5,3 +5,4 @@ blacklist.json
 welcomed_users.json
 *.log
 .env
+*.bak*

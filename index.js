@@ -868,31 +868,31 @@ client.on("group_join", async (notification) => {
             const info = await getContactInfo(userId);
             if (!info) continue;
 
-            console.log(`👤 New Member: ${info.name} (${info.actualNumber})`);
+            console.log(`👤 New Member: ${activeInfo.name} (${activeInfo.actualNumber})`);
 
             let isBanned = false;
             const now = Date.now();
 
             for (let bannedId in blacklistedUsers) {
-                if ((bannedId === userId || bannedId.includes(info.actualNumber)) && now < blacklistedUsers[bannedId]) {
+                if ((bannedId === userId || bannedId.includes(activeInfo.actualNumber)) && now < blacklistedUsers[bannedId]) {
                     isBanned = true;
                     break;
                 }
             }
 
             if (isBanned) {
-                await client.sendMessage(groupId, `🚫 @${userId.split("@")[0]} (*${info.name}*), ඔබට තවමත් මෙම සමූහයට සම්බන්ධ වීමට කාලය පැමිණ නැත (ඔබගේ Ban කාලය තවම අවසන් වී නැත).`, { mentions: [userId] });
+                await client.sendMessage(groupId, `🚫 @${userId.split("@")[0]} (*${activeInfo.name}*), ඔබට තවමත් මෙම සමූහයට සම්බන්ධ වීමට කාලය පැමිණ නැත (ඔබගේ Ban කාලය තවම අවසන් වී නැත).`, { mentions: [userId] });
                 await directRemoveParticipant(groupId, userId);
                 continue;
             }
 
-            if (!isSriLankan(info.actualNumber)) {
-                await client.sendMessage(groupId, `🌍 @${userId.split("@")[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group. You will be removed.`, { mentions: [userId] });
+            if (!isSriLankan(activeInfo.actualNumber)) {
+                await client.sendMessage(groupId, `🌍 @${userId.split("@")[0]} (*${activeInfo.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group. You will be removed.`, { mentions: [userId] });
                 await directRemoveParticipant(groupId, userId);
                 continue;
             }
 
-            enqueueWelcomeUser(userId, info.actualNumber, info.name);
+            enqueueWelcomeUser(userId, activeInfo.actualNumber, activeInfo.name);
         }
     } catch (error) {
         console.log("⚠️ Error in group_join event:", error);
@@ -1183,13 +1183,13 @@ client.on("message_create", async (message) => {
 
         const senderId = message.author || message.from;
         const info = await getContactInfo(senderId);
-        if (!info) return;
+        const safeSenderName = (senderId || "User").split("@")[0]; const activeInfo = info || { contact: null, name: safeSenderName, actualId: senderId, actualNumber: (senderId || "").replace(/\D/g, "") };
 
-        const isAdmin = await checkIsAdmin(message, senderId, info.actualNumber);
+        const isAdmin = await checkIsAdmin(message, senderId, activeInfo.actualNumber);
 
         console.log("\n----------------------------------------");
         console.log(`📩 Group ID : ${groupId}`);
-        console.log(`👤 Name     : ${info.name} (${info.actualNumber})`);
+        console.log(`👤 Name     : ${activeInfo.name} (${activeInfo.actualNumber})`);
         console.log(`👑 Is Admin : ${isAdmin}`);
         console.log(`💬 Type     : ${message.type}`);
         console.log(`💬 Message  : ${message.body || "[Media / Sticker / Invite]"}`);
@@ -1228,13 +1228,13 @@ client.on("message_create", async (message) => {
             return;
         }
 
-        if (info.actualNumber && !isSriLankan(info.actualNumber)) {
+        if (activeInfo.actualNumber && !isSriLankan(activeInfo.actualNumber)) {
             const removed = await directRemoveParticipant(groupId, senderId);
             if (removed) {
                 blacklistedUsers[senderId] = Date.now() + BAN_DURATION_MS;
-                if (info.actualId) blacklistedUsers[info.actualId] = Date.now() + BAN_DURATION_MS;
+                if (activeInfo.actualId) blacklistedUsers[activeInfo.actualId] = Date.now() + BAN_DURATION_MS;
                 saveBlacklist();
-                await client.sendMessage(groupId, `🌍 @${senderId.split("@")[0]} (*${info.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group. You will be removed.`, { mentions: [senderId] });
+                await client.sendMessage(groupId, `🌍 @${senderId.split("@")[0]} (*${activeInfo.name}*) Sorry, only Sri Lankan numbers (+94) are allowed in this group. You will be removed.`, { mentions: [senderId] });
             }
             return;
         }
@@ -1277,7 +1277,7 @@ client.on("message_create", async (message) => {
                     linkWarningTracker.set(senderId, warnings);
 
                     if (warnings === 1) {
-                        const warningMsg = `⚠️ @${senderId.split("@")[0]} (*${info.name}*)\n` +
+                        const warningMsg = `⚠️ @${senderId.split("@")[0]} (*${activeInfo.name}*)\n` +
                                            `මෙම කණ්ඩායම තුළ වෙනත් WhatsApp Group ලින්ක්, ටෙලිග්‍රෑම් ලින්ක් හෝ ව්‍යාපාරික දේවල් Share කිරීම තහනම්! ඔයාට group link share කරගන්න අවශ්‍යනම් group admin කෙනෙක් හරහා යොමු කරන්න 🤠.\n\n` +
                                            `මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත දැමුවහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ කරුණාකර link එක group එකෙන් ඉවත් කරගන්න. 🚫\n\n` +
                                            `ඔබට මෙම සමූහය සඳහා අවසර ඇති links වනුයේ පහත සඳහන් links පමණී:\n` +
@@ -1296,10 +1296,10 @@ client.on("message_create", async (message) => {
                         const removed = await directRemoveParticipant(groupId, senderId);
                         if (removed) {
                             blacklistedUsers[senderId] = Date.now() + BAN_DURATION_MS;
-                            if (info.actualId) blacklistedUsers[info.actualId] = Date.now() + BAN_DURATION_MS;
+                            if (activeInfo.actualId) blacklistedUsers[activeInfo.actualId] = Date.now() + BAN_DURATION_MS;
                             saveBlacklist();
                             if (ENABLE_AUTO_REMOVE) {
-                                await client.sendMessage(groupId, `🚫 @${senderId.split("@")[0]} (*${info.name}*) අවවාද නොතකා නැවත තහනම් ලින්ක් දැමූ නිසා පැය 24කට ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [senderId] });
+                                await client.sendMessage(groupId, `🚫 @${senderId.split("@")[0]} (*${activeInfo.name}*) අවවාද නොතකා නැවත තහනම් ලින්ක් දැමූ නිසා පැය 24කට ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [senderId] });
                             }
                         }
                     }
@@ -1317,15 +1317,15 @@ client.on("message_create", async (message) => {
                 badWordWarningTracker.set(senderId, warnings);
 
                 if (warnings === 1) {
-                    await client.sendMessage(groupId, `⚠️ @${senderId.split("@")[0]} (*${info.name}*)\nමෙම කණ්ඩායම තුළ අපහාසාත්මක හෝ තහනම් වචන භාවිතය තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත එවැනි වචන භාවිත කළහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🤬`, { mentions: [senderId] });
+                    await client.sendMessage(groupId, `⚠️ @${senderId.split("@")[0]} (*${activeInfo.name}*)\nමෙම කණ්ඩායම තුළ අපහාසාත්මක හෝ තහනම් වචන භාවිතය තහනම්! මෙය ඔබගේ *පළමු අවවාදයයි*. නැවත එවැනි වචන භාවිත කළහොත් ගෲප් එකෙන් ඉවත් කරනු ලැබේ. 🤬`, { mentions: [senderId] });
                 } else {
                     const removed = await directRemoveParticipant(groupId, senderId);
                     if (removed) {
                         blacklistedUsers[senderId] = Date.now() + BAN_DURATION_MS;
-                        if (info.actualId) blacklistedUsers[info.actualId] = Date.now() + BAN_DURATION_MS;
+                        if (activeInfo.actualId) blacklistedUsers[activeInfo.actualId] = Date.now() + BAN_DURATION_MS;
                         saveBlacklist();
                         if (ENABLE_AUTO_REMOVE) {
-                            await client.sendMessage(groupId, `🚫 @${senderId.split("@")[0]} (*${info.name}*) අවවාද නොතකා නැවත අපහාසාත්මක වචන භාවිත කළ නිසා පැය 24කට ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [senderId] });
+                            await client.sendMessage(groupId, `🚫 @${senderId.split("@")[0]} (*${activeInfo.name}*) අවවාද නොතකා නැවත අපහාසාත්මක වචන භාවිත කළ නිසා පැය 24කට ගෲප් එකෙන් ඉවත් කරන ලදී.`, { mentions: [senderId] });
                         }
                     }
                 }
@@ -1344,10 +1344,10 @@ client.on("message_create", async (message) => {
                 const removed = await directRemoveParticipant(groupId, senderId);
                 if (removed) {
                     blacklistedUsers[senderId] = Date.now() + BAN_DURATION_MS;
-                    if (info.actualId) blacklistedUsers[info.actualId] = Date.now() + BAN_DURATION_MS;
+                    if (activeInfo.actualId) blacklistedUsers[activeInfo.actualId] = Date.now() + BAN_DURATION_MS;
                     saveBlacklist();
                     if (ENABLE_AUTO_REMOVE) {
-                        await client.sendMessage(groupId, `🚫 @${senderId.split("@")[0]} (*${info.name}*)\nGroup එක Status වල Mention කිරීම තහනම් බැවින් පැය 24කට ඔබව ඉවත් කරන ලදී.`, { mentions: [senderId] });
+                        await client.sendMessage(groupId, `🚫 @${senderId.split("@")[0]} (*${activeInfo.name}*)\nGroup එක Status වල Mention කිරීම තහනම් බැවින් පැය 24කට ඔබව ඉවත් කරන ලදී.`, { mentions: [senderId] });
                     }
                 }
                 return;
@@ -1468,7 +1468,7 @@ client.on("message_create", async (message) => {
         }
 
         await handleCommonQuestionAutoReply(message, groupId, textLower);
-        await checkSpam(message, senderId, info.name, groupId);
+        await checkSpam(message, senderId, activeInfo.name, groupId);
 
     } catch (error) {
         console.error("message_create error:", error);
@@ -1489,7 +1489,7 @@ async function checkSpam(message, senderId, name, groupId) {
         if (removed) {
             blacklistedUsers[senderId] = Date.now() + BAN_DURATION_MS;
             const info = await getContactInfo(senderId);
-            if (info && info.actualId) blacklistedUsers[info.actualId] = Date.now() + BAN_DURATION_MS;
+            if (info && activeInfo.actualId) blacklistedUsers[activeInfo.actualId] = Date.now() + BAN_DURATION_MS;
             saveBlacklist();
             if (ENABLE_AUTO_REMOVE) {
                 await client.sendMessage(groupId, `🚨 @${senderId.split("@")[0]} (*${name}*) has been temporarily removed for Detected SPAMMING for rejoining please contact group admins after 24hours (24h ban).`, { mentions: [senderId] });
