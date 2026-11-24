@@ -56,43 +56,92 @@ function calcZStats(zList) {
   return { count: valid.length, min, max, avg };
 }
 
-function getChoiceTrendText(rows) {
-  if (!rows || rows.length === 0) return "N/A";
-  const firstYes = rows.filter((r) => r.isFirstChoice).length;
-  const firstNo = rows.length - firstYes;
-  if (firstYes > firstNo) {
-    return `Most students chose First Choice (${firstYes}/${rows.length})`;
+function getChoiceSummary(rows) {
+  if (!rows || rows.length === 0) {
+    return {
+      yesCount: 0,
+      noCount: 0,
+      yesStats: null,
+      noStats: null,
+      majorityText: "No data"
+    };
   }
-  if (firstNo > firstYes) {
-    return `Most students chose Not First Choice (${firstNo}/${rows.length})`;
+
+  const yesRows = rows.filter((r) => r.isFirstChoice);
+  const noRows = rows.filter((r) => !r.isFirstChoice);
+
+  const yesStats = calcZStats(yesRows.map((r) => r.zScore));
+  const noStats = calcZStats(noRows.map((r) => r.zScore));
+
+  let majorityText = `Equal split (${yesRows.length} Yes / ${noRows.length} No)`;
+  if (yesRows.length > noRows.length) {
+    majorityText = `Most students: First Choice (${yesRows.length}/${rows.length} Yes)`;
+  } else if (noRows.length > yesRows.length) {
+    majorityText = `Most students: Not First Choice (${noRows.length}/${rows.length} No)`;
   }
-  return `Equal split: First Choice & Not First Choice (${firstYes}/${rows.length})`;
+
+  return {
+    yesCount: yesRows.length,
+    noCount: noRows.length,
+    yesStats,
+    noStats,
+    majorityText
+  };
 }
 
-function buildStreamAverages(rows) {
-  const map = new Map();
+function buildBranchDegreeBlocks(rows) {
+  const branchMap = new Map();
 
   for (const r of rows) {
-    const streamName = (r.stream || "").trim();
-    if (!streamName || streamName.toLowerCase() === "n/a") continue;
-    if (!map.has(streamName)) {
-      map.set(streamName, []);
+    const rawBranch = (r.campus || "").trim();
+    const branchLabel = rawBranch && rawBranch.toLowerCase() !== "n/a" ? rawBranch : "General / Unspecified";
+    const branchKey = branchLabel.toLowerCase();
+
+    if (!branchMap.has(branchKey)) {
+      branchMap.set(branchKey, {
+        branch: branchLabel,
+        allZ: [],
+        degrees: new Map()
+      });
     }
+
+    const branchEntry = branchMap.get(branchKey);
     if (typeof r.zScore === "number" && Number.isFinite(r.zScore)) {
-      map.get(streamName).push(r.zScore);
+      branchEntry.allZ.push(r.zScore);
+    }
+
+    const rawDegree = (r.degree || "").trim();
+    const degreeLabel = rawDegree && rawDegree.toLowerCase() !== "n/a" ? rawDegree : "Unspecified Degree";
+    const degreeKey = degreeLabel.toLowerCase();
+
+    if (!branchEntry.degrees.has(degreeKey)) {
+      branchEntry.degrees.set(degreeKey, {
+        degree: degreeLabel,
+        zList: []
+      });
+    }
+
+    if (typeof r.zScore === "number" && Number.isFinite(r.zScore)) {
+      branchEntry.degrees.get(degreeKey).zList.push(r.zScore);
     }
   }
 
-  const result = [];
-  for (const [streamName, zList] of map.entries()) {
-    const stats = calcZStats(zList);
-    result.push({
-      stream: streamName,
-      avg: stats ? stats.avg : null
-    });
+  const blocks = [];
+  for (const branchEntry of branchMap.values()) {
+    const bStats = calcZStats(branchEntry.allZ);
+    const bAvgStr = bStats ? bStats.avg.toFixed(4) : "N/A";
+    const blockLines = [`• *${branchEntry.branch}* (Branch Avg: ${bAvgStr})`];
+
+    for (const degEntry of branchEntry.degrees.values()) {
+      const dStats = calcZStats(degEntry.zList);
+      const dAvgStr = dStats ? `*${dStats.avg.toFixed(4)}* (n=${dStats.count})` : "N/A";
+      blockLines.push(`   ◦ ${degEntry.degree}: ${dAvgStr}`);
+    }
+
+    blocks.push(blockLines.join("\n"));
   }
 
-  return result;
+  return blocks;
 }
 
 function extractDegreeAndChoice(headers, row) {
@@ -116,12 +165,24 @@ function extractDegreeAndChoice(headers, row) {
     "N/A";
 
   const flagRaw = firstChoiceFlagIdx >= 0 ? (row[firstChoiceFlagIdx] || "").trim() : "";
-  const isFirstChoice = firstChoiceFlagIdx >= 0 ? isYesValue(flagRaw) : true;
+  const hasExplicitFlag = firstChoiceFlagIdx >= 0 && flagRaw.length > 0;
+  const isFirstChoice = hasExplicitFlag ? isYesValue(flagRaw) : true;
 
   return {
     degree: selectedDegree,
-    isFirstChoice
+    isFirstChoice,
+    hasExplicitFlag
   };
+}
+
+function extractCampusLocation(row, idxCampus, idxLocation) {
+  const campusVal = idxCampus >= 0 ? (row[idxCampus] || "").trim() : "";
+  const locVal = idxLocation >= 0 && idxLocation !== idxCampus ? (row[idxLocation] || "").trim() : "";
+
+  if (campusVal && locVal && !campusVal.toLowerCase().includes(locVal.toLowerCase())) {
+    return `${campusVal} - ${locVal}`;
+  }
+  return campusVal || locVal || "N/A";
 }
 
 function csvToRecords(csvText) {
@@ -138,19 +199,20 @@ function csvToRecords(csvText) {
   const idxYear = headers.findIndex((h) => h.includes("year"));
   const idxIntake = headers.findIndex((h) => h.includes("intake"));
   const idxZ = headers.findIndex((h) => h.includes("z"));
-  const idxCampus = headers.findIndex((h) => h.includes("campus"));
+  const idxCampus = headers.findIndex((h) => h.includes("campus") || h.includes("institute") || h.includes("university"));
+  const idxLocation = headers.findIndex((h) => h.includes("location") || h.includes("branch") || h.includes("city"));
 
   const records = [];
 
   for (let i = 1; i < lines.length; i++) {
     const row = splitCsvLine(lines[i]);
 
-    const { degree, isFirstChoice } = extractDegreeAndChoice(headers, row);
+    const { degree, isFirstChoice, hasExplicitFlag } = extractDegreeAndChoice(headers, row);
     const stream = (idxStream >= 0 ? row[idxStream] : "").trim() || "N/A";
     const year = (idxYear >= 0 ? row[idxYear] : "").trim() || "N/A";
     const intake = (idxIntake >= 0 ? row[idxIntake] : "").trim() || "N/A";
     const zScore = toNumber(idxZ >= 0 ? row[idxZ] : null);
-    const campus = (idxCampus >= 0 ? row[idxCampus] : "").trim() || "N/A";
+    const campus = extractCampusLocation(row, idxCampus, idxLocation);
 
     const hasAnyData =
       degree !== "N/A" ||
@@ -164,6 +226,7 @@ function csvToRecords(csvText) {
       records.push({
         degree,
         isFirstChoice,
+        hasExplicitFlag,
         stream,
         year,
         intake,
@@ -224,6 +287,22 @@ function parseQuery(input) {
   return { keyword: text.toLowerCase(), zScore: null };
 }
 
+function resolveCampusTitle(keyword, filtered) {
+  const rawCampuses = [...new Set(filtered.map((r) => r.campus).filter((c) => c && c.toLowerCase() !== "n/a"))];
+  if (keyword) {
+    const upperKw = keyword.toUpperCase();
+    const matchedPrefixes = rawCampuses.filter((c) => c.toUpperCase().includes(upperKw));
+    if (matchedPrefixes.length > 1) {
+      const firstWordMatches = matchedPrefixes.map((c) => c.split(/[\s-]+/)[0]).filter(Boolean);
+      const uniqueFirst = [...new Set(firstWordMatches.map((w) => w.toUpperCase()))];
+      if (uniqueFirst.length === 1) {
+        return uniqueFirst[0];
+      }
+    }
+  }
+  return rawCampuses.length > 0 ? rawCampuses.join(", ") : keyword ? keyword.toUpperCase() : "All Campuses";
+}
+
 async function buildCutoffReply(rawArgs) {
   const { keyword, zScore } = parseQuery(rawArgs);
 
@@ -231,9 +310,9 @@ async function buildCutoffReply(rawArgs) {
     return [
       "📌 *IFSLS Cutoff & Z-Score Check*",
       "",
-      "• *Campus / Degree:* `/cutoff HORIZON`",
-      "• *By Z-Score:* `/cutoff 0.578` or `/zcheck 0.578`",
-      "• *Campus + Z-Score:* `/cutoff HORIZON 0.578`",
+      "• By Campus: `/cutoff sliit` or `/cutoff icbt`",
+      "• By Z-Score: `/cutoff 0.578` or `/zcheck 0.578`",
+      "• Campus + Z-Score: `/cutoff sliit 0.578`",
       "",
       "⚠️ _Peer-submitted preference trend only; not an official cutoff._"
     ].join("\n");
@@ -258,59 +337,43 @@ async function buildCutoffReply(rawArgs) {
     return `❌ *"${rawArgs.trim()}"* සඳහා records හමු වුණේ නැහැ.\n\n⚠️ _Peer-submitted preference trend only; not an official cutoff._`;
   }
 
-  const campuses = [...new Set(filtered.map((r) => r.campus).filter((c) => c !== "N/A"))];
-  const campusLabel = campuses.length > 0 ? campuses.join(", ") : rawArgs.trim() || "All Campuses";
-
-  const intakes = [...new Set(filtered.map((r) => r.intake).filter((i) => i !== "N/A"))];
-  const intakeLabel = intakes.length > 0 ? intakes.join(", ") : "N/A";
-
-  const allStats = calcZStats(filtered.map((r) => r.zScore));
-  const firstChoiceRows = filtered.filter((r) => r.isFirstChoice);
-  const firstChoiceStats = calcZStats(firstChoiceRows.map((r) => r.zScore));
-  const choiceTrend = getChoiceTrendText(filtered);
-
   let targetRows = filtered;
-  let degreeTitle = "🎓 *Matching Degrees:*";
-
   if (zScore !== null) {
-    targetRows = filtered
-      .filter((r) => typeof r.zScore === "number" && r.zScore <= zScore && r.degree !== "N/A")
-      .sort((a, b) => b.zScore - a.zScore);
-    degreeTitle = `🎓 *Matching Degrees (Z ≤ ${zScore.toFixed(4)}):*`;
+    targetRows = filtered.filter((r) => typeof r.zScore === "number" && r.zScore <= zScore);
   }
 
-  const degreesToShow = [
-    ...new Set(targetRows.map((r) => r.degree).filter((d) => d !== "N/A"))
-  ];
+  const rowsForBreakdown = targetRows.length > 0 ? targetRows : filtered;
+  const campusTitle = resolveCampusTitle(keyword, rowsForBreakdown);
+  const branchBlocks = buildBranchDegreeBlocks(rowsForBreakdown);
 
-  const streamAverages = buildStreamAverages(targetRows);
+  const intakes = [...new Set(rowsForBreakdown.map((r) => r.intake).filter((i) => i && i.toLowerCase() !== "n/a"))];
+  const intakeLabel = intakes.length > 0 ? intakes.join(", ") : "N/A";
 
-  const lines = [
-    `🏫 *Campus:* ${campusLabel}`,
-    "",
-    degreeTitle,
-    degreesToShow.length > 0
-      ? degreesToShow.slice(0, 8).map((d) => `• ${d}`).join("\n") +
-        (degreesToShow.length > 8 ? `\n• ... (+${degreesToShow.length - 8} more)` : "")
-      : "• No matching degrees found",
-    "",
-    "📚 *A/L Stream Average:*",
-    streamAverages.length > 0
-      ? streamAverages
-          .map((s) => `• ${s.stream}: ${s.avg !== null ? s.avg.toFixed(4) : "N/A"}`)
-          .join("\n")
-      : "• N/A",
-    "",
+  const allStats = calcZStats(rowsForBreakdown.map((r) => r.zScore));
+  const choiceSummary = getChoiceSummary(rowsForBreakdown);
+
+  let firstChoiceLine = "⭐ *First Choice Average:* ";
+  if (choiceSummary.yesStats) {
+    firstChoiceLine += `*${choiceSummary.yesStats.avg.toFixed(4)}* (${choiceSummary.majorityText})`;
+  } else if (choiceSummary.noStats) {
+    firstChoiceLine += `No 1st-Choice (Yes) Z-scores yet (${choiceSummary.majorityText})`;
+  } else {
+    firstChoiceLine += `No Z-scores submitted yet (${choiceSummary.majorityText})`;
+  }
+
+  const sections = [
+    `🏫 *Campus:* ${campusTitle}`,
+    zScore !== null
+      ? `📍 *Branches & Degrees (Z ≤ ${zScore.toFixed(4)}):*\n\n${branchBlocks.length > 0 ? branchBlocks.join("\n\n") : "   ◦ No branch or degree records found"}`
+      : `📍 *Branches & Degree Z-Score Averages:*\n\n${branchBlocks.length > 0 ? branchBlocks.join("\n\n") : "   ◦ No branch or degree records found"}`,
     `📈 *Z-Score Range:* ${allStats ? `${allStats.min.toFixed(4)} – ${allStats.max.toFixed(4)}` : "N/A"}`,
     `📊 *Z-Score Average:* ${allStats ? allStats.avg.toFixed(4) : "N/A"}`,
-    `⭐ *First Choice Average:* ${firstChoiceStats ? firstChoiceStats.avg.toFixed(4) : "N/A"}`,
-    `📌 *Preference Trend:* ${choiceTrend}`,
+    firstChoiceLine,
     `🗓️ *IFSLS Intake:* ${intakeLabel}`,
-    "",
     "⚠️ _Peer-submitted preference trend only; not an official cutoff._"
   ];
 
-  return lines.join("\n");
+  return sections.join("\n\n");
 }
 
 async function handleCutoffFeature(msg) {
