@@ -41,6 +41,89 @@ function toNumber(val) {
   return Number.isFinite(num) ? num : null;
 }
 
+function isYesValue(val) {
+  if (!val) return false;
+  const v = String(val).trim().toLowerCase();
+  return v === "yes" || v === "y" || v === "true" || v === "1" || v.startsWith("yes");
+}
+
+function calcZStats(zList) {
+  const valid = zList.filter((z) => typeof z === "number" && Number.isFinite(z));
+  if (valid.length === 0) return null;
+  const min = Math.min(...valid);
+  const max = Math.max(...valid);
+  const avg = valid.reduce((acc, v) => acc + v, 0) / valid.length;
+  return { count: valid.length, min, max, avg };
+}
+
+function getChoiceTrendText(rows) {
+  if (!rows || rows.length === 0) return "N/A";
+  const firstYes = rows.filter((r) => r.isFirstChoice).length;
+  const firstNo = rows.length - firstYes;
+  if (firstYes > firstNo) {
+    return `Most students chose First Choice (${firstYes}/${rows.length})`;
+  }
+  if (firstNo > firstYes) {
+    return `Most students chose Not First Choice (${firstNo}/${rows.length})`;
+  }
+  return `Equal split: First Choice & Not First Choice (${firstYes}/${rows.length})`;
+}
+
+function buildStreamAverages(rows) {
+  const map = new Map();
+
+  for (const r of rows) {
+    const streamName = (r.stream || "").trim();
+    if (!streamName || streamName.toLowerCase() === "n/a") continue;
+    if (!map.has(streamName)) {
+      map.set(streamName, []);
+    }
+    if (typeof r.zScore === "number" && Number.isFinite(r.zScore)) {
+      map.get(streamName).push(r.zScore);
+    }
+  }
+
+  const result = [];
+  for (const [streamName, zList] of map.entries()) {
+    const stats = calcZStats(zList);
+    result.push({
+      stream: streamName,
+      avg: stats ? stats.avg : null
+    });
+  }
+
+  return result;
+}
+
+function extractDegreeAndChoice(headers, row) {
+  const degreeCols = headers
+    .map((h, i) => (h.includes("degree") || h.includes("course") || h.includes("programme") ? i : -1))
+    .filter((i) => i !== -1);
+
+  const firstChoiceFlagIdx = headers.findIndex(
+    (h) =>
+      h.includes("first choice") ||
+      h.includes("1st choice") ||
+      h.includes("is this your first") ||
+      h.includes("first preference") ||
+      h.includes("1st preference")
+  );
+
+  const selectedDegree =
+    degreeCols
+      .map((colIdx) => (row[colIdx] || "").trim())
+      .find((val) => val.length > 0 && val.toLowerCase() !== "yes" && val.toLowerCase() !== "no") ||
+    "N/A";
+
+  const flagRaw = firstChoiceFlagIdx >= 0 ? (row[firstChoiceFlagIdx] || "").trim() : "";
+  const isFirstChoice = firstChoiceFlagIdx >= 0 ? isYesValue(flagRaw) : true;
+
+  return {
+    degree: selectedDegree,
+    isFirstChoice
+  };
+}
+
 function csvToRecords(csvText) {
   const lines = csvText
     .split(/\r?\n/)
@@ -51,28 +134,18 @@ function csvToRecords(csvText) {
 
   const headers = splitCsvLine(lines[0]).map((h) => h.toLowerCase());
 
-  const idxName = headers.findIndex((h) => h.includes("name"));
   const idxStream = headers.findIndex((h) => h.includes("stream"));
   const idxYear = headers.findIndex((h) => h.includes("year"));
   const idxIntake = headers.findIndex((h) => h.includes("intake"));
   const idxZ = headers.findIndex((h) => h.includes("z"));
   const idxCampus = headers.findIndex((h) => h.includes("campus"));
 
-  const degreeCols = headers
-    .map((h, i) => (h.includes("degree") ? i : -1))
-    .filter((i) => i !== -1);
-
   const records = [];
 
   for (let i = 1; i < lines.length; i++) {
     const row = splitCsvLine(lines[i]);
 
-    const degree =
-      degreeCols
-        .map((colIdx) => (row[colIdx] || "").trim())
-        .find((val) => val.length > 0) || "N/A";
-
-    const name = (idxName >= 0 ? row[idxName] : "").trim() || "Anonymous";
+    const { degree, isFirstChoice } = extractDegreeAndChoice(headers, row);
     const stream = (idxStream >= 0 ? row[idxStream] : "").trim() || "N/A";
     const year = (idxYear >= 0 ? row[idxYear] : "").trim() || "N/A";
     const intake = (idxIntake >= 0 ? row[idxIntake] : "").trim() || "N/A";
@@ -80,16 +153,23 @@ function csvToRecords(csvText) {
     const campus = (idxCampus >= 0 ? row[idxCampus] : "").trim() || "N/A";
 
     const hasAnyData =
-      name !== "Anonymous" ||
+      degree !== "N/A" ||
       stream !== "N/A" ||
       year !== "N/A" ||
       intake !== "N/A" ||
       zScore !== null ||
-      campus !== "N/A" ||
-      degree !== "N/A";
+      campus !== "N/A";
 
     if (hasAnyData) {
-      records.push({ name, stream, year, intake, zScore, campus, degree });
+      records.push({
+        degree,
+        isFirstChoice,
+        stream,
+        year,
+        intake,
+        zScore,
+        campus
+      });
     }
   }
 
@@ -150,9 +230,10 @@ async function buildCutoffReply(rawArgs) {
   if (!keyword && zScore === null) {
     return [
       "📌 *IFSLS Cutoff & Z-Score Check*",
-      "• By Campus / Degree / Intake: `/cutoff HORIZON`",
-      "• By Z-Score: `/cutoff 0.578` or `/zcheck 0.578`",
-      "• Campus + Z-Score: `/cutoff HORIZON 0.578`",
+      "",
+      "• *Campus / Degree:* `/cutoff HORIZON`",
+      "• *By Z-Score:* `/cutoff 0.578` or `/zcheck 0.578`",
+      "• *Campus + Z-Score:* `/cutoff HORIZON 0.578`",
       "",
       "⚠️ _Peer-submitted preference trend only; not an official cutoff._"
     ].join("\n");
@@ -173,79 +254,62 @@ async function buildCutoffReply(rawArgs) {
     );
   }
 
-  if (keyword && zScore === null) {
-    if (filtered.length === 0) {
-      return `❌ *"${rawArgs.trim()}"* සඳහා records හමු වුණේ නැහැ.\n⚠️ _Peer-submitted preference trend only; not an official cutoff._`;
-    }
-
-    const zList = filtered.map((r) => r.zScore).filter((z) => typeof z === "number");
-    const degrees = [...new Set(filtered.map((r) => r.degree).filter((d) => d !== "N/A"))];
-    const intakes = [...new Set(filtered.map((r) => r.intake).filter((i) => i !== "N/A"))];
-
-    let zLine = "• *Z-Score Range:* No Z-scores submitted yet";
-    if (zList.length > 0) {
-      const min = Math.min(...zList);
-      const max = Math.max(...zList);
-      const avg = zList.reduce((acc, v) => acc + v, 0) / zList.length;
-      zLine = `• *Z-Score Range:* ${min.toFixed(4)} – ${max.toFixed(4)} (Avg: ${avg.toFixed(4)})`;
-    }
-
-    return [
-      `📊 *IFSLS Peer Trend* — \`${rawArgs.trim()}\``,
-      `• *Submissions:* ${filtered.length}`,
-      zLine,
-      intakes.length > 0 ? `• *Intakes:* ${intakes.join(", ")}` : null,
-      degrees.length > 0
-        ? `• *Degrees (${degrees.length}):* ${degrees.slice(0, 6).join(" | ")}${degrees.length > 6 ? " ..." : ""}`
-        : null,
-      "",
-      "⚠️ _Peer-submitted preference trend only; not an official cutoff._"
-    ]
-      .filter(Boolean)
-      .join("\n");
+  if (filtered.length === 0) {
+    return `❌ *"${rawArgs.trim()}"* සඳහා records හමු වුණේ නැහැ.\n\n⚠️ _Peer-submitted preference trend only; not an official cutoff._`;
   }
 
-  const withZ = filtered.filter((r) => typeof r.zScore === "number");
-  if (withZ.length === 0) {
-    return `❌ *"${rawArgs.trim()}"* සඳහා Z-score records හමු වුණේ නැහැ.\n⚠️ _Peer-submitted preference trend only; not an official cutoff._`;
+  const campuses = [...new Set(filtered.map((r) => r.campus).filter((c) => c !== "N/A"))];
+  const campusLabel = campuses.length > 0 ? campuses.join(", ") : rawArgs.trim() || "All Campuses";
+
+  const intakes = [...new Set(filtered.map((r) => r.intake).filter((i) => i !== "N/A"))];
+  const intakeLabel = intakes.length > 0 ? intakes.join(", ") : "N/A";
+
+  const allStats = calcZStats(filtered.map((r) => r.zScore));
+  const firstChoiceRows = filtered.filter((r) => r.isFirstChoice);
+  const firstChoiceStats = calcZStats(firstChoiceRows.map((r) => r.zScore));
+  const choiceTrend = getChoiceTrendText(filtered);
+
+  let targetRows = filtered;
+  let degreeTitle = "🎓 *Matching Degrees:*";
+
+  if (zScore !== null) {
+    targetRows = filtered
+      .filter((r) => typeof r.zScore === "number" && r.zScore <= zScore && r.degree !== "N/A")
+      .sort((a, b) => b.zScore - a.zScore);
+    degreeTitle = `🎓 *Matching Degrees (Z ≤ ${zScore.toFixed(4)}):*`;
   }
 
-  const zValues = withZ.map((r) => r.zScore);
-  const min = Math.min(...zValues);
-  const max = Math.max(...zValues);
-  const avg = zValues.reduce((acc, v) => acc + v, 0) / zValues.length;
-
-  const matching = withZ
-    .filter((r) => r.zScore <= zScore)
-    .sort((a, b) => b.zScore - a.zScore);
-
-  let status = "Within the peer Z-score range recorded so far.";
-  if (zScore >= max) {
-    status = "At or above the highest peer Z-score in this group.";
-  } else if (zScore < min) {
-    status = "Below the lowest peer Z-score recorded so far in this group.";
-  }
-
-  const lines = [
-    `🎯 *Z-Score Check* — \`${zScore.toFixed(4)}\`${keyword ? ` (\`${keyword}\`)` : ""}`,
-    `• *Peer Z Range:* ${min.toFixed(4)} – ${max.toFixed(4)} (Avg: ${avg.toFixed(4)})`,
-    `• *Status:* ${status}`,
-    `• *Matching / Within-Reach Entries:* ${matching.length} / ${withZ.length}`,
-    "",
-    "*Matching Peer Entries:*"
+  const degreesToShow = [
+    ...new Set(targetRows.map((r) => r.degree).filter((d) => d !== "N/A"))
   ];
 
-  if (matching.length === 0) {
-    lines.push("• No peer entries at or below this Z-score in the current dataset.");
-  } else {
-    for (const item of matching.slice(0, 6)) {
-      lines.push(
-        `• *${item.campus}* — ${item.degree} (Z: ${item.zScore.toFixed(4)} | ${item.intake})`
-      );
-    }
-  }
+  const streamAverages = buildStreamAverages(targetRows);
 
-  lines.push("", "⚠️ _Peer-submitted preference trend only; not an official cutoff._");
+  const lines = [
+    `🏫 *Campus:* ${campusLabel}`,
+    "",
+    degreeTitle,
+    degreesToShow.length > 0
+      ? degreesToShow.slice(0, 8).map((d) => `• ${d}`).join("\n") +
+        (degreesToShow.length > 8 ? `\n• ... (+${degreesToShow.length - 8} more)` : "")
+      : "• No matching degrees found",
+    "",
+    "📚 *A/L Stream Average:*",
+    streamAverages.length > 0
+      ? streamAverages
+          .map((s) => `• ${s.stream}: ${s.avg !== null ? s.avg.toFixed(4) : "N/A"}`)
+          .join("\n")
+      : "• N/A",
+    "",
+    `📈 *Z-Score Range:* ${allStats ? `${allStats.min.toFixed(4)} – ${allStats.max.toFixed(4)}` : "N/A"}`,
+    `📊 *Z-Score Average:* ${allStats ? allStats.avg.toFixed(4) : "N/A"}`,
+    `⭐ *First Choice Average:* ${firstChoiceStats ? firstChoiceStats.avg.toFixed(4) : "N/A"}`,
+    `📌 *Preference Trend:* ${choiceTrend}`,
+    `🗓️ *IFSLS Intake:* ${intakeLabel}`,
+    "",
+    "⚠️ _Peer-submitted preference trend only; not an official cutoff._"
+  ];
+
   return lines.join("\n");
 }
 

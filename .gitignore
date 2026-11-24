@@ -1,8 +1,8 @@
-node_modules/
+*.bak*
+*.log
+.env
 .wwebjs_auth/
 .wwebjs_cache/
 blacklist.json
+node_modules/
 welcomed_users.json
-*.log
-.env
-*.bak*

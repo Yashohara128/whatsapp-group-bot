@@ -631,7 +631,234 @@ async function onBotReady() {
     console.log("========================================");
     console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
     startScheduledReminders(client, TARGET_GROUP_IDS, sendWithTimeout);
+    setTimeout(() => installDomCommandFallback(), 2500);
 }
+
+async function sendViaDomComposeBox(replyText) {
+    const page = client.pupPage;
+    if (!page) return false;
+
+    const text = String(replyText || "");
+    if (!text) return false;
+
+    const inputSelector = "footer div[contenteditable=\"true\"][data-tab], #main footer div[contenteditable=\"true\"]";
+    const box = await page.$(inputSelector);
+    if (!box) {
+        console.log("[DOM COMPOSE] Active chat input box not found on screen.");
+        return false;
+    }
+
+    await box.click();
+    await page.evaluate((el, val) => {
+        el.focus();
+        document.execCommand("selectAll", false, null);
+        document.execCommand("insertText", false, val);
+        el.dispatchEvent(new InputEvent("input", { bubbles: true }));
+    }, box, text);
+
+    await new Promise((r) => setTimeout(r, 250));
+    await page.keyboard.press("Enter");
+    console.log("✅ [DOM COMPOSE] Sent reply via active chat input box.");
+    return true;
+}
+
+async function deliverFallbackReply(targetGroup, replyText) {
+    try {
+        await sendWithTimeout(client, targetGroup, replyText, { sendSeen: false }, 8000);
+        console.log("✅ [DOM FALLBACK] Sent via sendWithTimeout to", targetGroup);
+        return;
+    } catch (err) {
+        console.warn("⚠️ [DOM FALLBACK] sendWithTimeout failed, trying DOM compose box:", err.message);
+    }
+
+    const sentViaUi = await sendViaDomComposeBox(replyText);
+    if (!sentViaUi) {
+        console.error("❌ [DOM FALLBACK] Could not deliver reply via sendWithTimeout or UI compose box.");
+    }
+}
+
+
+const __cmdLastSentMap = new Map();
+async function getActiveGroupIdForCmd(preferredGroupId) {
+    try {
+        if (client && client.pupPage) {
+            const gid = await client.pupPage.evaluate(() => {
+                const main = document.querySelector("#main");
+                if (!main) return null;
+                const el = main.querySelector("[data-id*='@g.us']");
+                if (el) {
+                    const m = (el.getAttribute("data-id") || "").match(/(\d+@g\.us)/);
+                    if (m) return m[1];
+                }
+                return null;
+            });
+            if (gid && gid.endsWith("@g.us")) return gid;
+        }
+    } catch (_) {}
+    if (preferredGroupId && String(preferredGroupId).endsWith("@g.us")) return preferredGroupId;
+    return null;
+}
+
+async function dispatchFallbackCommand(rawText, preferredGroupId) {
+    const __txt = String(arguments[0] || "").trim();
+    if (!__txt || !__txt.startsWith("/")) return;
+    if (__txt.includes(" - ") || __txt.includes("*") || /[\u0D80-\u0DFF]/.test(__txt)) return;
+    const __grp = await getActiveGroupIdForCmd(arguments[1]);
+    if (!__grp) return;
+    const __k = __grp + "::" + __txt.toLowerCase();
+    const __now = Date.now();
+    if (__now - (__cmdLastSentMap.get(__k) || 0) < 8000) return;
+    __cmdLastSentMap.set(__k, __now);
+    const msgText = String(rawText || "").trim();
+    if (!msgText.startsWith("/")) return;
+
+    console.log("🔎 [DOM FALLBACK CAPTURED]:", msgText);
+
+    const lower = msgText.toLowerCase();
+    const targetGroup = __grp;
+
+    if (!targetGroup) {
+        console.warn("[DOM FALLBACK] No TARGET_GROUP_IDS configured.");
+        return;
+    }
+
+    try {
+        if (lower === "/cutoff" || lower.startsWith("/cutoff ") || lower === "/zcheck" || lower.startsWith("/zcheck ")) {
+            const args = msgText.replace(/^\/(cutoff|zcheck)\b/i, "").trim();
+            const { buildCutoffReply } = require("./features/cutoffFeature");
+            const reply = await buildCutoffReply(args);
+            await deliverFallbackReply(targetGroup, reply);
+            return;
+        }
+
+        if (lower === "/menu" || lower === "/help") {
+            const menuMsg = `*🎓 IFSLS 2026/27 සම්පූර්ණ තොරතුරු මෙනුව 🎓*\n\n` +
+                            `*පොදු තොරතුරු සඳහා පහත කමාන්ඩ් Type කරන්න:*\n` +
+                            `📘 */about* - IFSLS යනු කුමක්ද?\n` +
+                            `✅ */eligibility* - මූලික සුදුසුකම්\n` +
+                            `💰 */loan* - ණය මුදල සහ දීමනාව\n` +
+                            `💰 */maxloan* - උපරිම ණය මුදල් සිමාව\n` +
+                            `⏳ */repayment* - ණය ආපසු ගෙවීම\n` +
+                            `❌ */disqualified* - අයදුම් කළ නොහැක්කේ කාටද?\n` +
+                            `✍️ */guarantors* - ඇපකරුවන්\n` +
+                            `🌉 */bridging* - ඈඳුනු පාඨමාලා කල යුතු අය\n` +
+                            `🌉 */bridginginfo* - ඈඳුනු පාඨමාලා කරන්නේ කොහොමද?\n` +
+                            `👤 */private* - Private අයදුම්කරුවන්\n` +
+                            `📂 */documents* - සම්මුඛ පරීක්ෂණ ලියකියවිලි\n` +
+                            `📌 */stipend* - ශිෂ්‍යාධාර දීමනා පිළිබඳව.\n` +
+                            `📌 */conditions* - Degree හදාරන කාලය තුලදි පිලිපැදිය යුතු නීති.\n` +
+                            `📌 */applycenters* - Apply කීරිමේ මධ්‍යස්ථාන පිළිබඳ විස්තර.\n` +
+                            `📝 */applysteps* - අයදුම් කරන පියවර\n` +
+                            `📝 */afterapplysteps* - අයදුම් කිරීමෙන් පසු \n` +
+                            `📌 */specialnotes* - Interviews වලින් පසු වැදගත් විස්තර\n` +
+                            `⏰ */deadline* - අවසන් දිනය\n` +
+                            `✅ */ministrycontact* - Ministry Department එක contact කරන ආකාරය\n\n` +
+                            `✅ */results* - IFSLS selection results check කරන ආකාරය \n\n` +
+                            `📌 */onlinecertificate* - O/L & A/L Exam Certificates Online ගෙන්න ගන්නා ආකාරය \n` +
+                            `📌 */coursechange* - Course Change Letter Format\n` +
+                            `📌 */affidavit* - දිවුරුම් ප්‍රකාශයක් ලබා ගැනීම සදහා\n` +
+                            `📌 */ugccancel* - UGC Registration Cancel කරන ආකාරය\n` +
+                            `📌 */jobs* - Internships සහ Jobs විස්තර \n` +
+                            `📌 */boarding* - බෝඩිම් සොයාගන්නා ආකාරය / Accommodation Web & Video\n\n` +
+                            `*📄 මාර්ගෝපදේශක PDF (භාෂා 3):*\n` +
+                            `🇱🇰 */guidepdf-si* - සිංහල මාර්ගෝපදේශකය\n` +
+                            `🌍 */guidepdf-ta* - දෙමළ මාර්ගෝපදේශකය\n` +
+                            `🇬🇧 */guidepdf-en* - ඉංග්‍රීසි මාර්ගෝපදේශකය\n\n` +
+                            `*🏫 කැම්පස් අනුව උපාධි සහ අදාළ A/L සුදුසුකම් බැලීමට පහත නම Type කරන්න:*\n` +
+                            `*/sliit* | */nsbm* | */cinec* | */kiu*\n` +
+                            `*/sltc* | */saegis* | */horizon* | */icbt*\n` +
+                            `*/bci* | */icasl* | */esoft* | */siba*\n` +
+                            `*/slita* | */niibs* | */ichem* | */lyc* | */bms*`;
+            await deliverFallbackReply(targetGroup, menuMsg);
+            return;
+        }
+
+        if (lower === "/results") {
+            const resText = [
+                "📊 *IFSLS 11th Intake – Selection Results*",
+                "• Selection results are expected around December 2026.",
+                "• Check official ministry / selection updates and your email (Inbox & Spam)."
+            ].join("\n");
+            await deliverFallbackReply(targetGroup, resText);
+            return;
+        }
+
+        if (lower === "/specialnotes") {
+            const notesText = [
+                "📌 *Special Notes – Post Interview*",
+                "• Follow official IFSLS notices regarding selection results, physical registration, and appeals.",
+                "• Avoid sharing personal details directly via unofficial campus channels before final results."
+            ].join("\n");
+            await deliverFallbackReply(targetGroup, notesText);
+            return;
+        }
+    } catch (err) {
+        console.error("[DOM FALLBACK ERROR]:", err);
+    }
+}
+
+async function installDomCommandFallback() {
+    try {
+        const page = client.pupPage;
+        if (!page) {
+            console.log("[DOM FALLBACK] pupPage not ready yet");
+            return;
+        }
+
+        if (typeof page.exposeFunction === "function") {
+            try {
+                await page.exposeFunction("__onDomSlashCommand", async (cmdText) => {
+                    await dispatchFallbackCommand(cmdText, TARGET_GROUP_IDS[0]);
+                });
+            } catch (e) {}
+        }
+
+        await page.evaluate(() => {
+            if (window.__ifslsDomWatcherInstalled) return;
+            window.__ifslsDomWatcherInstalled = true;
+            window.__ifslsSeenCmds = window.__ifslsSeenCmds || new Set();
+
+            function scanForSlashCommands() {
+                const mainEl = document.querySelector("#main") || document.body;
+                if (!mainEl) return;
+
+                const candidates = mainEl.querySelectorAll("span.selectable-text, div.copyable-text span, div[data-pre-plain-text] span, span[data-lexical-text=\"true\"]");
+                for (const el of candidates) {
+                    const __row = el.closest("[data-id]") || el.closest("[role=\"row\"]");
+                    const __id = __row ? (__row.getAttribute("data-id") || "") : "";
+                    if (__id.startsWith("true_") || el.closest(".message-out")) continue;
+                    const txt = (el.innerText || el.textContent || "").trim();
+                    if (!txt || txt.length > 60 || txt.includes(" - ") || txt.includes("*") || /[\u0D80-\u0DFF]/.test(txt)) continue;
+                    if (!txt || !txt.startsWith("/")) continue;
+                    if (txt.length > 200) continue;
+
+                    const rowEl = el.closest("[data-id]") || el.closest("[role=\"row\"]") || el.parentElement;
+                    const msgKey = (rowEl && (rowEl.getAttribute("data-id") || rowEl.getAttribute("data-testid")))
+                        ? (rowEl.getAttribute("data-id") || rowEl.getAttribute("data-testid")) + "::" + txt
+                        : "txt::" + txt;
+
+                    if (window.__ifslsSeenCmds.has(msgKey)) continue;
+                    window.__ifslsSeenCmds.add(msgKey);
+
+                    if (typeof window.__onDomSlashCommand === "function") {
+                        window.__onDomSlashCommand(txt);
+                    }
+                }
+            }
+
+            const observer = new MutationObserver(() => {
+                scanForSlashCommands();
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+            setInterval(scanForSlashCommands, 1200);
+        });
+
+        console.log("✅ [DOM FALLBACK] Installed WhatsApp Web DOM slash-command listener.");
+    } catch (err) {
+        console.error("[DOM FALLBACK SETUP ERROR]:", err);
+    }
+}
+
 
 client.on("qr", (qr) => {
     qrcode.generate(qr, { small: true });
@@ -1179,6 +1406,12 @@ client.on("message_create", async (message) => {
         const groupId = message.fromMe ? message.to : message.from;
         if (!groupId || !groupId.endsWith("@g.us")) return;
         if (!TARGET_GROUP_IDS.includes(groupId)) return;
+
+        if (msgText.length > 0 && (textLower === "/cutoff" || textLower.startsWith("/cutoff ") || textLower === "/zcheck" || textLower.startsWith("/zcheck "))) {
+            const handledByCutoff = await handleCutoffFeature(message);
+            if (handledByCutoff) return;
+        }
+
         if (message.fromMe) return;
 
         const senderId = message.author || message.from;
