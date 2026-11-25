@@ -1,3 +1,16 @@
+
+function __getGlobalWelcomeQueueCount() {
+    let total = 0;
+    if (global.__ifslsWelcomeQueue && typeof global.__ifslsWelcomeQueue.values === "function") {
+        for (const usersMap of global.__ifslsWelcomeQueue.values()) {
+            if (usersMap && typeof usersMap.size === "number") {
+                total += usersMap.size;
+            }
+        }
+    }
+    return total;
+}
+
 const cron = require("node-cron");
 const os = require("os");
 const { execSync } = require("child_process");
@@ -6,7 +19,9 @@ const keywordCooldowns = new Map();
 const KEYWORD_COOLDOWN_MS = 10 * 60 * 1000;
 
 function handleCalculatorCommand(msgText) {
-    const parts = msgText.trim().split(/\s+/);
+    const trimmed = String(msgText || "").trim();
+    if (!/^\/calc(\s|$)/i.test(trimmed)) return null;
+    const parts = trimmed.split(/\s+/);
     const amountRaw = parts[1] ? parts[1].replace(/,/g, "") : "";
     const yearsRaw = parts[2] ? parseInt(parts[2], 10) : 4;
 
@@ -155,6 +170,8 @@ function getStorageSummary() {
 }
 
 function buildBotStatusReport({ targetGroupsCount, welcomeQueueLength, blacklistedUsers }) {
+    const __gCount = __getGlobalWelcomeQueueCount();
+    if (__gCount > 0) welcomeQueueLength = __gCount;
     const uptimeSec = Math.floor(process.uptime());
     const hrs = Math.floor(uptimeSec / 3600);
     const mins = Math.floor((uptimeSec % 3600) / 60);
@@ -171,7 +188,7 @@ function buildBotStatusReport({ targetGroupsCount, welcomeQueueLength, blacklist
         `🟢 *Status:* Online & Active\n` +
         `⏱️ *Uptime:* පැය ${hrs}යි, විනාඩි ${mins}යි\n` +
         `👥 *Active Groups:* ${targetGroupsCount}\n` +
-        `⏳ *Welcome Inbox Queue:* ${welcomeQueueLength} users pending\n` +
+        `⏳ *Welcome Inbox Queue:* ${__getGlobalWelcomeQueueCount() || welcomeQueueLength || 0} users pending\n` +
         `🚫 *Active 24h Bans Members:* ${activeBans}\n` +
         `🧠 *Bot Server Total RAM:* ${botRamGb} GB *(VPS Free: ${freeSysRamGb} GB / Total: ${totalSysRamGb} GB)*\n` +
         `⚡ *BOT CPU Usage:* ${cpuUsage}\n` +
