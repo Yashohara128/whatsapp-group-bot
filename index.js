@@ -13,7 +13,6 @@ const {
     handleCommonQuestionAutoReply
 } = require("./features");
 
-
 const groqApiKey = process.env.GROQ_API_KEY;
 if (!groqApiKey) {
     console.warn("⚠️ [WARN] GROQ_API_KEY environment variable is not set!");
@@ -23,10 +22,8 @@ const groq = new Groq({ apiKey: groqApiKey || "" });
 const stickerWarnings = {};
 const pmRepliedUsers = new Map();
 const pmCooldownTimestamps = new Map();
+const PM_COOLDOWN_MS = 86400000;
 
-// ==========================================
-// 📌 TEXT GUIDE BOOKS LOAD CONFIGURATION
-// ==========================================
 let englishGuide = "";
 let sinhalaGuide = "";
 
@@ -112,9 +109,6 @@ async function sendWithTimeout(client, chatId, content, options = {}, timeoutMs 
     ]);
 }
 
-// ==========================================
-// 🎓 1. IFSLS පොදු ප්‍රශ්න සහ පිළිතුරු (FAQs)
-// ==========================================
 const ifslsAnswers = {
     "/about": "🎓 *IFSLS යනු කුමක්ද?*\nමෙය ශ්‍රී ලංකා රජය මගින් රාජ්‍ය නොවන විශ්වවිද්‍යාල වල උපාධියක් හැදෑරීම සඳහා සිසුන්ට ලබාදෙන 100% ක් පොලී රහිත ශිෂ්‍ය ණය යෝජනා ක්‍රමයකි.",
     "/ministrycontact": "🏛️ *MINISTRY OF HIGHER EDUCATION - CONTACT DETAILS* 🇱🇰\n\n🏢 *Non-State Higher Education Division (Ethul Kotte Office):*\n\n• *Address:* No. 980/4A, Wickramasinghe Place, Ethul Kotte, Sri Lanka\n\n• *Director (Student Loans):* +94 11 287 9724\n\n• *Student Loans Division:* +94 11 287 9727\n\n• *Assistant Director (Student Loans):* +94 11 287 9718\n\n• *Assistant Director (Admin):* +94 11 287 9723\n\n• *Subject Officers:* +94 70 355 5971 to +94 70 355 5979\n\n• *Fax:* +94 11 287 9719\n\n• *Whatsapp Messages Only:* +94703555974\n\n• *Email:* dsls@mohe.gov.lk / adsls@mohe.gov.lk\n\n• *Official Portal:* https://studentloans.mohe.gov.lk/loan_application/\n\n🏛️ *Main Ministry Office (Colombo 07):*\n\n• *Address:* No. 18, Ward Place, Colombo 07, Sri Lanka\n\n• *General Numbers:* +94 11 269 4486 / +94 11 269 7133 / +94 11 269 7721 / +94 11 269 1378\n\n• *Government Information Center:* 1919",
@@ -177,7 +171,6 @@ const ifslsAnswers = {
                         "2️⃣ *Interview එකට සූදානම් වීම:* Online Interview එකට පෙර අවශ්‍ය ලියකියවිලි වල (Application එකේ මුද්‍රිත පිටපත, NIC, උප්පැන්න, O/L සහ A/L සහතික මුල් පිටපත්, පාසලේ අස්වීමේ සහතිකය, චරිත සහතිකය ආදී) Scan කොපි අමාත්‍යාංශයෙන් දෙන Email එකට යැවිය යුතුය.\n\n" +
                         "3️⃣ *පාඨමාලාවට තේරී පත්වීම:* Interview එකෙන් පසු තේරී පත් වූ උපාධිය සහ කැම්පස් එක වෙබ් අඩවියේ පළ කරන අතර, කැම්පස් Physical ලියාපදිංචි විය යුතු දිනයන් Email  මගින් දැනුම් දෙනු ඇත.\n\n" +
                         "4️⃣ *අභියාචනා යොමු කිරීම (Appeals):* තේරීම් ප්‍රතිඵල පැමිණිමෙන් වෙනසක් කරගැනිමට (Course/Campus මාරු කරගන්න අවශ්‍යය)නම්, ප්‍රතිඵල පැමිණ මසක් තුල වෙබ් අඩවිය හරහා (https://studentloans.mohe.gov.lk) අභියාචනයක් අයදුම් කල හැක (අභියාචනා කළ නොහැකි අය: තෝරාගත් උපාධි පිරිනමන ආයතනවල දැනටමත් ලියාපදිංචි වී සිටින අයට අභියාචනා ඉදිරිපත් කළ නොහැක.   තෝරාගැනීමේ පදනම: අභියාචනා සලකා බලන්නේ පවතින පුරප්පාඩු මත වන අතර, පුරප්පාඩු වලට වඩා අභියාචනා සංඛ්‍යාව වැඩි වුවහොත් අයදුම්කරුවන්ගේ Z-අගය (Z-scores) සැලකිල්ලට ගනී.   ප්‍රතික්ෂේප වීම් හා අවසන් තීරණය: නියමිත කාලසීමාවෙන් පසු යොමු කරන අභියාචනා භාර නොගන්නා අතර, අභියාචනා සම්බන්ධයෙන් අමාත්‍යාංශ ලේකම්වරයා ගන්නා තීරණය අවසාන තීරණය ලෙස සැලකේ.)",
-
     "/specialnotes": `📢🎓 *IFSLS 11th INTAKE – POST-INTERVIEW IMPORTANT NOTICE* 🎓📢
 
 IFSLS 11th Intake සඳහා සම්මුඛ පරීක්ෂණ (Interviews) වලට සහභාගී වූ සියලුම සිසුන්ගේ අවධානයටයි.
@@ -218,7 +211,6 @@ Interviews අවසන් වීමෙන් පසු ඉදිරි පි�
 🎓🌟 *WISH YOU ALL THE BEST FOR YOUR SELECTION RESULTS!* 🌟🎓
 
 🎓 *IFSLS STUDENT ADMIN COMMUNITY*`,
-
     "/onlinecertificate": "📜 *Online A/L & O/L Exam Certificates ගෙදරටම ගෙන්වා ගන්නා ආකාරය:*\n\n" +
                           "සහතිකය Online මඟින් අයදුම් කර ගෙදරටම ගෙන්වා ගැනීමට පහත පියවර අනුගමනය කරන්න:\n" +
                           "1️⃣ Department of Examinations නිල වෙබ් අඩවියට පිවිසෙන්න: https://doenets.lk\n" +
@@ -226,19 +218,15 @@ Interviews අවසන් වීමෙන් පසු ඉදිරි පි�
                           "3️⃣ ගාස්තුව Online හෝ තැපැල් කාර්යාලය හරහා ගෙවා දින කිහිපයකින් Post එකෙන් සහතිකය ගෙදරටම ගෙන්වා ගන්න.\n\n" +
                           "🎥 *වීඩියෝ මාර්ගෝපදේශය (Video Guide):*\n" +
                           "🔗 https://www.facebook.com/share/v/1JxcGvZMoQ/",
-
     "/coursechange": "📝 *Course Change Letter Structure:*\n\n" +
                      "ඔබට Course එකක් හෝ Campus එකක් වෙනස් කරගැනීමට අවශ්‍ය නම් අමාත්‍යාංශයට යොමු කළ යුතු Letter එකේ Format එක මෙන්න (සිංහල letter එක edit කිරිම සදහා PC එකක් භාවිතා කරන්න සියලුම letters word document format එකෙන් ලබා දී ඇත):\n\n" +
                      "🔗 English Letter Format: https://docs.google.com/document/d/10vvIaWHQY_JpzJu80Uc0UjOT0uGaeWy1/edit?usp=sharing&ouid=113936433707512643329&rtpof=true&sd=true\n\n" +
                      "🔗 Sinhala Letter Format: https://docs.google.com/document/d/1qRNlfFBMn-ICdXM4Vsv2dISdkyYYjal3/edit?usp=sharing&ouid=113936433707512643329&rtpof=true&sd=true",
-
     "/affidavit": "📜 *AFFIDAVIT (දිවුරුම් ප්‍රකාශය) පිළිබඳ උපදෙස් සහ Document Link* 🏛️\n\n1️⃣ **දිවුරුම් ප්‍රකාශයක් (Affidavit) ලබා ගන්නේ කෙසේද?**\n• සාමදාන විනිශ්චයකාරවරයෙකු (JP - Justice of the Peace) හෝ දිවුරුම් කොමසාරිස්වරයෙකු (Commissioner for Oaths) ලවා සහතික කරගත යුතුය.\n• ඔබගේ නිවැරදි ජාතික හැඳුනුම්පත් (NIC) විස්තර සහ අදාළ කරුණු පැහැදිලිව ඇතුළත් කළ යුතුය.\n\n2️⃣ **අවශ්‍ය වන සාමාන්‍ය අවස්ථා:**\n• නම් වල වෙනස්කම් / අක්ෂර වින්‍යාසයේ දෝෂ (Name Correction)\n• ලිපිනයන් තහවුරු කිරීම (Address Verification)\n\n📁 *Download Affidavit Form / Sample (Google Drive):*\nhttps://drive.google.com/file/d/1MvbFANFnO8mYvgszPAJidsiVA0YEkQc4/view?usp=sharing\n\n✨ *වැඩි විස්තර සදහා Admin වරයෙක් සම්බන්ධ කරගන්න!*",
-
     "/ugccancel": "🚫 *UGC (රජයේ කැම්පස්) ලියාපදිංචිය අවලංගු කර පාසල් අස්වීමේ සහතිකය ලබාගැනීම:*\n\n" +
                   "ඔබ රජයේ විශ්වවිද්‍යාලයකට (UGC) තේරීපත්වී, පසුව IFSLS ණය යෝජනා ක්‍රමය යටතේ වෙනත් කැම්පස් එකකට යාමට අපේක්ෂා කරන්නේ නම්, UGC ලියාපදිංචිය නිල වශයෙන් අවලංගු කර (Cancel කර) පාසල් අස්වීමේ සහතිකය (School Leaving Certificate) ලබාගත යුතුය.\n\n" +
                   "📁 *අදාළ Official Document Form එක මෙතනින් ඩවුන්ලෝඩ් කරගන්න:*\n" +
                   "🔗 https://drive.google.com/file/d/113EmLqJJeRiPHdwp4XNJKZhlBIxsb1uR/view?usp=sharing",
-
     "/laptopguide": "💻 *Undergraduate Laptop Buying Guide 2026*\n\n" +
                     "හැමෝම මේ දවස් වල campus apply කරන ගමන් නේ. ඉතින් ගොඩක් අයට එන ප්‍රශ්නයක් තමා කොහොමද අපි අපේ ඉස්සරහට degree එකට ගැලපෙන laptop model එකක් එහෙම නැත්නම් PC එකක් select කරගන්නේ කියල. \n\n" +
                     "ඉතින් undergraduate level එකේ ඉන්න ඔයාලට ඉස්සරහටම කියන්න ඕන studio එකක් කරන ගානට යන performance ඕන devices මේ කාලෙට අවශ්‍ය නැ කියන එක. මොකද ඔයාලා invest කරල buy කරන්නෙ නෑ නේද තාම? හැමෝම තියනවා නේ ආර්ථික පැත්තෙන් අඩුපාඩුකම්. ඉතින් normally day to day campus වැඩ ටික කරගන්න model එකක් select කරගන්න විදිහ අපි බලමු. මමත් undergraduate level එකේ ඉන්න නිසා මගේ personal experience එක, knowledge එක මම share කරගන්නවා ඔයාලත් එක්ක 😊💗\n\n" +
@@ -308,7 +296,6 @@ Interviews අවසන් වීමෙන් පසු ඉදිරි පි�
                     "• MSI Cyber\n" +
                     "• Lenovo Legion\n" +
                     "• Lenovo LOQ",
-
     "/boarding": "🏠 *Boarding Places & Accommodation (නවාතැන් පහසුකම් හොයාගන්නා හැටි):*\n\n" +
                  "ඔබගේ කැම්පස් එක අසලින් බෝඩිමක් / ඇනෙක්ස් එකක් හොයාගැනීමට පහත වෙබ් අඩවි සහ Video භාවිතා කරන්න:\n\n" +
                  "🎥 *බෝඩිම් සෙවීමේ උපදෙස් වීඩියෝව (Video Guide):*\n" +
@@ -316,7 +303,6 @@ Interviews අවසන් වීමෙන් පසු ඉදිරි පි�
                  "🌐 *හොඳම Boarding Web Platforms:*\n" +
                  "• *Ikman.lk (Property Section):* https://lk.ikman.lk/en/ads/property/rooms-annexes\n" +
                  "• *Lankapropertyweb:* https://www.lankapropertyweb.com",
-
     "/jobs": "💼 *Internships & Job Opportunities (අධ්‍යාපනය අතරතුර රැකියා තොරතුරු):*\n\n" +
              "Degree එක කරන අතරතුර හෝ අවසානයේ Internships / Jobs හොයාගන්න පුළුවන් Groups පහතින් ලබාගත හැක:\n\n" +
              "🌐 *Top Job Portals:*\n" +
@@ -327,7 +313,6 @@ Interviews අවසන් වීමෙන් පසු ඉදිරි පි�
              "• *Jobs & Internships Group 01:* https://whatsapp.com/channel/0029Vb615LUHVvTdCZmE4B1A\n" +
              "• *Jobs & Internships Group 02:* https://whatsapp.com/channel/0029Va9Xpxx8PgsOtsAbFn45\n\n" +
              "💡 *Tip:* CV එකක් නිවැරදිව හදාගෙන LinkedIn Profile එක Update තබාගැනීමෙන් පහසුවෙන් Opportunities ලබාගත හැක.",
-
     "/results": "📊 *IFSLS Selection Results & Portal:*\n\n" +
                 "ශිෂ්‍ය ණය (IFSLS) තේරීම් ප්‍රතිඵල (Selection Results) සහ ඔබගේ අයදුම්පතේ තත්ත්වය (Application / Appeal Status) පරීක්ෂා කිරීමට පහත නිල වෙබ් අඩවියට පිවිසෙන්න:\n\n" +
                 "🌐 *Official IFSLS Portal:* https://studentloans.mohe.gov.lk/loan_application/\n" +
@@ -335,9 +320,6 @@ Interviews අවසන් වීමෙන් පසු ඉදිරි පි�
                 "💡 *සටහන:* ප්‍රතිඵල නිකුත් වූ පසු ඔබගේ NIC / Login විස්තර මගින් Portal එකට log වී results පරීක්ෂා කරන්න. Intake 11 තේරීම් ප්‍රතිඵල (Selection Results) 2026 දෙසැම්බර් මස බලාපොරොත්තු විය හැක."
 };
 
-// ==========================================
-// 🏫 2. කැම්පස්, සියලුම උපාධි සහ අවශ්‍ය A/L සුදුසුකම්
-// ==========================================
 const campusAnswers = {
     "/sliit": "🎓 *SLIIT Campus*\n\n" +
               "📘 *Faculty of Humanities & Sciences*\n" +
@@ -364,7 +346,6 @@ const campusAnswers = {
               "• BSc Honours in Software Engineering\n" +
               "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
               "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).* ",
-
     "/nsbm": "🎓 *NSBM Green University*\n\n" +
              "📘 *Faculty of Humanities & Social Sciences*\n" +
              "• Bachelor of Laws (Honours) - LLB\n" +
@@ -387,7 +368,6 @@ const campusAnswers = {
              "• BSc in Multimedia\n" +
              "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් සහ ඉංග්‍රීසි සඳහා 'S' 1ක්.\n" +
              "  ✔️ *සා/පෙළ:* ඉංග්‍රීසි 'C' සහ ගණිතය 'C' සාමාර්ථයක්.",
-
     "/cinec": "🎓 *CINEC Campus*\n\n" +
               "📘 *Faculty of Humanities & Education*\n" +
               "• Bachelor of Education Honours in Information Technology / Early Childhood Education / Physical Education & Sports\n" +
@@ -416,7 +396,6 @@ const campusAnswers = {
               "• BSc Honours in Software Engineering / Computer Science (Network Security & Forensics)\n" +
               "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
               "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
-
     "/kiu": "🎓 *KIU Campus*\n\n" +
             "📘 *Faculty of Humanities & Social Sciences*\n" +
             "• BSc Honours in Psychology\n" +
@@ -436,7 +415,6 @@ const campusAnswers = {
             "• BSc Honours in Management Information Systems / Software Engineering / Computer Networks & Cyber Security / Data Science\n" +
             "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
-
     "/horizon": "🎓 *HORIZON Campus*\n\n" +
                 "📘 *Faculty of Education*\n" +
                 "• Bachelor of Education Honours in Biological Sciences / Information Technology\n" +
@@ -453,7 +431,6 @@ const campusAnswers = {
                 "• BSc Honours in Information Technology / Data Science / IT (Networking)\n" +
                 "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
                 "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
-
     "/sltc": "🎓 *SLTC (Sri Lanka Technological Campus)*\n\n" +
              "📊 *Faculty of Business & Management*\n" +
              "• Bachelor of Business Management Honours (Supply Chain / Operations / Marketing / Accounting) / BSc in Tourism & Hospitality\n" +
@@ -468,7 +445,6 @@ const campusAnswers = {
              "• BSc Honours in Data Science / Software Engineering / Cyber Security / Cloud Computing\n" +
              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
-
     "/saegis": "🎓 *SAEGIS Campus*\n\n" +
                "📘 *Faculty of Humanities & Social Sciences*\n" +
                "• Bachelor of Arts in English\n" +
@@ -481,7 +457,6 @@ const campusAnswers = {
                "• BSc in Information Technology / BSc Honours in IT / Software Engineering / Computer Science\n" +
                "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
                "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
-
     "/icbt": "🎓 *ICBT Campus*\n\n" +
              "📊 *Faculty of Business*\n" +
              "• Bachelor of Business Management Honours\n" +
@@ -491,7 +466,6 @@ const campusAnswers = {
              "• BSc Honours in Software Engineering / IT (Cyber Security / Data Science / AI)\n" +
              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
-
     "/bci": "🎓 *BCI Campus*\n\n" +
             "📘 *Faculty of Humanities & Social Sciences*\n" +
             "• Bachelor of Education Honours (Primary Education / Early Childhood)\n" +
@@ -507,7 +481,6 @@ const campusAnswers = {
             "• BSc Honours in Information Technology / Software Engineering\n" +
             "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
             "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
-
     "/icasl": "🎓 *ICASL Campus*\n\n" +
               "📊 *Faculty of Business*\n" +
               "• BSc in Applied Accounting (Special / General)\n" +
@@ -516,7 +489,6 @@ const campusAnswers = {
               "• BBM Honours in Business Analytics\n" +
               "  ✔️ *උ/පෙළ:* වාණිජ අංශයෙන් 'S' 3ක් *හෝ* ආර්ථික විද්‍යාව ඇතුළුව ඕනෑම අංශයකින් 'S' 3ක්.\n" +
               "  ✔️ *සා/පෙළ:* ගණිතය සඳහා අවම 'S' සාමාර්ථයක්.",
-
     "/esoft": "🎓 *ESOFT Metro Campus*\n\n" +
               "📊 *Faculty of Business*\n" +
               "• Bachelor of Business Management Honours\n" +
@@ -525,7 +497,6 @@ const campusAnswers = {
               "💻 *Faculty of Computing*\n" +
               "• BSc Honours in Information Technology\n" +
               "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'S' 3ක් ලබා තිබීම.",
-
     "/siba": "🎓 *SIBA Campus*\n\n" +
              "📊 *Faculty of Business*\n" +
              "• Bachelor of Business Management Honours\n" +
@@ -535,7 +506,6 @@ const campusAnswers = {
              "• BSc in Information Technology\n" +
              "  ✔️ *උ/පෙළ:* භෞතික විද්‍යා හෝ ඉංජිනේරු තාක්ෂණ අංශයෙන් 'S' 3ක්.\n" +
              "  *(සටහන: ඕනෑම අංශයකින් 'S' 3ක් ඇති අය සා/පෙළ ගණිතය 'C' සාමාර්ථයක් ලබා තිබිය යුතු අතර, ඈඳුනු පාඨමාලාවක් (Bridging Course) සමත් විය යුතුය).*",
-
     "/slita": "🎓 *SLITA Campus*\n\n" +
               "⚙️ *Faculty of Engineering & Technology*\n" +
               "• BSc in Textile & Apparel Technology / Textile & Apparel Studies\n" +
@@ -543,23 +513,19 @@ const campusAnswers = {
               "  ✔️ *සා/පෙළ:* ගණිතය සහ විද්‍යාව සඳහා අවම වශයෙන් වාර දෙකක් තුළ 'C' සාමාර්ථයක්.\n\n" +
               "• Bachelor of Technology Honours in Environmental Technology\n" +
               "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් 'S' 3ක් එකවර ලබා තිබීම.",
-
     "/niibs": "🎓 *NIIBS Campus*\n\n" +
               "💻 *Faculty of Computing*\n" +
               "• BSc Honours in Information Technology\n" +
               "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'S' 3ක් ලබා තිබීම.",
-
     "/ichem": "🎓 *ICHEM Campus*\n\n" +
               "🔬 *Faculty of Science*\n" +
               "• BSc Honours in Chemical Science\n" +
               "  ✔️ *උ/පෙළ:* ජීව විද්‍යා හෝ භෞතික විද්‍යා අංශයෙන් එකවර 'S' 3ක් ලබා තිබීම.",
-
     "/lyc": "🎓 *LYC Campus*\n\n" +
             "📘 *Faculty of Education*\n" +
             "• Bachelor of Education Honours in Primary Education\n" +
             "  ✔️ *උ/පෙළ:* ඕනෑම අංශයකින් එකවර 'S' 3ක් ලබා තිබීම.\n" +
             "  ✔️ *සා/පෙළ:* සිංහල/දෙමළ, ගණිතය සහ ඉංග්‍රීසි සඳහා අවම 'S' 3ක් ලබා තිබීම.",
-
     "/bms": "🎓 *BMS*\n\n" +
             "📊 *Faculty of Business*\n" +
             "• Bachelor of Business Management Honours\n" +
@@ -606,6 +572,7 @@ const executablePath = resolveChromiumPath();
 
 const client = new Client({
     authStrategy: new LocalAuth(),
+    authTimeoutMs: 120000,
     puppeteer: {
         headless: true,
         ...(executablePath ? { executablePath } : {}),
@@ -616,7 +583,9 @@ const client = new Client({
             "--disable-accelerated-2d-canvas",
             "--no-first-run",
             "--no-zygote",
-            "--disable-gpu"
+            "--disable-gpu",
+            "--disable-software-rasterizer",
+            "--disable-extensions"
         ]
     }
 });
@@ -629,26 +598,13 @@ client.on("loading_screen", (percent, message) => {
     console.log("⏳ LOADING SCREEN:", percent, message);
 });
 
+let isReadyTriggered = false;
+
 client.on("authenticated", () => {
     console.log("✅ WhatsApp authenticated");
 
     startScheduledReminders(client, TARGET_GROUP_IDS, sendWithTimeout);
-    
-});
 
-client.on("auth_failure", (msg) => {
-    console.error("❌ AUTH FAILURE:", msg);
-});
-
-client.on("ready", async () => {
-    console.log("\n========================================");
-    console.log("🤖 BOT READY - SAFE QUEUE & ANTI-SPAM SYSTEM");
-    console.log("========================================");
-    console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
-
-    let isReadyTriggered = true;
-
-client.on("authenticated", () => {
     setTimeout(async () => {
         if (isReadyTriggered) return;
         try {
@@ -667,9 +623,17 @@ client.on("authenticated", () => {
     }, 15000);
 });
 
-    
+client.on("auth_failure", (msg) => {
+    console.error("❌ AUTH FAILURE:", msg);
+});
 
-
+client.on("ready", async () => {
+    isReadyTriggered = true;
+    console.log("\n========================================");
+    console.log("🤖 BOT READY - SAFE QUEUE & ANTI-SPAM SYSTEM");
+    console.log("========================================");
+    console.log(`Working on ${TARGET_GROUP_IDS.length} Groups!`);
+});
 
 async function getContactInfo(id) {
     try {
@@ -722,9 +686,6 @@ async function directRemoveParticipant(groupId, participantId) {
     }
 }
 
-// ==========================================
-// ⏳ SAFE INBOX WELCOME QUEUE SYSTEM
-// ==========================================
 const welcomeQueue = [];
 const queuedWelcomeUsers = new Set();
 let isProcessingWelcomeQueue = false;
@@ -844,7 +805,59 @@ async function processWelcomeQueue() {
     }
 }
 
+
+const WELCOME_BATCH_INTERVAL_MS = 30 * 60 * 1000;
+const pendingWelcomeByGroup = new Map();
+let welcomeBatchTimerStarted = false;
+
+async function flushWelcomeBatches(client) {
+    for (const [groupId, usersMap] of pendingWelcomeByGroup.entries()) {
+        const users = Array.from(usersMap.values());
+        usersMap.clear();
+        if (users.length === 0) continue;
+
+        const tagLine = users.map((u) => "@" + u.phone).join(" ");
+        const batchText = tagLine + "\n\n" + "ආයුබෝවන්! IFSLS Group BOT සමග සම්බන්ධ වීමට ස්තුතියි ඔයාට . 👋💙\n\n⚠️ කරුණාකර මෙම අංකයට පෞද්ගලික පණිවිඩ හා ණය පිලිබද විස්තර (Inbox/Direct Messages) එවීමෙන් වළකින්න.\n\nශිෂ්‍ය ණය (IFSLS) පිළිබඳ ඕනෑම ඔබට ඇති ඔනම ප්‍රශ්නයක් අපේ *IFSLS Main Group* එක ඇතුළට ගිහින් */menu* කියලා ටයිප් කරලා ලබා ගන්න පුළුවන් ලමයි නැත්නම් group admin කෙනෙක් හා සම්බන්ධ වෙන්න පුලුවන්! 😊\n\n📞 *Admins & Contacts:*\n\n🛠️ *BOT Programmer*\n- 076 206 8122 - Yasho (Horizon Campus)\n\n🎓 *SLIIT Campus Admins*\n\n- Chathuranga — 076 120 0261\n- Yasiru — 071 087 5268\n- Vidushi — 078 621 5746\n- Manuja — 078 532 5617\n- Rusindu — 075 113 2588\n\n🎓 *Horizon Campus Admins*\n\n- Yasho — 076 206 8122\n- Lahiru — 077 375 1413\n\n🎓 *CINEC Campus Admin*\n\n- Isuru — 076 063 0712\n\n🎓 *SLTC Admin*\n\n- Suwani      | 071 197 2394";
+
+        try {
+            const chat = await client.getChatById(groupId);
+            await chat.sendMessage(batchText, { mentions: users.map((u) => u.contact).filter(Boolean) });
+            console.log("👋 [WELCOME BATCH SENT] Group:", groupId, "| Users:", users.length);
+        } catch (err) {
+            console.error("❌ [WELCOME BATCH ERROR] Group:", groupId, ":", err.message);
+        }
+    }
+}
+
+function startWelcomeBatchScheduler(client) {
+    if (welcomeBatchTimerStarted) return;
+    welcomeBatchTimerStarted = true;
+    setInterval(() => {
+        flushWelcomeBatches(client).catch((e) => console.error("[welcome-timer]", e.message));
+    }, WELCOME_BATCH_INTERVAL_MS);
+}
+
 client.on("group_join", async (notification) => {
+    try {
+        const groupId = notification.chatId;
+        if (!TARGET_GROUP_IDS.includes(groupId)) return;
+        startWelcomeBatchScheduler(client);
+        if (!pendingWelcomeByGroup.has(groupId)) {
+            pendingWelcomeByGroup.set(groupId, new Map());
+        }
+        const q = pendingWelcomeByGroup.get(groupId);
+        const ids = notification.recipientIds || [];
+        for (const id of ids) {
+            const phone = String(id || "").split("@")[0].replace(/\D/g, "");
+            let contact = null;
+            try { contact = await client.getContactById(id); } catch (_) {}
+            q.set(phone || id, { id, phone: phone || "member", contact });
+        }
+        console.log("🕒 [WELCOME QUEUED] Group:", groupId, "| Pending:", q.size);
+        return;
+    } catch (err) {
+        console.error("❌ [GROUP JOIN QUEUE ERROR]:", err.message);
+    }
     try {
         cleanExpiredBans();
 
@@ -919,7 +932,46 @@ async function checkIsAdmin(message, senderId, actualNumber) {
     }
 }
 
+
+async function handleInboxAutoReply(client, message) {
+    try {
+        if (!message || message.fromMe) return false;
+        const chat = await message.getChat();
+        if (chat.isGroup) return false;
+
+        const senderId = message.author || message.from;
+        if (!senderId || senderId === "status@broadcast") return false;
+
+        const now = Date.now();
+        if (pmRepliedUsers.has(senderId) && (now - pmRepliedUsers.get(senderId) < PM_COOLDOWN_MS)) {
+            return true;
+        }
+
+        const recent = (pmCooldownTimestamps.get(senderId) || []).filter((ts) => now - ts < 60 * 1000);
+        recent.push(now);
+        pmCooldownTimestamps.set(senderId, recent);
+        if (recent.length > 5) {
+            console.log("⚠️ [PM RATE LIMIT] Throttling rapid PMs from", senderId);
+            return true;
+        }
+
+        try { await chat.sendStateTyping(); } catch (_) {}
+        const delay = Math.floor(Math.random() * (6000 - 3000 + 1)) + 3000;
+        await new Promise((r) => setTimeout(r, delay));
+        try { await chat.clearState(); } catch (_) {}
+
+        await client.sendMessage(message.from, "ආයුබෝවන්! IFSLS Group BOT සමග සම්බන්ධ වීමට ස්තුතියි ඔයාට . 👋💙\n\n⚠️ කරුණාකර මෙම අංකයට පෞද්ගලික පණිවිඩ හා ණය පිලිබද විස්තර (Inbox/Direct Messages) එවීමෙන් වළකින්න.\n\nශිෂ්‍ය ණය (IFSLS) පිළිබඳ ඕනෑම ඔබට ඇති ඔනම ප්‍රශ්නයක් අපේ *IFSLS Main Group* එක ඇතුළට ගිහින් */menu* කියලා ටයිප් කරලා ලබා ගන්න පුළුවන් ලමයි නැත්නම් group admin කෙනෙක් හා සම්බන්ධ වෙන්න පුලුවන්! 😊\n\n📞 *Admins & Contacts:*\n\n🛠️ *BOT Programmer*\n- 076 206 8122 - Yasho (Horizon Campus)\n\n🎓 *SLIIT Campus Admins*\n\n- Chathuranga — 076 120 0261\n- Yasiru — 071 087 5268\n- Vidushi — 078 621 5746\n- Manuja — 078 532 5617\n- Rusindu — 075 113 2588\n\n🎓 *Horizon Campus Admins*\n\n- Yasho — 076 206 8122\n- Lahiru — 077 375 1413\n\n🎓 *CINEC Campus Admin*\n\n- Isuru — 076 063 0712\n\n🎓 *SLTC Admin*\n\n- Suwani      | 071 197 2394");
+        pmRepliedUsers.set(senderId, now);
+        console.log("📩 [PM AUTO-REPLY SENT] To:", senderId);
+        return true;
+    } catch (err) {
+        console.error("❌ [PM AUTO-REPLY ERROR]:", err.message);
+        return false;
+    }
+}
+
 client.on("message", async (message) => {
+    if (await handleInboxAutoReply(client, message)) return;
     try {
         if (!message || message.fromMe || message.from === "status@broadcast") return;
 
@@ -937,9 +989,6 @@ client.on("message", async (message) => {
             isGroupChat = typeof message.from === "string" && message.from.endsWith("@g.us");
         }
 
-        // ==========================================
-        // 📩 SAFE PM / INBOX AUTO-REPLY (24h Cooldown)
-        // ==========================================
         if (!isGroupChat && !(typeof message.from === "string" && message.from.endsWith("@g.us"))) {
             const senderId = message.from;
             const now = Date.now();
@@ -974,9 +1023,6 @@ client.on("message", async (message) => {
             return;
         }
 
-        // ==========================================
-        // 🤖 AI ASSISTANT (/ai or @mention)
-        // ==========================================
         const isMentioned = message.mentionedIds && client.info?.wid && message.mentionedIds.includes(client.info.wid._serialized);
         if (textLower.startsWith("/ai") || isMentioned) {
             if (!groqApiKey) {
@@ -1404,9 +1450,6 @@ async function checkSpam(message, senderId, name, groupId) {
     }
 }
 
-// ==========================================
-// 📌 LOAD GUIDES & INITIALIZE BOT
-// ==========================================
 loadGuides().then(async () => {
     await client.initialize();
     console.log("ℹ️ client.initialize() promise resolved");

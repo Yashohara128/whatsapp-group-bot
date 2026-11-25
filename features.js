@@ -175,7 +175,7 @@ function buildBotStatusReport({ targetGroupsCount, welcomeQueueLength, blacklist
         `🚫 *Active 24h Bans Members:* ${activeBans}\n` +
         `🧠 *Bot Server Total RAM:* ${botRamGb} GB *(VPS Free: ${freeSysRamGb} GB / Total: ${totalSysRamGb} GB)*\n` +
         `⚡ *BOT CPU Usage:* ${cpuUsage}\n` +
-        `💾 *BOT Storage (/):* ${storageInfo}\n` +
+        `💾 *BOT Storage (/):* ${storageInfo}\n`
     );
 }
 
