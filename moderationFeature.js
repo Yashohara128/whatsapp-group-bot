@@ -185,22 +185,20 @@ async function handleBroadcastCommand(sock, chatId, senderJid, text, replyText) 
     }
 
     const customBody = text.replace(/^\/(broadcast|boradcast)\s*/i, "").trim();
-    const textToSend = customBody || `📢🎓 *IFSLS 11th INTAKE – BOT & IMPORTANT UPDATES* 🎓📢
+    const textToSend = `📢🎓 *IFSLS වැදගත් දැනුම්දීමයි!* 🎓📢
 
-ළමයි, Interviews අවසන් වීමත් සමඟ අපේ Smart Bot එකට අලුත් features සහ වැදගත් updates කිහිපයක් එකතු කරලා තියෙනවා! 🎉
+ළමයි හැමෝටම සුබ දවසක්! පහත කරුණු දෙක ගැන විශේෂ අවධානය යොමු කරන්න. 👇
 
-✨ *අලුත් Updates මොනවද?*
-📊 */results* – Selection Results Portal link එක සහ Intake 11 ප්‍රතිඵල (2026 දෙසැම්බර් මස බලාපොරොත්තු වන) පිළිබඳ විස්තර.
-📌 */specialnotes* – Interviews වලින් පසු Selection Results, Physical Registration සහ Appeals (අභියාචනා) ගැන වැදගත් උපදෙස්.
-🤖 */ai* (හෝ @mention) – ශිෂ්‍ය ණය (IFSLS) ගැන ඔයාලගේ ප්‍රශ්න වලට AI assistant හරහා පිළිතුරු ලබාගැනීමේ පහසුකම.
-🛡️ *Safe System & Anti-Spam* – Group එකේ ආරක්ෂාව වෙනුවෙන් anti-spam සහ safe messaging rules තවදුරටත් වැඩිදියුණු කර ඇත.
+🔹 *1. නව FAQ Commands (/faq-si & /faq-en)*
+IFSLS ශිෂ්‍ය ණය යෝජනා ක්‍රමය සම්බන්ධයෙන් නිතර අසනු ලබන ප්‍රශ්න සහ පිළිතුරු දැන් සිංහල සහ English දෙකෙන්ම Bot හරහා ලබාගත හැක:
+• *සිංහල FAQ:* /faq-si
+• *English FAQ:* /faq-en
 
-💬 *කොහොමද පාවිච්චි කරන්නේ?*
-• Group එක ඇතුළේ /menu කියලා type කරලා සියලුම commands බලාගන්න පුලුවන්.
-• ප්‍රශ්නයක් අහන්න ඕන නම් /ai [ඔයාගේ ප්‍රශ්නය] ලෙස type කරන්න.
+🔹 *2. /cutoff Command පිළිබඳ දැනුම්දීම*
+*/cutoff* command එක දැනට වැඩ කරන්නේ නැහැ — Google Form submissions තවම නැති නිසා.
+ඒ feature එක *12th Intake* එක වෙනුවෙන් හදපු එකක් බව කරුණාවෙන් සලකන්න. ✨
 
 🎓 *IFSLS STUDENT ADMIN COMMUNITY*`;
-
     let sentCount = 0;
     for (const gid of TARGET_GROUP_IDS) {
         try {
