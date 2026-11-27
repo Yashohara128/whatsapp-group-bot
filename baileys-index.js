@@ -101,6 +101,9 @@ function buildWelcomeForUser(digitsOrTag) {
     const secondMsg =
         "🤖 *Smart Bot Commands IFSLS Group Only Don't Send Direct Message to this Number (ස්වයංක්‍රීය සහය)* 🤖\n\n" +
         "ළමයි ඔයාලට ශිෂ්‍ය ණය ගැන අවශ්‍ය මූලික තොරතුරු ක්ෂණිකව Bot හරහා දැන් ලබාගන්න පුළුවන්. ඒ සඳහා *Group එක ඇතුළට ගොස්* / type කරලා පහත Commands ටයිප් කරලා send කරන්න.\n\n" +
+        "📌 */faq-si* - නිතර අසනු ලබන ප්‍රශ්න (සිංහල)\n" +
+        "📌 */faq-en* - නිතර අසනු ලබන ප්‍රශ්න (English)\n" +
+        "📊 */cutoff* - Z-Score based campus selection (previous intake students Z-Score අනුව, official cutoff පමණක් නොවේ)\n" +
         "📌 */menu* - සියලුම විස්තර සහ Commands බලාගැනීමට.\n" +
         "📌 */about* - IFSLS ගැන විස්තර.\n" +
         "📌 */eligibility* - ණය ලබාගැනීමේ සුදුසුකම්.\n" +
@@ -728,6 +731,9 @@ const campusAnswers = {
 const MENU_MESSAGE =
     `*🎓 IFSLS 2026/27 සම්පූර්ණ තොරතුරු මෙනුව 🎓*\n\n` +
     `*පොදු තොරතුරු සඳහා පහත කමාන්ඩ් Type කරන්න:*\n` +
+    `📚 */faq-si* - නිතර අසනු ලබන ප්‍රශ්න සිංහල` + "\n" +
+    `📚 */faq-en* - නිතර අසනු ලබන ප්‍රශ්න English` + "\n" +
+    `📊 */cutoff* - Z-Score based campus selection (previous intake students Z-Score අනුව, official cutoff පමණක් නොවේ)` + "\n" +
     `📘 */about* - IFSLS යනු කුමක්ද?\n` +
     `✅ */eligibility* - මූලික සුදුසුකම්\n` +
     `💰 */loan* - ණය මුදල සහ දීමනාව\n` +
